@@ -1,3 +1,4 @@
+/*
 Copyright (c) 2015, Andreas Reder
 All rights reserved.
 
@@ -25,4 +26,45 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 
+package org.lielas.dataloggerstudio.lib.Logger.Lielas;
+
+/**
+ * Created by Andi on 02.01.2015.
+ */
+public class LielasId {
+
+    public static final int ID_LENGTH = 8;
+    private byte[] id;
+
+    public LielasId(){
+        id = new byte[ID_LENGTH];
+    }
+
+    public boolean setId(byte[] id){
+
+        if(id.length != ID_LENGTH){
+            return false;
+        }
+
+        for(int i = 0; i< ID_LENGTH; i++){
+            this.id[i] = id[i];
+        }
+        return true;
+    }
+
+    @Override
+    public String toString(){
+        int i;
+        StringBuilder sb = new StringBuilder();
+        for(i = 0; i < (id.length -1 ); i++){
+            sb.append(String.format("%02X", id[i]));
+            sb.append(":");
+        }
+        sb.append(String.format("%02X", id[i]));
+
+        return sb.toString();
+    }
+
+}

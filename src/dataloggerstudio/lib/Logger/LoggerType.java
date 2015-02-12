@@ -1,3 +1,4 @@
+/*
 Copyright (c) 2015, Andreas Reder
 All rights reserved.
 
@@ -25,4 +26,53 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 
+package org.lielas.dataloggerstudio.lib.Logger;
+
+import org.lielas.dataloggerstudio.pc.language.LanguageManager;
+
+public class LoggerType {
+	public static final int NONE  = 0;
+	public static final int USB_STICK = 1;
+	public static final int USB_CUBE = 2;
+	
+	public static String USB_STICK_LBL = "USB_STICK_LBL";
+	public static String USB_CUBE_LBL = "USB_CUBE_LBL";
+	
+	private int type;
+	
+	public LoggerType(String type){
+		LanguageManager lm = LanguageManager.getInstance();
+		if(type.equals(lm.getString(1020))){
+			this.type = USB_STICK;
+		}else if(type.equals(lm.getString(1021))){
+			this.type = USB_CUBE;
+		}else{
+			this.type = NONE;
+		}
+	}
+	
+	public String toString(){
+
+		LanguageManager lm = LanguageManager.getInstance();
+		
+		switch(type){
+			case USB_STICK:
+				return lm.getString(USB_STICK_LBL);
+			case USB_CUBE:
+				return lm.getString(USB_CUBE_LBL);
+		}
+		return "";
+	}
+	
+	public void setType(int type){
+		this.type = type;
+	}
+	
+	public int getType(){
+		return type;
+	}
+	
+	
+}

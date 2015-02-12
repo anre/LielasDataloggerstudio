@@ -1,3 +1,4 @@
+/*
 Copyright (c) 2015, Andreas Reder
 All rights reserved.
 
@@ -25,4 +26,49 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 
+package org.lielas.dataloggerstudio.lib.crc;
+
+public class Crc16{
+	
+	public static int calculate(byte[] data, int len){
+		int crc = 0xFFFF;
+		int polynom = 0x1021;
+		
+		for(byte b : data){
+			for(int i = 0; i < 8; i++){
+				boolean bit = ((b >> (7-i) & 1) == 1);
+				boolean c15 = ((crc >> 15 & 1) == 1);
+				crc <<= 1;
+				if(c15 ^ bit) crc ^= polynom;
+			}
+			len-= 1;
+			if(len == 0){
+				break;
+			}
+		}
+		crc &= 0xFFFF;
+		return crc;
+	}
+
+	public static int calculate(byte[] data, int len, int start){
+		int crc = start;
+		int polynom = 0x1021;
+		
+		for(byte b : data){
+			for(int i = 0; i < 8; i++){
+				boolean bit = ((b >> (7-i) & 1) == 1);
+				boolean c15 = ((crc >> 15 & 1) == 1);
+				crc <<= 1;
+				if(c15 ^ bit) crc ^= polynom;
+			}
+			len-= 1;
+			if(len == 0){
+				break;
+			}
+		}
+		crc &= 0xFFFF;
+		return crc;
+	}
+}

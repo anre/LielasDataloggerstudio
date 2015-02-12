@@ -1,3 +1,4 @@
+/*
 Copyright (c) 2015, Andreas Reder
 All rights reserved.
 
@@ -25,4 +26,49 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 
+package org.lielas.dataloggerstudio.lib.LielasCommunicationProtocol;
+
+import org.lielas.dataloggerstudio.lib.Logger.Lielas.LielasId;
+
+/**
+ * Created by Andi on 02.01.2015.
+ */
+public class LielasSettingsProtocolId extends LielasSettingsProtocolPayload{
+    private LielasId id;
+
+    @Override
+    public int getLspId() {
+        return LielasSettingsProtocolIds.ID;
+    }
+
+    @Override
+    public int getLength() {
+        return 0;
+    }
+
+    @Override
+    public byte[] getBytes() {
+        return new byte[0];
+    }
+
+    @Override
+    public boolean parse(byte[] payload) {
+        if(payload == null){
+            return false;
+        }
+
+        if(payload.length != LielasId.ID_LENGTH){
+            return false;
+        }
+
+        id = new LielasId();
+        id.setId(payload);
+        return true;
+    }
+
+    public LielasId getId(){
+        return id;
+    }
+}

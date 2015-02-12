@@ -1,3 +1,4 @@
+/*
 Copyright (c) 2015, Andreas Reder
 All rights reserved.
 
@@ -25,4 +26,23 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 
+package org.lielas.dataloggerstudio.pc.gui.Panels.DataContentPanels;
+
+import org.lielas.dataloggerstudio.lib.LoggerRecord;
+import org.lielas.dataloggerstudio.pc.gui.Panels.DataloggerstudioPanel;
+
+/**
+ * Created by Andi on 14.01.2015.
+ */
+public abstract class DataContentPanel extends DataloggerstudioPanel{
+
+
+    protected LoggerRecord lr;
+
+
+    public void setLoggerRecord(LoggerRecord lr){
+        this.lr = lr;
+    }
+}

@@ -1,3 +1,4 @@
+/*
 Copyright (c) 2015, Andreas Reder
 All rights reserved.
 
@@ -25,4 +26,59 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 
+package org.lielas.dataloggerstudio.lib.FileCreator;
+
+import org.lielas.dataloggerstudio.lib.LoggerRecord;
+import org.lielas.dataloggerstudio.lib.FileCreator.FileSaver;
+import org.lielas.dataloggerstudio.pc.FileSaver.PcFileSaver;
+
+public abstract class FileCreator{
+	
+	protected String delimiter = ";";
+	protected String comma = ",";
+	protected FileSaver fileSaver;
+	protected String path;
+	
+	public static String FORMAT_CSV = ".csv";
+	
+	public static final int STATUS_OK = 0;
+	public static final int STATUS_ERROR = 1;
+	public static final int STATUS_FILE_EXISTS = 2;
+	
+	public FileCreator(){
+		
+	}
+	
+	public void setDelimiter(String delimiter) {
+		
+		if(delimiter.equals("tab")){
+			this.delimiter  ="\t";
+		}else if(delimiter.equals("space")){
+			this.delimiter  =" ";
+		}else{
+			this.delimiter = delimiter;
+		}
+		
+	}
+	
+	public void setComma(String comma) {
+		this.comma = comma;
+	} 
+	
+	public void setFileSaverType(int type){
+		if(type == FileSaver.PC_FILE_SAVER){
+			fileSaver = (FileSaver)new PcFileSaver();
+		}
+	}
+	
+	public void setPath(String path){
+		this.path = path;
+	}
+	
+	public abstract boolean create(LoggerRecord lr);
+	
+	public abstract int save(LoggerRecord lr, boolean overwriteExisting);
+	
+}

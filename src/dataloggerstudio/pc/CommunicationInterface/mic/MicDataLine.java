@@ -1,3 +1,4 @@
+/*
 Copyright (c) 2015, Andreas Reder
 All rights reserved.
 
@@ -25,4 +26,48 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 
+package org.lielas.dataloggerstudio.pc.CommunicationInterface.mic;
+
+public class MicDataLine{
+	
+	private int values[];
+	
+	public MicDataLine(int valueCount){
+		values = new int[valueCount];
+	}
+
+	public int[] getValues() {
+		return values;
+	}
+
+	public void setValues(int[] values) {
+		this.values = values;
+	}
+	
+	public boolean parse(byte[] line){
+		int pos = 0;
+		
+		if(line == null)
+			return false;
+		
+		// parse answer
+		if (line[0] != 'd' && line[0] != 'v') {
+			return false;
+		}
+		
+		for(int i = 0; i < values.length; i++){
+			try {
+				pos = MicParser.findNextToken(line, pos, line.length);
+				values[i] = (int)MicParser.parseTokenToLong(line, pos, line.length);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+}

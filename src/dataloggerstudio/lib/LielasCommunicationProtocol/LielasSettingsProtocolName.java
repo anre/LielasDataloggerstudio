@@ -1,3 +1,4 @@
+/*
 Copyright (c) 2015, Andreas Reder
 All rights reserved.
 
@@ -25,4 +26,68 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 
+package org.lielas.dataloggerstudio.lib.LielasCommunicationProtocol;
+
+import java.io.UnsupportedEncodingException;
+
+/**
+ * Created by Andi on 02.01.2015.
+ */
+public class LielasSettingsProtocolName extends LielasSettingsProtocolPayload{
+    private byte[] name;
+
+    public static final int MAX_LOGGER_NAME_LENGTH  = 40;
+
+    @Override
+    public int getLspId() {
+        return LielasSettingsProtocolIds.LOGGERNAME;
+    }
+
+    @Override
+    public int getLength() {
+        if(name == null) {
+            return 0;
+        }
+        return  name.length;
+    }
+
+    @Override
+    public byte[] getBytes() {
+        return name;
+    }
+
+    @Override
+    public boolean parse(byte[] payload) {
+        if(payload == null) {
+            return false;
+        }
+
+        if(payload.length == 0 || payload.length > MAX_LOGGER_NAME_LENGTH){
+            this.name = new byte[0];
+            return true;
+        }
+
+        name = new byte[payload.length];
+        System.arraycopy(payload, 0, name, 0, payload.length);
+        return true;
+    }
+
+    public boolean setName(String name){
+        if(name == null){
+            return false;
+        }
+
+        if(name.length() == 0 || name.length() > MAX_LOGGER_NAME_LENGTH){
+            return  false;
+        }
+        try {
+            this.name = name.getBytes("ASCII");
+        }catch(UnsupportedEncodingException e){
+            this.name = null;
+        }
+
+        return true;
+    }
+}

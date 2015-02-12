@@ -1,3 +1,4 @@
+/*
 Copyright (c) 2015, Andreas Reder
 All rights reserved.
 
@@ -25,4 +26,58 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 
+package org.lielas.dataloggerstudio.lib.LielasCommunicationProtocol;
+
+public class LielasSettingsProtocolRTLStatus extends LielasSettingsProtocolPayload{
+
+	private boolean status;
+	
+	@Override
+	public int getLength() {
+		return 1;
+	}
+
+	@Override
+	public byte[] getBytes() {
+		byte b[] = new byte[1];
+		
+		b[0] = 0;
+		if(status){
+			b[0] = 1;
+		}
+		return b;
+	}
+
+	@Override
+	public boolean parse(byte[] payload) {
+		
+		if(payload == null){
+			return false;
+		}
+		
+		if(payload[0] == 0){
+			status = false;
+		}else if(payload[0] == 1){
+			status = true;
+		}else{
+			return false;
+		}
+		return true;
+	}
+	
+	public boolean getStatus(){
+		return status;
+	}
+	
+	public void setStatus(boolean status){
+		this.status = status;
+	}
+
+	@Override
+	public int getLspId() {
+		return LielasSettingsProtocolIds.REALTIMELOGGING;
+	}
+	
+}

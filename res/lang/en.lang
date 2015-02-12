@@ -1,0 +1,257 @@
+﻿//1106
+
+LBL900=Lielas Datalogger Studio
+LBL901=0.9.5
+
+//Header
+LBL902=Connect
+LBL903=Device Settings
+LBL904=Data
+LBL905=Realtime Data
+
+LBL906=Connect to a datalogger
+LBL907=Change logger settings and start logging
+LBL908=Load and view data
+LBL909=Show logger data in real-time
+LBL910=About Lielas Datalogger Studio
+
+//Connect View
+LBL910=Type
+LBL911=COM Port
+LBL912=Connect
+LBL913=Connect to datalogger
+LBL914=Reload comports
+LBL915=Change logger type
+LBL916=Change comport
+LBL1092=Disconnect
+LBL1093=Are you sure you want to disconnect the current logger?
+
+//MIC Settings View
+LBL917=Info
+LBL918=Type
+LBL919=Version
+LBL920=Name
+LBL921=Give the logger a name, max. 20 Chars without space
+LBL922=Save name
+LBL923=Write name
+LBL924=Clock
+LBL925=Date
+LBL926=Time
+LBL927=Set Clock
+LBL928=Write date and time to the logger
+LBL929=Logging
+LBL930=Samplerate [s]
+LBL931=Set the meassurement interval in seconds ( 1 to 21600 )
+LBL932=Unit
+LBL933=Set metric or imperial units
+LBL934=Samples
+LBL935=Set the number of meassurements
+LBL936=Start Trigger
+LBL937=Set the trigger to start meassuring
+LBL938=Start Logger
+LBL939=Starts the logger
+LBL940=Start logger
+LBL941=Data saved on the logger will be lost, are you sure you want to start logging?
+
+//MIC Data View
+LBL942=Data
+LBL943=Samplerate
+LBL944=Meassurement interval in seconds
+LBL945=Units
+LBL946=Unit class, metric or imperial
+LBL947=Samples
+LBL948=Number of recorded samples
+LBL949=Read Data
+LBL950=Read logger data
+
+//MIC Realtime view
+LBL960=Start
+LBL961=Stop
+LBL962=Start/Stop realtime logging
+LBL963=Starting realtime logging
+LBL964=Start realtime logging
+LBL965=This stops the logger, any unsaved data will be lost. Start realtime logging?
+
+//USB_CUBE Settings View
+LBL966=Info
+LBL967=Version
+LBL968=Id
+LBL969=Name
+LBL970=Save name
+LBL971=Write name to logger
+
+LBL972=Clock
+LBL973=Logger date/time
+LBL1100=Pc date/time
+LBL974=Date
+LBL975=Time
+LBL976=Set Clock
+LBL1102=Set Pc Clock
+LBL977=Write date and time to the logger
+LBL1103=Write Pc date and time to the logger
+
+LBL978=Logging
+LBL979=Samplerate [s]
+LBL980=Status
+LBL981=Logfile name
+LBL982=Start logging
+LBL983=Stop logging
+LBL1087=logging
+LBL1088=stopped
+
+LBL984=Delete logfiles
+LBL985=Delete
+LBL1084=Logfiles successfully deleted
+
+LBL1000=Various informations about the logger
+LBL1001=Logger firmware version
+LBL1002=Logger id
+LBL1003=Logger name
+LBL1004=Logger realtime clock settings
+LBL1005=Actual logger date and time
+LBL1001=Actual pc date and time
+LBL1006=New logger date
+LBL1007=New logger time
+LBL1008=Set logger name
+LBL1009=Set new logger date and time
+LBL1010=Change logging settings and start/stop logging
+LBL1011=Logger status
+LBL1012=Logger samplerate in seconds. Has to be between 1 and 86000
+LBL1013=Logfile name
+LBL1014=Start/stop logging
+LBL1015=Delete logfiles from logger
+LBL1016=Delete logfiles from logger
+LBL1094=Delete logfiles
+LBL1095=Are you sure you want to delete all logfiles on the logger?
+
+//USBCube Realtime View
+LBL987=Start
+LBL1079=Stop
+LBL1089=Starting realtime logging
+
+//Logfiles Menu Panel
+LBL986=Logfiles
+LBL988=Load Data
+LBL1090=Logfiles
+LBL1091=Progress
+
+//ExportMenuPanel
+LBL989=Export
+LBL990=Format
+LBL991=Path
+LBL992=Filename
+LBL993=Export
+LBL1080=Export data to harddrive
+LBL1081=Choose export file format
+LBL1082=Choose the output path
+LBL1083=Choose filename
+
+//CSV Export View
+LBL994=CSV
+LBL995=Delimiter
+LBL996=Set the delimiter character
+LBL997=Comma
+LBL998=Set the comma character
+LBL1017=Write file in csv format
+
+
+
+//Table header
+LBL999=Date
+LBL1018=Temperature[°C]
+LBL1019=Humidity [%]
+
+//Logger Type
+LBL1020=Usb Stick
+LBL1021=Usb Cube
+
+//Status bar
+LBL1022=Not connected
+LBL1023=Connected
+
+//Unit classes
+LBL1024=metric
+LBL1025=imperial
+
+//start triggers
+LBL1026=start immediately
+LBL1027=button press
+
+//Status messages
+LBL1078=File successfully saved
+
+//Mic Status messages
+LBL1028=Successfully connected
+LBL1029=Logger name successfully written
+LBL1030=Date and time successfully written
+LBL1031=Logger successfully started
+
+//USBCUBE Status messages
+LBL1032=Successfully connected
+LBL1033=Logger name successfully written
+LBL1034=Date and time successfully written
+LBL1035=Logger successfully started
+LBL1036=Logger successfully stopped
+LBL1037=Logfiles successfully deleted
+LBL1038=Realtime logging sucessfully started
+
+//Error messages
+
+LBL1039=Unknown error
+LBL1040=Failed to open comport, port is blocked
+LBL1085=No data to save selected/loaded
+
+
+
+//Mic errors
+LBL1041=Comport not open
+LBL1042=Failed to parse logger name
+LBL1043=Failed to parse logger settings
+LBL1044=Failed to parse logger date and time
+LBL1045=Failed to write logger date and time
+LBL1046=Failed to start logger
+LBL1047=Serial port write error
+LBL1048=The logger name may not be longer than 20 charactes
+LBL1049=The logger name may not include spaces
+LBL1050=The samplerate has to be between 1 and 21600 seconds
+
+//USBCUBE errors
+LBL1051=The logger name may not be empty
+LBL1052=The logger name may not be longer than 40 characters
+LBL1053=Comport not open
+LBL1054=Failed to wake logger up
+LBL1055=Serial port write error
+LBL1056=Failed to parse paket, wrong protocol type.
+LBL1057=Failed to parse logger version
+LBL1058=Failed to parse logger id
+LBL1059=Failed to parse logger name
+LBL1060=Failed to parse logger samplerate
+LBL1061=Failed to parse logger status
+LBL1062=Failed to set logfilename
+LBL1063=Failed to parse date and time
+LBL1064=Failed to parse logfile count
+LBL1065=Failed to parse logfile properties
+LBL1066=Failed to get dataset
+LBL1067=Failed to delete logfiles
+LBL1068=Failed to parse date. Date has to be between 1.1.2000\nand 1.1.2100
+LBL1069=Failed to parse time. Please enter a valid time in the\nformat 'hh:mm:ss'
+LBL1070=Failed to set samplerate. Please choose a samplerate\nbetween 1 and 86000 seconds.
+LBL1071=Failed to start realtime logging
+LBL1096=Logging in progress. You have to stop the logger\nbefore deleting the logfiles.
+LBL1097=Realtimelogging in progress. You have to stop\nthe logger before deleting the logfiles.
+LBL1098=Please stop logging before starting\nrealtime logging.
+LBL1099=Please stop realtime logging before starting\nlogging.
+LBL1104=Logging in progress. You have to stop the logger\nbefore setting a new date/time.
+LBL1105=Realtimelogging in progress. You have to stop\nthe logger before setting a new date/time.
+
+//File create errors
+LBL1072=Please specify a path
+LBL1073=Please specify a filename
+LBL1074=The filename may not include spaces
+LBL1075=File already exists
+LBL1076=The file already exists, do you want to overwrite it?
+LBL1077=Failed to write file
+
+//About Panel
+LBL1086=About
+

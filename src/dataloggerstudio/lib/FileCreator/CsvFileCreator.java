@@ -1,3 +1,4 @@
+/*
 Copyright (c) 2015, Andreas Reder
 All rights reserved.
 
@@ -25,4 +26,82 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 
+package org.lielas.dataloggerstudio.lib.FileCreator;
+
+import org.lielas.dataloggerstudio.lib.Dataset;
+import org.lielas.dataloggerstudio.lib.Logger.Logger;
+import org.lielas.dataloggerstudio.lib.Logger.UsbCube.UsbCube;
+import org.lielas.dataloggerstudio.lib.LoggerRecord;
+
+
+
+public class CsvFileCreator extends FileCreator{
+
+	
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6678915796254215485L;
+
+	StringBuilder sb;
+	
+	public CsvFileCreator() {
+		super();
+		sb = null;
+	}
+	
+	@Override
+	public boolean create(LoggerRecord lr) {
+		sb = new StringBuilder();
+		
+		if(lr == null){
+			return false;
+		}
+
+		sb.append(lr.getLogger().getCsvHeader(delimiter));
+		
+		//add data
+		for(int i = 0; i < lr.getCount(); i++){
+			Dataset ds = lr.get(i);
+			String values[] = ds.getStringArray();
+			for(int j = 0; j < values.length; j++){
+				sb.append(values[j].replaceAll(",", this.comma));
+				sb.append(delimiter);
+			}
+			sb.append("\n");
+		}
+		
+		
+		return true;
+	}
+	
+	@Override
+	public int save(LoggerRecord lr, boolean overwriteExisting){
+		int status;
+		
+		if(this.fileSaver == null){
+			return STATUS_ERROR;
+		}
+
+		if(lr == null){
+			return STATUS_ERROR;
+		}
+		
+		if(sb == null){
+			return STATUS_ERROR;
+		}
+		
+		status = fileSaver.save(sb, path, overwriteExisting);
+		if(status == FileSaver.ERROR_FILE_EXISTS){
+			return STATUS_FILE_EXISTS;
+		}else if(status == FileSaver.STATUS_OK){
+			lr.setSaved(true);
+			return STATUS_OK;
+		}
+		return STATUS_ERROR;
+	}
+	
+}

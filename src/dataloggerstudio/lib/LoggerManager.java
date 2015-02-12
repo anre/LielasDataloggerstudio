@@ -1,3 +1,4 @@
+/*
 Copyright (c) 2015, Andreas Reder
 All rights reserved.
 
@@ -25,4 +26,65 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 
+package org.lielas.dataloggerstudio.lib;
+
+import java.util.ArrayList;
+
+import org.lielas.dataloggerstudio.lib.Logger.Logger;
+
+public class LoggerManager{
+	
+	private static LoggerManager instance = null;
+	
+	private Logger active;
+	private int count;
+	private ArrayList<Logger> logger;
+	
+	private LoggerManager(){
+		count = 0;
+		logger = new ArrayList<Logger>();
+	}
+	
+	public static LoggerManager getInstance(){
+		if(instance == null){
+			instance = new LoggerManager();
+		}
+		return instance;
+	}
+	
+	public int getCount(){
+		return count;
+	}
+	
+	public Logger getLogger(int index){
+		return logger.get(index);
+	}
+	
+	public void add(Logger logger){
+		this.logger.add(logger);
+	}
+	
+	public void clear(){
+		active = null;
+		logger.clear();
+	}
+	
+	public Logger getActiveLogger(){
+		return active;
+	}
+	
+	public void setActiveLogger(int index){
+		active = logger.get(index);
+	}
+	
+	public void setFirstLoggerActive(){
+		active = logger.get(01);
+	}
+	
+	public void setLastLoggerActive(){
+		active = logger.get(logger.size()-1);
+	}
+	
+}

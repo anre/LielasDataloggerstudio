@@ -1,3 +1,4 @@
+/*
 Copyright (c) 2015, Andreas Reder
 All rights reserved.
 
@@ -25,4 +26,28 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 
+package org.lielas.dataloggerstudio.lib.FileCreator;
+
+public abstract class FileSaver{
+	
+	public static final int PC_FILE_SAVER = 1;
+	public static final int ANDROID_FILE_SAVER = 2;
+	protected int type;
+	
+	public static final int STATUS_OK = 0;
+	public static final int ERROR_FILENAME_TOO_LONG = 1;
+	public static final int ERROR_FILENAME_INVALID = 2;
+	public static final int ERROR_FILE_EXISTS = 3;
+	public static final int ERROR_FAILED_TO_WRITE_FILE = 4;
+	
+	
+	public FileSaver(int type){
+		this.type = type;
+	}
+	
+	public abstract int save(final StringBuilder sb, String path, boolean overWrite);
+
+	
+}

@@ -1,3 +1,4 @@
+/*
 Copyright (c) 2015, Andreas Reder
 All rights reserved.
 
@@ -25,4 +26,47 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 
+package org.lielas.dataloggerstudio.lib.LielasCommunicationProtocol;
+
+/**
+ * Created by Andi on 16.01.2015.
+ */
+public class LielasSettingsProtocolDelete extends LielasSettingsProtocolPayload {
+    private boolean dataDeleted = false;
+
+    @Override
+    public int getLspId() {
+        return LielasSettingsProtocolIds.DELETE_DATA;
+    }
+
+    @Override
+    public int getLength() {
+        return 1;
+    }
+
+    @Override
+    public byte[] getBytes() {
+        byte[] b = new byte[1];
+        b[0] = 37;
+        return b;
+    }
+
+    @Override
+    public boolean parse(byte[] payload) {
+        if(payload == null || payload.length != 1){
+            return false;
+        }
+
+        if(payload[0] == 1){
+            dataDeleted = true;
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isDataDeleted(){
+        return dataDeleted;
+    }
+}

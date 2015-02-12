@@ -1,3 +1,4 @@
+/*
 Copyright (c) 2015, Andreas Reder
 All rights reserved.
 
@@ -25,4 +26,34 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 
+package org.lielas.dataloggerstudio.pc.gui.Panels.MenuPanels.ExportPanel;
+
+import javax.swing.JPanel;
+
+import org.lielas.dataloggerstudio.pc.gui.MouseOverHintManager;
+import org.lielas.dataloggerstudio.pc.language.LanguageManager;
+
+public abstract class ExportPanel extends JPanel{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1225042247491929528L;
+	
+	public static final int EXPORT_TYPE_CSV = 0;
+	
+	protected int exportType;
+	
+	public ExportPanel(int type){
+		exportType = type;
+	}
+	
+	public int getExportType(){
+		return exportType;
+	}
+	
+	public abstract void updateLanguage(LanguageManager lm, MouseOverHintManager hintManager);
+	
+}

@@ -1,3 +1,4 @@
+/*
 Copyright (c) 2015, Andreas Reder
 All rights reserved.
 
@@ -25,4 +26,54 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 
+package org.lielas.dataloggerstudio.lib.CommunicationInterface;
+
+
+public abstract class SerialInterface extends CommunicationInterface{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2815694568261326330L;
+	
+	protected int baudrate;
+	protected int readTimeout;
+	protected int writeTimeout;
+	protected int databits;
+	protected int stopbits;
+	protected int parity;
+	
+	protected final int maxLineLength = 100;
+	
+	protected byte lineEnd = '\n';
+	
+	public SerialInterface(){
+		baudrate = 38400;
+		readTimeout = 200;
+		writeTimeout = 200;
+		databits = 8;
+		stopbits = 1;
+		parity = 0;
+	}
+	
+	public void setBaudrate(int baudrate){
+		this.baudrate = baudrate;
+	}
+	
+	public int getReadTimeout(){
+		return readTimeout;
+	}
+	
+	public void setReadTimeout(int timeout){
+		this.readTimeout = timeout;
+	}
+	
+	public int getWriteTimeout(){
+		return readTimeout;
+	}
+	
+	public void setWriteTimeout(int timeout){
+		this.readTimeout = timeout;
+	}
+}

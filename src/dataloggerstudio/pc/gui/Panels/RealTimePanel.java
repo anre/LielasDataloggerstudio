@@ -1,3 +1,4 @@
+/*
 Copyright (c) 2015, Andreas Reder
 All rights reserved.
 
@@ -25,4 +26,23 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 
+package org.lielas.dataloggerstudio.pc.gui.Panels;
+
+import java.awt.BorderLayout;
+
+public abstract class RealTimePanel extends DataloggerstudioPanel{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2866764870583208516L;
+
+	public RealTimePanel(){
+		super();
+		setOpaque(false);
+		setLayout(new BorderLayout(0, 0));
+	}
+	
+}

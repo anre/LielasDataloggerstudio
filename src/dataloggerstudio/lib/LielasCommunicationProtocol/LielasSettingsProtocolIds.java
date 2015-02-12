@@ -1,3 +1,4 @@
+/*
 Copyright (c) 2015, Andreas Reder
 All rights reserved.
 
@@ -25,4 +26,23 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 
+package org.lielas.dataloggerstudio.lib.LielasCommunicationProtocol;
+
+public final class LielasSettingsProtocolIds {
+	public static final int DATETIME = 1;
+	public static final int REALTIMELOGGING = 2;
+	public static final int ID = 3;
+	public static final int VERSION = 4;
+	public static final int SENSORS = 5;
+	public static final int SAMPLERATE = 6;
+	public static final int LOGGERNAME = 7;
+	public static final int LRI_COUNT = 8;
+	public static final int SET_LRI_NAME = 9;
+	public static final int GET_LRI = 11;
+	public static final int LOGGER_STATUS = 12;
+	public static final int GET_DATASET  = 13;
+	public static final int GET_DATASET_STRUCTURE = 14;
+	public static final int DELETE_DATA = 15;
+}

@@ -1,3 +1,4 @@
+/*
 Copyright (c) 2015, Andreas Reder
 All rights reserved.
 
@@ -25,4 +26,35 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 
+package org.lielas.dataloggerstudio.lib.Logger.Lielas;
+
+/**
+ * Created by Andi on 02.01.2015.
+ */
+public class LielasVersion {
+    private byte[] version;
+
+    public LielasVersion(){
+        version = new byte[3];
+        version[0] = 0;
+        version[1] = 0;
+        version[2] = 0;
+    }
+
+    public void setVersion(byte[] version){
+        if(version.length != 3){
+            return;
+        }
+
+        this.version[0] = version[0];
+        this.version[1] = version[1];
+        this.version[2] = version[2];
+    }
+
+    @Override
+    public String toString(){
+        return version[0] + "." + version[1] + "." +version[2];
+    }
+}

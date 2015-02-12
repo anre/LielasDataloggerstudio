@@ -1,3 +1,4 @@
+/*
 Copyright (c) 2015, Andreas Reder
 All rights reserved.
 
@@ -25,4 +26,42 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 
+package org.lielas.dataloggerstudio.lib.Logger.Units;
+
+public class UnitClass {
+	
+	public static final int UNIT_CLASS_METRIC = 0;
+	public static final int UNIT_CLASS_IMPERIAL  = 1;
+	
+	public static final String UNIT_CLASS_METRIC_STRING = "UNIT_CLASS_METRIC";
+	public static final String UNIT_CLASS_IMPERIAL_STRING = "UNIT_CLASS_IMPERIAL";
+	
+	private int unitClass;
+	
+	public UnitClass(){
+		this.unitClass = UNIT_CLASS_METRIC;
+	}
+	
+	public int getUnitClass(){
+		return unitClass;
+	}
+	
+	public void setUnitClass(int unitClass){
+		switch(unitClass){
+			case UNIT_CLASS_IMPERIAL:
+			case UNIT_CLASS_METRIC:
+				this.unitClass = unitClass;
+		}
+	}
+	
+	@Override
+	public String toString(){
+		switch(unitClass){
+			case UNIT_CLASS_IMPERIAL:
+				return UNIT_CLASS_IMPERIAL_STRING;
+		}
+		return UNIT_CLASS_METRIC_STRING;
+	}
+}

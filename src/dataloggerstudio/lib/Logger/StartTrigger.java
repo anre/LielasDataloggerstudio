@@ -1,3 +1,4 @@
+/*
 Copyright (c) 2015, Andreas Reder
 All rights reserved.
 
@@ -25,4 +26,43 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 
+package org.lielas.dataloggerstudio.lib.Logger;
+
+import org.lielas.dataloggerstudio.pc.language.LanguageManager;
+
+public class StartTrigger{
+	
+	public static final int START_IMMEDIATELY  = 1026;
+	public static final int START_AFTER_BUTTON_PRESS  = 1027;
+	
+	private int startTrigger;
+	
+	public StartTrigger(){
+		startTrigger = START_IMMEDIATELY;
+	}
+	
+	public StartTrigger(int trigger){
+		LanguageManager lm = LanguageManager.getInstance();
+		
+		if(trigger == START_AFTER_BUTTON_PRESS){
+			startTrigger = START_AFTER_BUTTON_PRESS;
+		}else{
+			startTrigger = START_IMMEDIATELY;
+		}
+	}
+
+	public int getStartTrigger() {
+		return startTrigger;
+	}
+
+	public void setStartTrigger(int startTrigger) {
+		switch(startTrigger){
+			case START_IMMEDIATELY:
+				this.startTrigger = startTrigger;
+				break;
+		}
+	}
+	
+}

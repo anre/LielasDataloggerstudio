@@ -1,3 +1,4 @@
+/*
 Copyright (c) 2015, Andreas Reder
 All rights reserved.
 
@@ -25,4 +26,61 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 
+package org.lielas.dataloggerstudio.lib.LielasCommunicationProtocol;
+
+/**
+ * Created by Andi on 04.01.2015.
+ */
+public class LielasSettingsProtocolLogfilename extends LielasSettingsProtocolPayload {
+
+    String name;
+
+    public LielasSettingsProtocolLogfilename(){
+        name = null;
+    }
+
+    @Override
+    public int getLspId() {
+        return LielasSettingsProtocolIds.SET_LRI_NAME;
+    }
+
+    @Override
+    public int getLength() {
+        if(name == null){
+            return 0;
+        }
+        return name.length();
+    }
+
+    @Override
+    public byte[] getBytes() {
+        if(name == null){
+            return null;
+        }
+        return name.getBytes();
+    }
+
+    @Override
+    public boolean parse(byte[] payload) {
+
+        if (payload == null) {
+            return false;
+        }
+
+        name = new String(payload);
+        if (name.length() > 30){
+            name = name.substring(0,30);
+        }
+        return true;
+    }
+
+    public void setName(String name){
+        this.name = name;
+    }
+
+    public String getName(){
+        return name;
+    }
+}

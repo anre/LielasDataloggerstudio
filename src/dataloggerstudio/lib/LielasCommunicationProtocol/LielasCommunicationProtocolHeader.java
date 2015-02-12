@@ -1,3 +1,4 @@
+/*
 Copyright (c) 2015, Andreas Reder
 All rights reserved.
 
@@ -25,4 +26,46 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 
+package org.lielas.dataloggerstudio.lib.LielasCommunicationProtocol;
+
+public class LielasCommunicationProtocolHeader{
+	
+	public int length;
+	private int id;
+	private byte protocol;
+	
+	public static final int HEADER_LENGTH = 5;
+	
+	public LielasCommunicationProtocolHeader() {
+		length = 0;
+		id = 0;
+		protocol = 0;
+	}
+	
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public byte getProtocol() {
+		return protocol;
+	}
+	public void setProtocol(byte protocol) {
+		this.protocol = protocol;
+	}
+	
+	public byte[] getBytes(){
+		byte[] b = new byte[5];
+		
+		b[0] = (byte)(length >> 8);
+		b[1] = (byte)(length);
+		b[2] = (byte)(id >> 8);
+		b[3] = (byte)(id);
+		b[4] = protocol;
+		
+		return b;
+	}
+}

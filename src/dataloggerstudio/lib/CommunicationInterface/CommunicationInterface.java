@@ -1,3 +1,4 @@
+/*
 Copyright (c) 2015, Andreas Reder
 All rights reserved.
 
@@ -25,4 +26,44 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 
+package org.lielas.dataloggerstudio.lib.CommunicationInterface;
+
+
+
+
+public abstract class CommunicationInterface{
+	
+	protected boolean isOpen;
+	protected boolean isBusy;
+	
+	private String lastError;
+	
+	public CommunicationInterface(){
+		isOpen = false;
+		isBusy = false;
+		lastError = null;
+	}
+	
+	public boolean isOpen(){
+		return isOpen;
+	}
+	
+	public boolean isBusy(){
+		return isBusy;
+	}
+	
+	public String getLastError(){
+		String err = lastError;
+		lastError = null;
+		return err;
+	}
+	
+	protected void setError(String error){
+		lastError = error;
+	}
+
+	public abstract boolean open(String port);
+	public abstract void close();
+}
