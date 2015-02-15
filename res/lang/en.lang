@@ -1,7 +1,7 @@
-﻿//1106
+﻿//1108
 
 LBL900=Lielas Datalogger Studio
-LBL901=0.9.5
+LBL901=0.9.6
 
 //Header
 LBL902=Connect
@@ -160,6 +160,8 @@ LBL1017=Write file in csv format
 LBL999=Date
 LBL1018=Temperature[°C]
 LBL1019=Humidity [%]
+LBL1106=°C
+LBL1107=%
 
 //Logger Type
 LBL1020=Usb Stick

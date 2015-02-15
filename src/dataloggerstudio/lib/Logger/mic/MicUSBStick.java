@@ -35,7 +35,7 @@ import org.lielas.dataloggerstudio.lib.Logger.Units.UnitClass;
 import org.lielas.dataloggerstudio.lib.Logger.Logger;
 import org.lielas.dataloggerstudio.lib.Logger.LoggerType;
 import org.lielas.dataloggerstudio.lib.Logger.StartTrigger;
-import org.lielas.dataloggerstudio.pc.CommunicationInterface.mic.MicSerialInterface;
+import org.lielas.dataloggerstudio.lib.CommunicationInterface.mic.MicSerialInterface;
 
 public class MicUSBStick extends Logger{
 	

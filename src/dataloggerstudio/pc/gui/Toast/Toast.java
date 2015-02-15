@@ -227,6 +227,10 @@ public class Toast extends JDialog{
 				xAlignement + " , " + yAlignement;
 	}
 
+	public void close(){
+		setVisible(false);
+	}
+
 	public void fadeOut() {
 		Toolkit.getDefaultToolkit().removeAWTEventListener(mouseListener);
 		final Timer timer = new Timer(20, null);

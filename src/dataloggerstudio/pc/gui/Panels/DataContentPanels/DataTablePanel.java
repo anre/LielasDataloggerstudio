@@ -30,6 +30,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.lielas.dataloggerstudio.pc.gui.Panels.DataContentPanels;
 
+import org.lielas.dataloggerstudio.lib.Logger.Logger;
+import org.lielas.dataloggerstudio.lib.Logger.UsbCube.Dataset.DatasetItemIds;
+import org.lielas.dataloggerstudio.lib.Logger.UsbCube.Dataset.DatasetSensorItemPT1K;
+import org.lielas.dataloggerstudio.lib.Logger.UsbCube.Dataset.DatasetStructure;
+import org.lielas.dataloggerstudio.lib.Logger.UsbCube.UsbCube;
+import org.lielas.dataloggerstudio.lib.LoggerManager;
 import org.lielas.dataloggerstudio.lib.LoggerRecord;
 import org.lielas.dataloggerstudio.lib.LoggerRecordManager;
 import org.lielas.dataloggerstudio.pc.gui.MainFrame;
@@ -128,7 +134,6 @@ public class DataTablePanel extends DataContentPanel {
     private class LielasTableModel extends AbstractTableModel {
 
         private LoggerRecord lr;
-        private final String[] COLUMN_NAMES = {"Date", "Temperature [°C]", "Humidity [%]"};
 
         public LielasTableModel(LoggerRecord lr){
             this.lr = lr;
@@ -156,7 +161,41 @@ public class DataTablePanel extends DataContentPanel {
         }
 
         public String getColumnName(int column){
-            return COLUMN_NAMES[column];
+            Logger logger = LoggerManager.getInstance().getActiveLogger();
+            LanguageManager lm = LanguageManager.getInstance();
+            String[] columnNames;
+
+            if(logger instanceof UsbCube){
+                UsbCube usbCube = (UsbCube)logger;
+                columnNames = new String[usbCube.getChannels()+1];
+
+                columnNames[0] = lm.getString(999);
+                for(int i = 1; i < usbCube.getChannels()+1; i++){
+                    DatasetStructure ds = usbCube.getDatasetStructure();
+                    switch(ds.getItem(i+1).getItemId()){
+                        case DatasetItemIds.SHT_T:
+                        case DatasetItemIds.PT1K1:
+                        case DatasetItemIds.PT1K2:
+                        case DatasetItemIds.PT1K3:
+                        case DatasetItemIds.PT1K4:
+                            columnNames[i] = lm.getString(1018);
+                            break;
+                        case DatasetItemIds.SHT_H:
+                            columnNames[i] = lm.getString(1019);
+                            break;
+                        default:
+                            columnNames[i] = "";
+                            break;
+                    }
+                }
+            }else {
+                columnNames = new String[3];
+                columnNames[0] = lm.getString(999);
+                columnNames[1] = lm.getString(1018);
+                columnNames[2] = lm.getString(1019);
+            }
+
+            return columnNames[column];
         }
 
     }

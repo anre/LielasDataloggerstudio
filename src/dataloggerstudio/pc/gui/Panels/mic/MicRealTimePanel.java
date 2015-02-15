@@ -36,7 +36,7 @@ import org.lielas.dataloggerstudio.lib.LoggerRecord;
 import org.lielas.dataloggerstudio.lib.LoggerRecordManager;
 import org.lielas.dataloggerstudio.lib.Logger.Logger;
 import org.lielas.dataloggerstudio.lib.Logger.mic.MicUSBStick;
-import org.lielas.dataloggerstudio.pc.CommunicationInterface.mic.MicSerialInterface;
+import org.lielas.dataloggerstudio.lib.CommunicationInterface.mic.MicSerialInterface;
 import org.lielas.dataloggerstudio.pc.gui.BodyButton;
 import org.lielas.dataloggerstudio.pc.gui.MainFrame;
 import org.lielas.dataloggerstudio.pc.gui.MouseOverHintManager;

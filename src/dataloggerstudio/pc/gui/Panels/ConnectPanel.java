@@ -39,8 +39,8 @@ import org.lielas.dataloggerstudio.lib.Logger.LoggerType;
 import org.lielas.dataloggerstudio.lib.Logger.UsbCube.UsbCube;
 import org.lielas.dataloggerstudio.lib.Logger.mic.MicUSBStick;
 import org.lielas.dataloggerstudio.lib.LoggerRecordManager;
-import org.lielas.dataloggerstudio.pc.CommunicationInterface.UsbCube.UsbCubeSerialInterface;
-import org.lielas.dataloggerstudio.pc.CommunicationInterface.mic.MicSerialInterface;
+import org.lielas.dataloggerstudio.lib.CommunicationInterface.UsbCube.UsbCubeSerialInterface;
+import org.lielas.dataloggerstudio.lib.CommunicationInterface.mic.MicSerialInterface;
 import org.lielas.dataloggerstudio.pc.gui.BodyButton;
 import org.lielas.dataloggerstudio.pc.gui.ImageButton;
 import org.lielas.dataloggerstudio.pc.gui.MainFrame;
@@ -74,6 +74,8 @@ public class ConnectPanel extends DataloggerstudioPanel{
 	JComboBox<String> cbComPort;
 	ImageButton bttnReload;
 	BodyButton bttnConnect;
+
+	Toast connectingToast;
 	
 	private MainFrame mainFrame;
 	
@@ -242,6 +244,8 @@ public class ConnectPanel extends DataloggerstudioPanel{
 		
 		ConnectWorker cw = new ConnectWorker(lt);
 		cw.execute();
+
+		connectingToast = new  Toast(mainFrame, "Connecting...");
 	}
 	
 	class ConnectWorker extends SwingWorker<Object, Logger>{
@@ -251,7 +255,7 @@ public class ConnectPanel extends DataloggerstudioPanel{
 		public ConnectWorker(LoggerType loggerType){
 			lt = loggerType;
 		}
-		
+
 		@Override 
 		public Logger doInBackground(){
 			Logger logger = null;
@@ -289,7 +293,6 @@ public class ConnectPanel extends DataloggerstudioPanel{
 			}else if(lt.getType() == LoggerType.USB_CUBE){
 				logger = (Logger)new UsbCube();
 				UsbCube usbCube = (UsbCube)logger;
-				usbCube.setChannels(2);
 				
 				//connect
 				String port = String.valueOf(cbComPort.getSelectedItem());
@@ -317,6 +320,12 @@ public class ConnectPanel extends DataloggerstudioPanel{
 
 				//get version
 				if(!com.getVersion((UsbCube)logger)){
+					com.close();
+					return logger;
+				}
+
+				//get model
+				if(!com.getDatasetStructure((UsbCube)logger)){
 					com.close();
 					return logger;
 				}
@@ -374,7 +383,10 @@ public class ConnectPanel extends DataloggerstudioPanel{
 		
 		@Override
 		public void done(){
-			
+
+			connectingToast.close();
+			connectingToast = null;
+
 			try {
 				Logger logger = (Logger)get();
 				if(logger!= null){

@@ -35,8 +35,10 @@ import org.lielas.dataloggerstudio.lib.Logger.Lielas.LielasId;
 import org.lielas.dataloggerstudio.lib.Logger.Lielas.LielasVersion;
 import org.lielas.dataloggerstudio.lib.Logger.Logger;
 import org.lielas.dataloggerstudio.lib.Logger.LoggerType;
+import org.lielas.dataloggerstudio.lib.Logger.UsbCube.Dataset.DatasetItemIds;
+import org.lielas.dataloggerstudio.lib.Logger.UsbCube.Dataset.DatasetStructure;
 import org.lielas.dataloggerstudio.lib.LoggerRecord;
-import org.lielas.dataloggerstudio.pc.CommunicationInterface.UsbCube.UsbCubeSerialInterface;
+import org.lielas.dataloggerstudio.lib.CommunicationInterface.UsbCube.UsbCubeSerialInterface;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -53,6 +55,7 @@ public class UsbCube extends Logger{
 	ArrayList<LoggerRecord> records;
 	int recordCount;
 	int channels;
+	DatasetStructure datasetStructure;
 
 	public UsbCube(){
 		super();
@@ -100,10 +103,23 @@ public class UsbCube extends Logger{
 
 		//create header line 4
 		sb.append(delimiter);
-		sb.append("°C");
-		sb.append(delimiter);
-		sb.append("%");
-		sb.append(delimiter);
+        for(int i = 0; i < channels; i++){
+            switch(datasetStructure.getItem(i+2).getItemId()){
+                case DatasetItemIds.SHT_T:
+                case DatasetItemIds.PT1K1:
+                case DatasetItemIds.PT1K2:
+                case DatasetItemIds.PT1K3:
+                case DatasetItemIds.PT1K4:
+                    sb.append("°C");
+                    break;
+                case DatasetItemIds.SHT_H:
+                    sb.append("%");
+                    break;
+                default:
+                    break;
+            }
+            sb.append(delimiter);
+        }
 		sb.append("\n");
 
 		return sb;
@@ -214,6 +230,14 @@ public class UsbCube extends Logger{
 
 	public int getChannels(){
 		return channels;
+	}
+
+	public DatasetStructure getDatasetStructure() {
+		return datasetStructure;
+	}
+
+	public void setDatasetStructure(DatasetStructure datasetStructure) {
+		this.datasetStructure = datasetStructure;
 	}
 
 	class TimeTask extends TimerTask{

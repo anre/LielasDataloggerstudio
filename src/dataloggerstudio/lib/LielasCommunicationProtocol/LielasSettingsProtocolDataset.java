@@ -30,6 +30,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.lielas.dataloggerstudio.lib.LielasCommunicationProtocol;
 
+import org.lielas.dataloggerstudio.lib.Logger.UsbCube.Dataset.*;
+
 /**
  * Created by Andi on 14.01.2015.
  */
@@ -41,6 +43,20 @@ public class LielasSettingsProtocolDataset extends LielasSettingsProtocolPayload
     long id;
     long dt;
     long[] channelValue;
+    int[] decimalPoints;
+    DatasetStructure datasetStructure;
+
+    public LielasSettingsProtocolDataset(){
+        datasetStructure = null;
+    }
+
+    public void setDatasetStructure(DatasetStructure ds){
+        this.datasetStructure = ds;
+    }
+
+    public DatasetStructure getDatasetStructure(){
+        return datasetStructure;
+    }
 
     @Override
     public int getLspId() {
@@ -69,31 +85,34 @@ public class LielasSettingsProtocolDataset extends LielasSettingsProtocolPayload
 
     @Override
     public boolean parse(byte[] payload) {
+        int pos = 0;
+        int channel = 0;
 
-        int i = 0;
+        if(datasetStructure == null){
+            return false;
+        }
 
+        for(int i = 0; i < datasetStructure.getCount(); i++){
+            DatasetItem dsItem = datasetStructure.getItem(i);
 
-        id = (payload[i++] & 0xFF) << 24;
-        id += (payload[i++] & 0xFF) << 16;
-        id += (payload[i++] & 0xFF) << 8;
-        id += (payload[i++] & 0xFF);
-
-        dt = (payload[i++] & 0xFF) << 56;
-        dt += (payload[i++] & 0xFF) << 48;
-        dt += (payload[i++] & 0xFF) << 40;
-        dt += (payload[i++] & 0xFF) << 32;
-
-        dt += (payload[i++] & 0xFF) << 24;
-        dt += (payload[i++] & 0xFF) << 16;
-        dt += (payload[i++] & 0xFF) <<  8;
-        dt += (payload[i++] & 0xFF);
-        dt *= 1000;
-
-        for(int j = 0; j < channels; j++){
-            channelValue[j] = (payload[i++] & 0xFF) << 24;
-            channelValue[j] += (payload[i++] & 0xFF) << 16;
-            channelValue[j] += (payload[i++] & 0xFF) <<  8;
-            channelValue[j] += (payload[i++] & 0xFF);
+            if(dsItem instanceof DatasetItemId){
+                DatasetItemId ds = (DatasetItemId)dsItem;
+                ds.parse(payload, pos);
+                pos += ds.getSize();
+                id = ds.getId();
+            }else if(dsItem instanceof DatasetItemDatetime){
+                DatasetItemDatetime ds = (DatasetItemDatetime)dsItem;
+                ds.parse(payload, pos);
+                pos += ds.getSize();
+                dt = ds.getDt();
+            }else if(dsItem instanceof DatasetSensorItem){
+                DatasetSensorItem ds = (DatasetSensorItem)dsItem;
+                ds.parse(payload, pos);
+                pos += ds.getSize();
+                channelValue[channel] = ds.getValue();
+                decimalPoints[channel] = ds.getDecimalPoints();
+                channel += 1;
+            }
         }
 
         hasDataset = true;
@@ -108,6 +127,7 @@ public class LielasSettingsProtocolDataset extends LielasSettingsProtocolPayload
     public void setChannels(int channels){
         this.channels = channels;
         channelValue = new long[channels];
+        decimalPoints = new int[channels];
     }
 
     public long getDatetime(){
@@ -127,5 +147,13 @@ public class LielasSettingsProtocolDataset extends LielasSettingsProtocolPayload
             return 0;
         }
         return channelValue[index];
+    }
+
+    public int getDecimalPoints(int index){
+        if(decimalPoints == null || index > decimalPoints.length){
+            return 0;
+        }
+
+        return decimalPoints[index];
     }
 }

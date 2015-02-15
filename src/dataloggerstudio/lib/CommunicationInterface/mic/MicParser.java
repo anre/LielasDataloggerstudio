@@ -28,7 +28,7 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.lielas.dataloggerstudio.pc.CommunicationInterface.mic;
+package org.lielas.dataloggerstudio.lib.CommunicationInterface.mic;
 
 public class MicParser{
 	

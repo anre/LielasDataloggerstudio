@@ -160,8 +160,6 @@ public class PcSerialInterface extends SerialInterface{
 			try{
 				recv = sp.readBytes(1, 200);
 			} catch (Exception e) {
-				// TODO 
-				e.printStackTrace();
 			}
 		}
 		

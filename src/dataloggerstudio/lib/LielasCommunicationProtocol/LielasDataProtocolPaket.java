@@ -32,16 +32,24 @@ package org.lielas.dataloggerstudio.lib.LielasCommunicationProtocol;
 
 import org.joda.time.DateTime;
 import org.lielas.dataloggerstudio.lib.Dataset;
+import org.lielas.dataloggerstudio.lib.Logger.UsbCube.Dataset.*;
+import org.lielas.dataloggerstudio.lib.Logger.UsbCube.UsbCube;
 
 public class LielasDataProtocolPaket extends LielasApplicationProtocolPaket{
 
 	private int datasetCount;
 	private Dataset ds;
 	private byte[] paket;
+    private DatasetStructure datasetStructure;
 	
 	public LielasDataProtocolPaket() {
 		super(LielasApplicationProtocolPaket.LAP_PROTOCOL_TYPE_LDP);
+        datasetStructure = null;
 	}
+
+    public void setDatasetStructure(DatasetStructure datasetStructure){
+        this.datasetStructure = datasetStructure;
+    }
 
 	@Override
 	public int getLength() {
@@ -56,21 +64,42 @@ public class LielasDataProtocolPaket extends LielasApplicationProtocolPaket{
 	@Override
 	public boolean parse(byte[] bytes) {
 		paket = bytes;
-		int pos = 9;
-		ds = new Dataset(2);
+        int pos = 1;
+        int channel = 0;
 
-		DateTime dt = new DateTime();
-		ds.setDateTime(dt.getMillis());
-		
-		datasetCount = LielasCommunicationProtocolPaket.getUnsignedByte(paket[0]);
-		//for(int i = 0; i < datasetCount; i++){
-			int val = (int)LielasCommunicationProtocolPaket.getUint32(bytes, 9);
-			val -= 27310;
-			ds.setValue(val, 2, 0);
-			val = (int)LielasCommunicationProtocolPaket.getUint32(bytes, 13);
-			ds.setValue(val, 1);
-		//}
-		
+        if(datasetStructure == null){
+            return false;
+        }
+
+        if(bytes == null || bytes.length < 1){
+            return false;
+        }
+
+        datasetCount = bytes[0];
+
+        for(int i = 0; i < datasetCount; i++){
+            ds = new Dataset(datasetStructure.getSensorCount());
+            DateTime dt = new DateTime();
+            ds.setDateTime(dt.getMillis());
+
+
+            for(int j = 0; j < datasetStructure.getCount(); j++){
+                DatasetItem dsItem = datasetStructure.getItem(j);
+
+                if(dsItem instanceof DatasetItemId){
+                    pos += dsItem.getSize();
+                }else if(dsItem instanceof DatasetItemDatetime){
+                    pos += dsItem.getSize();
+                }else if(dsItem instanceof DatasetSensorItem){
+                    DatasetSensorItem dsSensorItem = (DatasetSensorItem)dsItem;
+                    dsSensorItem.parse(bytes, pos);
+                    pos += dsSensorItem.getSize();
+                    ds.setValue((int)dsSensorItem.getValue(), dsSensorItem.getDecimalPoints(), channel);
+                    channel += 1;
+                }
+            }
+
+        }
 		
 		return true;
 	}

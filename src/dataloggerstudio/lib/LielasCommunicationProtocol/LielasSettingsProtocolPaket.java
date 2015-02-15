@@ -142,6 +142,9 @@ public class LielasSettingsProtocolPaket extends LielasApplicationProtocolPaket{
 				case LielasSettingsProtocolIds.DELETE_DATA:
 					payload = (LielasSettingsProtocolPayload) new LielasSettingsProtocolDelete();
 					break;
+				case LielasSettingsProtocolIds.GET_DATASET_STRUCTURE:
+					payload = (LielasSettingsProtocolPayload) new LielasSettingsProtocolDatasetStructure();
+					break;
 				default:
 					return false;
 			}

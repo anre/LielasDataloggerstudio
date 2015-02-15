@@ -47,12 +47,15 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 
 import org.lielas.dataloggerstudio.lib.Dataset;
+import org.lielas.dataloggerstudio.lib.Logger.UsbCube.Dataset.DatasetItemIds;
+import org.lielas.dataloggerstudio.lib.Logger.UsbCube.Dataset.DatasetSensorItem;
+import org.lielas.dataloggerstudio.lib.Logger.UsbCube.Dataset.DatasetStructure;
 import org.lielas.dataloggerstudio.lib.LoggerManager;
 import org.lielas.dataloggerstudio.lib.LoggerRecord;
 import org.lielas.dataloggerstudio.lib.LoggerRecordManager;
 import org.lielas.dataloggerstudio.lib.Logger.Logger;
 import org.lielas.dataloggerstudio.lib.Logger.UsbCube.UsbCube;
-import org.lielas.dataloggerstudio.pc.CommunicationInterface.UsbCube.UsbCubeSerialInterface;
+import org.lielas.dataloggerstudio.lib.CommunicationInterface.UsbCube.UsbCubeSerialInterface;
 import org.lielas.dataloggerstudio.pc.gui.BodyButton;
 import org.lielas.dataloggerstudio.pc.gui.GraphPanel;
 import org.lielas.dataloggerstudio.pc.gui.MainFrame;
@@ -78,20 +81,15 @@ public class UsbCubeRealTimePanel extends RealTimePanel{
 
 	private GraphPanel graphPanel;
 	BodyButton bttnStart;
-	JLabel lblValue1;
-	JLabel lblValue2;
-	JLabel lblValue3;
-	JLabel lblUnit1;
-	JLabel lblUnit2;
-	JLabel lblUnit3;
+	JLabel[] lblValue;
+	JLabel[] lblUnit;
 	private JPanel panel_1;
 	private JPanel panel_2;
 	private Component verticalStrut;
 	private JPanel panel_3;
 	private JPanel panel_4;
-	private JPanel colorPanel1;
 	private JPanel panel_6;
-	private JPanel colorPanel2;
+    private JPanel[] colorPanel;
 
 	LoggerRecord lr = null;
 
@@ -173,26 +171,30 @@ public class UsbCubeRealTimePanel extends RealTimePanel{
 				RowSpec.decode("default:grow"),
 				FormFactory.PREF_ROWSPEC,
 				RowSpec.decode("default:grow"),}));
-		
-		colorPanel1 = new JPanel();
-		colorPanel1.setVisible(false);
-		FlowLayout fl_colorPanel1 = (FlowLayout) colorPanel1.getLayout();
+
+        colorPanel = new JPanel[3];
+
+		colorPanel[0] = new JPanel();
+		colorPanel[0].setVisible(false);
+		FlowLayout fl_colorPanel1 = (FlowLayout) colorPanel[0].getLayout();
 		fl_colorPanel1.setAlignment(FlowLayout.LEFT);
-		colorPanel1.setPreferredSize(new Dimension(30, 10));
-		colorPanel1.setBackground(Color.GREEN);
-		panel_4.add(colorPanel1, "2, 2, center, center");
+		colorPanel[0].setPreferredSize(new Dimension(30, 10));
+		colorPanel[0].setBackground(Color.GREEN);
+		panel_4.add(colorPanel[0], "2, 2, center, center");
+
+        lblValue = new JLabel[3];
+        lblUnit = new JLabel[3];
+
+		lblValue[0] = new JLabel("22,3");
+		lblValue[0].setFont(new Font("Tahoma", Font.PLAIN, 44));
+		valuePanel.add(lblValue[0], "4, 2, left, bottom");
+		lblValue[0].setVisible(false);
 		
-		lblValue1 = new JLabel("22,3");
-		lblValue1.setFont(new Font("Tahoma", Font.PLAIN, 44));
-		valuePanel.add(lblValue1, "4, 2, left, bottom");
-		
-		lblValue1.setVisible(false);
-		
-		lblUnit1 = new JLabel("°C");
-		lblUnit1.setAlignmentY(Component.BOTTOM_ALIGNMENT);
-		lblUnit1.setFont(new Font("Tahoma", Font.PLAIN, 30));
-		valuePanel.add(lblUnit1, "6, 2, left, bottom");
-		lblUnit1.setVisible(false);
+		lblUnit[0] = new JLabel("°C");
+		lblUnit[0].setAlignmentY(Component.BOTTOM_ALIGNMENT);
+		lblUnit[0].setFont(new Font("Tahoma", Font.PLAIN, 30));
+		valuePanel.add(lblUnit[0], "6, 2, left, bottom");
+		lblUnit[0].setVisible(false);
 		
 		panel_6 = new JPanel();
 		panel_6.setOpaque(false);
@@ -207,37 +209,36 @@ public class UsbCubeRealTimePanel extends RealTimePanel{
 				FormFactory.PREF_ROWSPEC,
 				RowSpec.decode("default:grow"),}));
 		
-		colorPanel2 = new JPanel();
-		colorPanel2.setVisible(false);
-		colorPanel2.setPreferredSize(new Dimension(30, 10));
-		colorPanel2.setBackground(Color.BLUE);
+		colorPanel[1] = new JPanel();
+		colorPanel[1].setVisible(false);
+		colorPanel[1].setPreferredSize(new Dimension(30, 10));
+		colorPanel[1].setBackground(Color.BLUE);
 		
-		panel_6.add(colorPanel2, "2, 2, fill, fill");
+		panel_6.add(colorPanel[1], "2, 2, fill, fill");
 		
-		lblValue2 = new JLabel("48,7");
-		lblValue2.setFont(new Font("Tahoma", Font.PLAIN, 44));
-		valuePanel.add(lblValue2, "4, 4, left, default");
-		lblValue2.setVisible(false);
+		lblValue[1] = new JLabel("48,7");
+		lblValue[1].setFont(new Font("Tahoma", Font.PLAIN, 44));
+		valuePanel.add(lblValue[1], "4, 4, left, default");
+		lblValue[1].setVisible(false);
 		
-		lblUnit2 = new JLabel("%");
-		lblUnit2.setHorizontalAlignment(SwingConstants.LEFT);
-		lblUnit2.setAlignmentY(Component.BOTTOM_ALIGNMENT);
-		lblUnit2.setVerticalTextPosition(SwingConstants.BOTTOM);
-		lblUnit2.setVerticalAlignment(SwingConstants.BOTTOM);
-		lblUnit2.setFont(new Font("Tahoma", Font.PLAIN, 30));
-		valuePanel.add(lblUnit2, "6, 4, left, bottom");
-		lblUnit2.setVisible(false);
+		lblUnit[1] = new JLabel("%");
+		lblUnit[1].setHorizontalAlignment(SwingConstants.LEFT);
+		lblUnit[1].setAlignmentY(Component.BOTTOM_ALIGNMENT);
+		lblUnit[1].setVerticalTextPosition(SwingConstants.BOTTOM);
+		lblUnit[1].setVerticalAlignment(SwingConstants.BOTTOM);
+		lblUnit[1].setFont(new Font("Tahoma", Font.PLAIN, 30));
+		valuePanel.add(lblUnit[1], "6, 4, left, bottom");
+		lblUnit[1].setVisible(false);
 		
-		lblValue3 = new JLabel("6,3");
-		lblValue3.setFont(new Font("Tahoma", Font.PLAIN, 44));
-		valuePanel.add(lblValue3, "4, 6, left, default");
-		lblValue3.setVisible(false);
+		lblValue[2] = new JLabel("6,3");
+		lblValue[2].setFont(new Font("Tahoma", Font.PLAIN, 44));
+		valuePanel.add(lblValue[2], "4, 6, left, default");
+		lblValue[2].setVisible(false);
 		
-		lblUnit3 = new JLabel("V");
-		lblUnit3.setAlignmentY(Component.BOTTOM_ALIGNMENT);
-		lblUnit3.setFont(new Font("Tahoma", Font.PLAIN, 30));
-		valuePanel.add(lblUnit3, "6, 6, left, bottom");
-		lblUnit3.setVisible(false);
+		lblUnit[2] = new JLabel("V");
+		lblUnit[2].setAlignmentY(Component.BOTTOM_ALIGNMENT);
+		lblUnit[2].setFont(new Font("Tahoma", Font.PLAIN, 30));
+		lblUnit[2].setVisible(false);
 		
 		JPanel panel = new JPanel();
 		panel.setOpaque(false);
@@ -264,6 +265,7 @@ public class UsbCubeRealTimePanel extends RealTimePanel{
 	@Override
 	public void updateUIContent() {
 		LanguageManager lm = LanguageManager.getInstance();
+        UsbCube logger = (UsbCube)LoggerManager.getInstance().getActiveLogger();
 
 		if(lr != null){
 			graphPanel.setLoggerRecord(lr);
@@ -274,7 +276,28 @@ public class UsbCubeRealTimePanel extends RealTimePanel{
 		}else{
 			bttnStart.setText(lm.getString(987));
 		}
-		
+
+        DatasetStructure datasetStructure = logger.getDatasetStructure();
+
+        for(int i = 0; i < datasetStructure.getSensorCount(); i++){
+            DatasetSensorItem dsi = datasetStructure.getSensorItem(i);
+
+            switch (dsi.getItemId()) {
+                case DatasetItemIds.SHT_T:
+                case DatasetItemIds.PT1K1:
+                case DatasetItemIds.PT1K2:
+                case DatasetItemIds.PT1K3:
+                case DatasetItemIds.PT1K4:
+                    lblUnit[i].setText(lm.getString(1106));
+                    break;
+                case DatasetItemIds.SHT_H:
+                    lblUnit[i].setText(lm.getString(1107));
+                    break;
+                default:
+                    lblUnit[i].setText("");
+                    break;
+            }
+        }
 	}
 	
 
@@ -344,7 +367,7 @@ public class UsbCubeRealTimePanel extends RealTimePanel{
 				}
 
 				while(!isCancelled()){
-					if(com.getRealTimeData(lr)){
+					if(com.getRealTimeData(lr, logger)){
 						publish(lr.get(lr.getCount() - 1));
 					}
 					try {
@@ -369,19 +392,15 @@ public class UsbCubeRealTimePanel extends RealTimePanel{
 
 			if(list.size() > 0){
 				Dataset ds = list.get(list.size() - 1);
-				String value = ds.getString(1);
-				lblValue1.setText(value);
-				lblValue1.setVisible(true);
-				lblUnit1.setVisible(true);
-				colorPanel1.setVisible(true);
-				
-				if(ds.getChannels() > 1){
-					value = ds.getString(2);
-					lblValue2.setText(value);
-					lblValue2.setVisible(true);
-					lblUnit2.setVisible(true);
-					colorPanel2.setVisible(true);
-				}
+
+                for(int i = 0; i < ds.getChannels(); i++){
+
+                    String value = ds.getString(i+1);
+                    lblValue[i].setText(value);
+                    lblValue[i].setVisible(true);
+                    lblUnit[i].setVisible(true);
+                    colorPanel[i].setVisible(true);
+                }
 				
 			}
 		}

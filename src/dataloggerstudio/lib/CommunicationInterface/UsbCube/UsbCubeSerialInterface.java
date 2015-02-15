@@ -28,7 +28,7 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.lielas.dataloggerstudio.pc.CommunicationInterface.UsbCube;
+package org.lielas.dataloggerstudio.lib.CommunicationInterface.UsbCube;
 
 import jssc.SerialPortException;
 
@@ -36,6 +36,8 @@ import org.lielas.dataloggerstudio.lib.Dataset;
 import org.lielas.dataloggerstudio.lib.LielasCommunicationProtocol.*;
 import org.lielas.dataloggerstudio.lib.Logger.Lielas.LielasId;
 import org.lielas.dataloggerstudio.lib.Logger.Lielas.LielasVersion;
+import org.lielas.dataloggerstudio.lib.Logger.UsbCube.Dataset.DatasetSensorItem;
+import org.lielas.dataloggerstudio.lib.Logger.UsbCube.Dataset.DatasetStructure;
 import org.lielas.dataloggerstudio.lib.Logger.UsbCube.UsbCube;
 import org.lielas.dataloggerstudio.lib.LoggerRecord;
 import org.lielas.dataloggerstudio.lib.LoggerRecordManager;
@@ -161,7 +163,7 @@ public class UsbCubeSerialInterface extends PcSerialInterface{
 		return true;
 	}
 	
-	public boolean getRealTimeData(LoggerRecord lr){
+	public boolean getRealTimeData(LoggerRecord lr, UsbCube logger){
 		LielasCommunicationProtocolPaket lcpp;
 		LielasDataProtocolPaket ldpp = null;
 		boolean success = false;
@@ -176,7 +178,7 @@ public class UsbCubeSerialInterface extends PcSerialInterface{
 			return false;
 		}
 		
-		lcpp = getPaket();
+		lcpp = getPaket(logger.getDatasetStructure());
 		
 		if(lcpp != null){
 			try{
@@ -227,6 +229,26 @@ public class UsbCubeSerialInterface extends PcSerialInterface{
 		
 		return lcpp;
 	}
+
+    private LielasCommunicationProtocolPaket getPaket(DatasetStructure ds){
+        byte[] paket;
+
+        LielasCommunicationProtocolPaket lcpp = new LielasCommunicationProtocolPaket();
+        lcpp.setDatasetStructure(ds);
+
+        paket = getPaketData();
+        if(paket == null){
+            flush();
+            return null;
+        }
+
+        if(!lcpp.parse(paket)){
+            flush();
+            return null;
+        }
+
+        return lcpp;
+    }
 	
 	private byte[] getPaketData(){
 		byte[]recv = new byte[200];
@@ -1116,7 +1138,7 @@ public class UsbCubeSerialInterface extends PcSerialInterface{
 				lr.setSampleRate((int) lsppLogfileProperties.getSamplerate());
 				lr.setStartIndex(lsppLogfileProperties.getStartIndex());
 				lr.setEndIndex(lsppLogfileProperties.getEndIndex());
-				lr.setChannels(2);
+				lr.setChannels(logger.getChannels());
 				logger.addRecordset(lsppLogfileProperties.getIndex(), lr);
 				LoggerRecordManager.getInstance().add(lr);
 
@@ -1139,6 +1161,7 @@ public class UsbCubeSerialInterface extends PcSerialInterface{
 		//create application protocol paket
 		LielasSettingsProtocolPaket lspp = new LielasSettingsProtocolPaket();
 		LielasSettingsProtocolDataset lsppDs = new LielasSettingsProtocolDataset();
+		lsppDs.setDatasetStructure(logger.getDatasetStructure());
 		lsppDs.setId(id);
 		lsppDs.setChannels(logger.getChannels());
 		lspp.setPayload(lsppDs);
@@ -1193,10 +1216,11 @@ public class UsbCubeSerialInterface extends PcSerialInterface{
 				return false;
 			}
 
-			Dataset ds = new Dataset(2);
+			Dataset ds = new Dataset(logger.getChannels());
 			ds.setDateTime(lsppDs.getDatetime());
-			ds.setValue((int) lsppDs.getChannelValue(0)-27310, 2, 0);
-			ds.setValue((int)lsppDs.getChannelValue(1), 1);
+			for(int i = 0; i < logger.getChannels(); i++){
+				ds.setValue((int)lsppDs.getChannelValue(i), lsppDs.getDecimalPoints(i),  i);
+			}
 			lr.add(ds);
 
 		}catch(Exception e){
@@ -1264,4 +1288,63 @@ public class UsbCubeSerialInterface extends PcSerialInterface{
 		setError(LanguageManager.getInstance().getString(1067));
 		return false;
 	}
+
+	public boolean getDatasetStructure(UsbCube logger){
+
+		if(!isOpen){
+			setError(LanguageManager.getInstance().getString(1053));
+			return false;
+		}
+
+		if(!wakeup()){
+			setError(LanguageManager.getInstance().getString(1054));
+			return false;
+		}
+
+		//create application protocol paket
+		LielasSettingsProtocolPaket lspp = new LielasSettingsProtocolPaket();
+		LielasSettingsProtocolDatasetStructure lsppDsStructure = new LielasSettingsProtocolDatasetStructure();
+		lspp.setPayload(lsppDsStructure);
+
+		//create lcp protocol paket
+		LielasCommunicationProtocolPaket lcpp = new LielasCommunicationProtocolPaket();
+		lcpp.setLielasApplicationProtocol(lspp);
+		lcpp.pack();
+		//get paket
+		byte[] paket = lcpp.getBytes();
+
+		try{
+			sp.writeBytes(paket);
+		} catch (SerialPortException e) {
+			setError(LanguageManager.getInstance().getString(1055));
+			isBusy = false;
+			return false;
+		}
+
+		//receive answer
+		lcpp = getPaket();
+		if(lcpp == null) {
+			setError(LanguageManager.getInstance().getString(1064));
+			return false;
+		}
+		if(!(lcpp.header.getProtocol() == LielasApplicationProtocolPaket.LAP_PROTOCOL_TYPE_LSP)){
+			setError(LanguageManager.getInstance().getString(1056));
+			isBusy = false;
+			return false;
+		}
+		lspp = (LielasSettingsProtocolPaket) lcpp.payload;
+		try{
+			lsppDsStructure = (LielasSettingsProtocolDatasetStructure)lspp.getPayload();
+			if(lsppDsStructure != null){
+				logger.setDatasetStructure(lsppDsStructure.getDatasetStructure());
+				logger.setChannels(lsppDsStructure.getDatasetStructure().getChannelCount());
+			}
+		}catch(Exception e){
+			setError(LanguageManager.getInstance().getString(1064));
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+
 }

@@ -30,6 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.lielas.dataloggerstudio.lib.LielasCommunicationProtocol;
 
+import org.lielas.dataloggerstudio.lib.Logger.UsbCube.Dataset.DatasetStructure;
 import org.lielas.dataloggerstudio.lib.crc.Crc16;
 
 public class LielasCommunicationProtocolPaket{
@@ -44,11 +45,14 @@ public class LielasCommunicationProtocolPaket{
 	private static int LENGTH_POS = 1;
 	private static int ID_POS = 2;
 	private static int PROT_POS = 4;
-	
+
+    private DatasetStructure datasetStructure;
+
 	public LielasCommunicationProtocolPaket(){
 		header = new LielasCommunicationProtocolHeader();
 		payload = null;
 		crc = 0;
+        datasetStructure = null;
 	}
 	
 	public boolean parse(byte[] paket){
@@ -88,6 +92,11 @@ public class LielasCommunicationProtocolPaket{
 				break;
 			case LielasApplicationProtocolPaket.LAP_PROTOCOL_TYPE_LDP:
 				payload  = (LielasApplicationProtocolPaket) new LielasDataProtocolPaket();
+
+                if(datasetStructure != null){
+                    ((LielasDataProtocolPaket)payload).setDatasetStructure(datasetStructure);
+                }
+
 				if(!payload.parse(payloadBytes)){
 					return false;
 				}
@@ -137,6 +146,9 @@ public class LielasCommunicationProtocolPaket{
 				break;
 			case LielasApplicationProtocolPaket.LAP_PROTOCOL_TYPE_LDP:
 				payload  = (LielasApplicationProtocolPaket) new LielasDataProtocolPaket();
+                if(datasetStructure != null){
+
+                }
 				if(!payload.parse(payloadBytes)){
 					return false;
 				}
@@ -225,7 +237,11 @@ public class LielasCommunicationProtocolPaket{
 		l += (bytes[pos++] & 0xFF);
 		return l;
 	}
-	
+
+    public void setDatasetStructure(DatasetStructure ds){
+        datasetStructure = ds;
+    }
+
 	public class LcpErrorCode{
 		private static final int UNKNOWN_PROTOCOL = 21;
 		private static final int CRC_ERROR = 22;

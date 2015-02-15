@@ -37,7 +37,7 @@ import org.lielas.dataloggerstudio.lib.FileCreator.CsvFileCreator;
 import org.lielas.dataloggerstudio.lib.FileCreator.FileCreator;
 import org.lielas.dataloggerstudio.lib.FileCreator.FileSaver;
 import org.lielas.dataloggerstudio.lib.Logger.mic.MicUSBStick;
-import org.lielas.dataloggerstudio.pc.CommunicationInterface.mic.MicSerialInterface;
+import org.lielas.dataloggerstudio.lib.CommunicationInterface.mic.MicSerialInterface;
 import org.lielas.dataloggerstudio.pc.gui.BodyButton;
 import org.lielas.dataloggerstudio.pc.gui.ImageButton;
 import org.lielas.dataloggerstudio.pc.gui.MainFrame;
