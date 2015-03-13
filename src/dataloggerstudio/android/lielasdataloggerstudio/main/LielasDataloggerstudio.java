@@ -1,0 +1,29 @@
+package org.lielas.lielasdataloggerstudio.main;
+
+import android.app.Application;
+
+import org.acra.*;
+import org.acra.annotation.*;
+import org.lielas.lielasdataloggerstudio.R;
+
+@ReportsCrashes(
+        formKey = "",
+        formUri = "https://anre.cloudant.com/acra-myapp/_design/acra-storage/_update/report",
+        reportType = org.acra.sender.HttpSender.Type.JSON,
+        httpMethod = org.acra.sender.HttpSender.Method.PUT,
+        formUriBasicAuthLogin="ntiontefeentaidessonatio",
+        formUriBasicAuthPassword="CxqXGN2txNUA6fjdsALGQbdc",
+        mode = ReportingInteractionMode.DIALOG,
+        forceCloseDialogAfterToast = false,
+        resDialogText = R.string.errorTxt,
+        resDialogCommentPrompt = R.string.errorTxtComment,
+        resDialogTitle = R.string.errorTitle)
+public class LielasDataloggerstudio extends Application{
+
+    @Override
+    public void onCreate(){
+        super.onCreate();
+        ACRA.init(this);
+    }
+}
+

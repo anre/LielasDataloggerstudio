@@ -39,6 +39,7 @@ import org.lielas.dataloggerstudio.lib.FileCreator.FileCreator;
 import org.lielas.dataloggerstudio.lib.FileCreator.FileSaver;
 import org.lielas.dataloggerstudio.lib.LoggerRecord;
 import org.lielas.dataloggerstudio.lib.LoggerRecordManager;
+import org.lielas.dataloggerstudio.pc.FileSaver.PcFileSaver;
 import org.lielas.dataloggerstudio.pc.gui.BodyButton;
 import org.lielas.dataloggerstudio.pc.gui.ImageButton;
 import org.lielas.dataloggerstudio.pc.gui.MainFrame;
@@ -219,7 +220,7 @@ public class ExportMenuPanel extends MenuPanel {
             CsvExportPanel exPanel = (CsvExportPanel) exportPanel;
             CsvFileCreator fileCreator = new CsvFileCreator();
 
-            fileCreator.setFileSaverType(FileSaver.PC_FILE_SAVER);
+            fileCreator.setFileSaverType(new PcFileSaver());
             fileCreator.setDelimiter(exPanel.getDelimiter());
             fileCreator.setComma(exPanel.getComma());
             fileName = txtFilename.getText();

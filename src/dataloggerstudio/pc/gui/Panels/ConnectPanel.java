@@ -39,8 +39,8 @@ import org.lielas.dataloggerstudio.lib.Logger.LoggerType;
 import org.lielas.dataloggerstudio.lib.Logger.UsbCube.UsbCube;
 import org.lielas.dataloggerstudio.lib.Logger.mic.MicUSBStick;
 import org.lielas.dataloggerstudio.lib.LoggerRecordManager;
-import org.lielas.dataloggerstudio.lib.CommunicationInterface.UsbCube.UsbCubeSerialInterface;
-import org.lielas.dataloggerstudio.lib.CommunicationInterface.mic.MicSerialInterface;
+import org.lielas.dataloggerstudio.pc.CommunicationInterface.UsbCube.UsbCubeSerialInterface;
+import org.lielas.dataloggerstudio.pc.CommunicationInterface.mic.MicSerialInterface;
 import org.lielas.dataloggerstudio.pc.gui.BodyButton;
 import org.lielas.dataloggerstudio.pc.gui.ImageButton;
 import org.lielas.dataloggerstudio.pc.gui.MainFrame;
@@ -49,8 +49,6 @@ import org.lielas.dataloggerstudio.pc.gui.Toast.Toast;
 import org.lielas.dataloggerstudio.pc.language.LanguageManager;
 
 import java.awt.Font;
-
-import javax.swing.border.MatteBorder;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -229,8 +227,8 @@ public class ConnectPanel extends DataloggerstudioPanel{
 		LoggerRecordManager.getInstance().removeAll();
 		
 		//get selected type
-		String type = String.valueOf(cbType.getSelectedItem());
-		if(type == null){
+		int type = cbType.getSelectedIndex() + 1;
+		if(type == 0){
 			//TODO
 			return;
 		}
@@ -292,6 +290,7 @@ public class ConnectPanel extends DataloggerstudioPanel{
 				lm.setLastLoggerActive();
 			}else if(lt.getType() == LoggerType.USB_CUBE){
 				logger = (Logger)new UsbCube();
+                logger.setCommunicationInterface(new UsbCubeSerialInterface());
 				UsbCube usbCube = (UsbCube)logger;
 				
 				//connect

@@ -46,7 +46,7 @@ public abstract class Logger{
 	
 	
 	public Logger(){
-		loggerType =new LoggerType("");
+		loggerType =new LoggerType(0);
 		com = null;
 		lastValue = null;
 		unitClass = null;

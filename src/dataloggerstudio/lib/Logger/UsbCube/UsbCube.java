@@ -30,6 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.lielas.dataloggerstudio.lib.Logger.UsbCube;
 
+import org.lielas.dataloggerstudio.lib.CommunicationInterface.SerialInterface;
 import org.lielas.dataloggerstudio.lib.LielasCommunicationProtocol.LielasSettingsProtocolName;
 import org.lielas.dataloggerstudio.lib.Logger.Lielas.LielasId;
 import org.lielas.dataloggerstudio.lib.Logger.Lielas.LielasVersion;
@@ -38,7 +39,6 @@ import org.lielas.dataloggerstudio.lib.Logger.LoggerType;
 import org.lielas.dataloggerstudio.lib.Logger.UsbCube.Dataset.DatasetItemIds;
 import org.lielas.dataloggerstudio.lib.Logger.UsbCube.Dataset.DatasetStructure;
 import org.lielas.dataloggerstudio.lib.LoggerRecord;
-import org.lielas.dataloggerstudio.lib.CommunicationInterface.UsbCube.UsbCubeSerialInterface;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -61,7 +61,7 @@ public class UsbCube extends Logger{
 		super();
 		
 		loggerType.setType(LoggerType.USB_CUBE);
-		com = (UsbCubeSerialInterface)new UsbCubeSerialInterface();
+		com = new SerialInterface();
 		version = new LielasVersion();
 		id = new LielasId();
 		logging = false;
@@ -218,6 +218,18 @@ public class UsbCube extends Logger{
 		}
 		return null;
 	}
+
+    public LoggerRecord[] getRecordsetArray(){
+        if(records == null || records.size() == 0){
+            return null;
+        }
+        LoggerRecord[] recs = new LoggerRecord[records.size()];
+
+        for(int i = 0; i < records.size(); i++){
+            recs[i] = records.get(i);
+        }
+        return recs;
+    }
 
 	public void removeAllRecordsets(){
 		records = new ArrayList<LoggerRecord>();

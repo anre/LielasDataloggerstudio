@@ -270,7 +270,7 @@ public class MainFrame extends JFrame{
 		panel_5.setPreferredSize(new Dimension(40, 25));
 		panel.add(panel_5, BorderLayout.EAST);
 		
-		ImagePanel lielasLogo = new ImagePanel(("lielas_logo.png"));
+		ImagePanel lielasLogo = new ImagePanel(("lielas_logo_small.png"));
 		headerPanel.add(lielasLogo, BorderLayout.EAST);
 		lielasLogo.setOpaque(false);
 		lielasLogo.setVerticalOrientation(ImagePanel.ORIENTATION_LEFT);

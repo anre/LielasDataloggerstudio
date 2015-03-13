@@ -30,8 +30,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.lielas.dataloggerstudio.lib.Logger;
 
-import org.lielas.dataloggerstudio.pc.language.LanguageManager;
-
 public class StartTrigger{
 	
 	public static final int START_IMMEDIATELY  = 1026;
@@ -44,7 +42,6 @@ public class StartTrigger{
 	}
 	
 	public StartTrigger(int trigger){
-		LanguageManager lm = LanguageManager.getInstance();
 		
 		if(trigger == START_AFTER_BUTTON_PRESS){
 			startTrigger = START_AFTER_BUTTON_PRESS;

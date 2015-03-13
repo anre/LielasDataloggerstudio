@@ -30,12 +30,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.lielas.dataloggerstudio.lib.Logger.mic;
 
-import org.lielas.dataloggerstudio.lib.CommunicationInterface.CommunicationInterface;
+import org.lielas.dataloggerstudio.lib.CommunicationInterface.SerialInterface;
 import org.lielas.dataloggerstudio.lib.Logger.Units.UnitClass;
 import org.lielas.dataloggerstudio.lib.Logger.Logger;
 import org.lielas.dataloggerstudio.lib.Logger.LoggerType;
 import org.lielas.dataloggerstudio.lib.Logger.StartTrigger;
-import org.lielas.dataloggerstudio.lib.CommunicationInterface.mic.MicSerialInterface;
 
 public class MicUSBStick extends Logger{
 	
@@ -52,7 +51,7 @@ public class MicUSBStick extends Logger{
 	public MicUSBStick(){
 		super();
 		loggerType.setType(LoggerType.USB_STICK);
-		com = (CommunicationInterface) new MicSerialInterface();
+		com = new SerialInterface();
 		unitClass = new UnitClass();
 		startTrigger = new StartTrigger();
 		maxSamples = 1000;

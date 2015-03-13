@@ -32,7 +32,6 @@ package org.lielas.dataloggerstudio.lib.FileCreator;
 
 import org.lielas.dataloggerstudio.lib.LoggerRecord;
 import org.lielas.dataloggerstudio.lib.FileCreator.FileSaver;
-import org.lielas.dataloggerstudio.pc.FileSaver.PcFileSaver;
 
 public abstract class FileCreator{
 	
@@ -67,10 +66,8 @@ public abstract class FileCreator{
 		this.comma = comma;
 	} 
 	
-	public void setFileSaverType(int type){
-		if(type == FileSaver.PC_FILE_SAVER){
-			fileSaver = (FileSaver)new PcFileSaver();
-		}
+	public void setFileSaverType(FileSaver fs){
+        fileSaver = fs;
 	}
 	
 	public void setPath(String path){

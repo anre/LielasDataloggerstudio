@@ -31,7 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.lielas.dataloggerstudio.lib.CommunicationInterface;
 
 
-public abstract class SerialInterface extends CommunicationInterface{
+public class SerialInterface extends CommunicationInterface{
 	/**
 	 * 
 	 */
@@ -56,8 +56,18 @@ public abstract class SerialInterface extends CommunicationInterface{
 		stopbits = 1;
 		parity = 0;
 	}
-	
-	public void setBaudrate(int baudrate){
+
+    @Override
+    public boolean open(String port) {
+        return false;
+    }
+
+    @Override
+    public void close() {
+
+    }
+
+    public void setBaudrate(int baudrate){
 		this.baudrate = baudrate;
 	}
 	
