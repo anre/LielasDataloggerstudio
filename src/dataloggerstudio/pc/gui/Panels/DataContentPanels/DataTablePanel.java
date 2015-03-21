@@ -183,6 +183,9 @@ public class DataTablePanel extends DataContentPanel {
                         case DatasetItemIds.SHT_H:
                             columnNames[i] = lm.getString(1019);
                             break;
+                        case DatasetItemIds.MS5607:
+                            columnNames[i] = lm.getString(1108);
+                            break;
                         default:
                             columnNames[i] = "";
                             break;

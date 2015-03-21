@@ -107,6 +107,11 @@ public class DatasetStructure {
                     channels += 1;
                     sensors += 1;
                     break;
+                case DatasetItemIds.MS5607:
+                    items.add(new DatasetSensorItemMS5607(itemId));
+                    channels += 1;
+                    sensors += 1;
+                    break;
             }
         }
         return true;

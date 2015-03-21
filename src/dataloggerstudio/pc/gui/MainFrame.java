@@ -232,7 +232,8 @@ public class MainFrame extends JFrame{
 		aboutBttn = new HeaderButton("About");
 		aboutBttn.setPreferredSize(new Dimension(70, 25));
 		aboutBttn.setBorder(null);
-		panel_1.add(aboutBttn);
+		//panel_1.add(aboutBttn);
+
 		
 		dataBttn.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){

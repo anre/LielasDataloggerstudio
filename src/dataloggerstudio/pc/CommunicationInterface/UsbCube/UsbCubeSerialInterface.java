@@ -74,41 +74,11 @@ public class UsbCubeSerialInterface extends PcSerialInterface{
 		return realtimeLogging;
 	}
 
-	public boolean wakeup(){
-		byte[] sync = new byte[2];
-		int i;
-
-		sync[0] = (byte)0x0A;
-		sync[1] = (byte)0xA0;
-
-		if(!isOpen()){
-			return false;
-		}
-
-		for(i = 0; i < 5; i++) {
-			try {
-				sp.writeBytes(sync);
-			}catch(SerialPortException e){
-				return false;
-			}
-		}
-		try {
-			Thread.sleep(6);
-		}catch(InterruptedException e){
-		}
-		return true;
-	}
-
 	private boolean setRealTimeLoging(boolean status){	
 		
 		if(!isOpen){
 			setError(LanguageManager.getInstance().getString(1053));
 	    	return false;
-		}
-
-		if(!wakeup()){
-			setError(LanguageManager.getInstance().getString(1054));
-			return false;
 		}
 	
 		//create application protocol paket
@@ -170,11 +140,6 @@ public class UsbCubeSerialInterface extends PcSerialInterface{
 
 		if(!realtimeLogging){
 			setError(LanguageManager.getInstance().getString(1053));
-			return false;
-		}
-
-		if(!wakeup()){
-			setError(LanguageManager.getInstance().getString(1054));
 			return false;
 		}
 		
@@ -351,11 +316,6 @@ public class UsbCubeSerialInterface extends PcSerialInterface{
 			return false;
 		}
 
-		if(!wakeup()){
-			setError(LanguageManager.getInstance().getString(1054));
-			return false;
-		}
-
 		//create application protocol paket
 		LielasSettingsProtocolPaket lspp = new LielasSettingsProtocolPaket();
 		LielasSettingsProtocolVersion version = new LielasSettingsProtocolVersion();
@@ -412,11 +372,6 @@ public class UsbCubeSerialInterface extends PcSerialInterface{
 
 		if(!isOpen){
 			setError(LanguageManager.getInstance().getString(1053));
-			return false;
-		}
-
-		if(!wakeup()){
-			setError(LanguageManager.getInstance().getString(1054));
 			return false;
 		}
 
@@ -479,11 +434,6 @@ public class UsbCubeSerialInterface extends PcSerialInterface{
 			return false;
 		}
 
-		if(!wakeup()){
-			setError(LanguageManager.getInstance().getString(1054));
-			return false;
-		}
-
 		//create application protocol paket
 		LielasSettingsProtocolPaket lspp = new LielasSettingsProtocolPaket();
 		LielasSettingsProtocolName lsppName = new LielasSettingsProtocolName();
@@ -538,11 +488,6 @@ public class UsbCubeSerialInterface extends PcSerialInterface{
 
 		if(!isOpen){
 			setError(LanguageManager.getInstance().getString(1053));
-			return false;
-		}
-
-		if(!wakeup()){
-			setError(LanguageManager.getInstance().getString(1054));
 			return false;
 		}
 
@@ -607,11 +552,6 @@ public class UsbCubeSerialInterface extends PcSerialInterface{
 			return false;
 		}
 
-		if(!wakeup()){
-			setError(LanguageManager.getInstance().getString(1054));
-			return false;
-		}
-
 		//create application protocol paket
 		LielasSettingsProtocolPaket lspp = new LielasSettingsProtocolPaket();
 		LielasSettingsProtocolSamplerate lsppSamplerate = new LielasSettingsProtocolSamplerate();
@@ -664,11 +604,6 @@ public class UsbCubeSerialInterface extends PcSerialInterface{
 
 		if(!isOpen){
 			setError(LanguageManager.getInstance().getString(1053));
-			return false;
-		}
-
-		if(!wakeup()){
-			setError(LanguageManager.getInstance().getString(1054));
 			return false;
 		}
 
@@ -732,11 +667,6 @@ public class UsbCubeSerialInterface extends PcSerialInterface{
 			return false;
 		}
 
-		if(!wakeup()){
-			setError(LanguageManager.getInstance().getString(1054));
-			return false;
-		}
-
 		//create application protocol paket
 		LielasSettingsProtocolPaket lspp = new LielasSettingsProtocolPaket();
 		LielasSettingsProtocolLoggerStatus lsppLoggerStatus = new LielasSettingsProtocolLoggerStatus();
@@ -789,11 +719,6 @@ public class UsbCubeSerialInterface extends PcSerialInterface{
 
 		if(!isOpen){
 			setError(LanguageManager.getInstance().getString(1053));
-			return false;
-		}
-
-		if(!wakeup()){
-			setError(LanguageManager.getInstance().getString(1054));
 			return false;
 		}
 
@@ -857,11 +782,6 @@ public class UsbCubeSerialInterface extends PcSerialInterface{
 			return false;
 		}
 
-		if(!wakeup()){
-			setError(LanguageManager.getInstance().getString(1054));
-			return false;
-		}
-
 		//create application protocol paket
 		LielasSettingsProtocolPaket lspp = new LielasSettingsProtocolPaket();
 		LielasSettingsProtocolLogfilename lsppFilename = new LielasSettingsProtocolLogfilename();
@@ -914,11 +834,6 @@ public class UsbCubeSerialInterface extends PcSerialInterface{
 
 		if(!isOpen){
 			setError(LanguageManager.getInstance().getString(1053));
-			return false;
-		}
-
-		if(!wakeup()){
-			setError(LanguageManager.getInstance().getString(1054));
 			return false;
 		}
 
@@ -988,11 +903,6 @@ public class UsbCubeSerialInterface extends PcSerialInterface{
 
         logger.setDatetime(logger.getDatetime() + syncSecond() + 1000);
 
-		if(!wakeup()){
-			setError(LanguageManager.getInstance().getString(1054));
-			return false;
-		}
-
 		//create application protocol paket
 		LielasSettingsProtocolPaket lspp = new LielasSettingsProtocolPaket();
 		LielasSettingsProtocolDatetime lsppDt = new LielasSettingsProtocolDatetime();
@@ -1049,11 +959,6 @@ public class UsbCubeSerialInterface extends PcSerialInterface{
 			return false;
 		}
 
-		if(!wakeup()){
-			setError(LanguageManager.getInstance().getString(1054));
-			return false;
-		}
-
 		//create application protocol paket
 		LielasSettingsProtocolPaket lspp = new LielasSettingsProtocolPaket();
 		LielasSettingsProtocolLogfileCount lsppCount = new LielasSettingsProtocolLogfileCount();
@@ -1101,11 +1006,6 @@ public class UsbCubeSerialInterface extends PcSerialInterface{
 
 		if(!isOpen){
 			setError(LanguageManager.getInstance().getString(1053));
-			return false;
-		}
-
-		if(!wakeup()){
-			setError(LanguageManager.getInstance().getString(1054));
 			return false;
 		}
 
@@ -1253,11 +1153,6 @@ public class UsbCubeSerialInterface extends PcSerialInterface{
 			return false;
 		}
 
-		if(!wakeup()){
-			setError(LanguageManager.getInstance().getString(1054));
-			return false;
-		}
-
 		//create application protocol paket
 		LielasSettingsProtocolPaket lspp = new LielasSettingsProtocolPaket();
 		LielasSettingsProtocolDelete lsppDelete = new LielasSettingsProtocolDelete();
@@ -1308,11 +1203,6 @@ public class UsbCubeSerialInterface extends PcSerialInterface{
 
 		if(!isOpen){
 			setError(LanguageManager.getInstance().getString(1053));
-			return false;
-		}
-
-		if(!wakeup()){
-			setError(LanguageManager.getInstance().getString(1054));
 			return false;
 		}
 

@@ -297,7 +297,6 @@ public class LoggerRecordsMenuPanel extends MenuPanel{
             LoggerManager loggerManager = LoggerManager.getInstance();
             UsbCubeSerialInterface com = (UsbCubeSerialInterface) loggerManager.getActiveLogger().getCommunicationInterface();
 
-            com.wakeup();
             for(id = lr.getStartIndex(); id <= lr.getEndIndex(); id++){
                 for(j = 0; j < tries; j++) {
                     if(com.getLogfileDataset((UsbCube) loggerManager.getActiveLogger(), lr, id)){
@@ -305,7 +304,6 @@ public class LoggerRecordsMenuPanel extends MenuPanel{
                     }
 
                     if(com.getLastError().equals(LanguageManager.getInstance().getString(1066))){
-                        com.wakeup();
                         break;
                     }
                 }

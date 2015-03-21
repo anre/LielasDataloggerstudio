@@ -115,6 +115,9 @@ public class UsbCube extends Logger{
                 case DatasetItemIds.SHT_H:
                     sb.append("%");
                     break;
+                case DatasetItemIds.MS5607:
+                    sb.append("mbar");
+                    break;
                 default:
                     break;
             }

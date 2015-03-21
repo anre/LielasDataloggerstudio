@@ -89,6 +89,7 @@ public class UsbCubeRealTimePanel extends RealTimePanel{
 	private JPanel panel_3;
 	private JPanel panel_4;
 	private JPanel panel_6;
+    private JPanel panel_7;
     private JPanel[] colorPanel;
 
 	LoggerRecord lr = null;
@@ -185,12 +186,12 @@ public class UsbCubeRealTimePanel extends RealTimePanel{
         lblValue = new JLabel[3];
         lblUnit = new JLabel[3];
 
-		lblValue[0] = new JLabel("22,3");
+		lblValue[0] = new JLabel("");
 		lblValue[0].setFont(new Font("Tahoma", Font.PLAIN, 44));
 		valuePanel.add(lblValue[0], "4, 2, left, bottom");
 		lblValue[0].setVisible(false);
 		
-		lblUnit[0] = new JLabel("°C");
+		lblUnit[0] = new JLabel("");
 		lblUnit[0].setAlignmentY(Component.BOTTOM_ALIGNMENT);
 		lblUnit[0].setFont(new Font("Tahoma", Font.PLAIN, 30));
 		valuePanel.add(lblUnit[0], "6, 2, left, bottom");
@@ -213,15 +214,14 @@ public class UsbCubeRealTimePanel extends RealTimePanel{
 		colorPanel[1].setVisible(false);
 		colorPanel[1].setPreferredSize(new Dimension(30, 10));
 		colorPanel[1].setBackground(Color.BLUE);
-		
 		panel_6.add(colorPanel[1], "2, 2, fill, fill");
 		
-		lblValue[1] = new JLabel("48,7");
+		lblValue[1] = new JLabel("");
 		lblValue[1].setFont(new Font("Tahoma", Font.PLAIN, 44));
 		valuePanel.add(lblValue[1], "4, 4, left, default");
 		lblValue[1].setVisible(false);
 		
-		lblUnit[1] = new JLabel("%");
+		lblUnit[1] = new JLabel("");
 		lblUnit[1].setHorizontalAlignment(SwingConstants.LEFT);
 		lblUnit[1].setAlignmentY(Component.BOTTOM_ALIGNMENT);
 		lblUnit[1].setVerticalTextPosition(SwingConstants.BOTTOM);
@@ -230,16 +230,39 @@ public class UsbCubeRealTimePanel extends RealTimePanel{
 		valuePanel.add(lblUnit[1], "6, 4, left, bottom");
 		lblUnit[1].setVisible(false);
 		
-		lblValue[2] = new JLabel("6,3");
+		lblValue[2] = new JLabel("");
 		lblValue[2].setFont(new Font("Tahoma", Font.PLAIN, 44));
 		valuePanel.add(lblValue[2], "4, 6, left, default");
 		lblValue[2].setVisible(false);
-		
-		lblUnit[2] = new JLabel("V");
-		lblUnit[2].setAlignmentY(Component.BOTTOM_ALIGNMENT);
-		lblUnit[2].setFont(new Font("Tahoma", Font.PLAIN, 30));
-		lblUnit[2].setVisible(false);
-		
+
+        lblUnit[2] = new JLabel("");
+        lblUnit[2].setHorizontalAlignment(SwingConstants.LEFT);
+        lblUnit[2].setAlignmentY(Component.BOTTOM_ALIGNMENT);
+        lblUnit[2].setVerticalTextPosition(SwingConstants.BOTTOM);
+        lblUnit[2].setVerticalAlignment(SwingConstants.BOTTOM);
+        lblUnit[2].setFont(new Font("Tahoma", Font.PLAIN, 15));
+        valuePanel.add(lblUnit[2], "6, 6, left, bottom");
+        lblUnit[2].setVisible(false);
+
+        panel_7 = new JPanel();
+        panel_7.setOpaque(false);
+        panel_7.setBackground(Color.GREEN);
+        valuePanel.add(panel_7, "2, 6, fill, fill");
+        panel_7.setLayout(new FormLayout(new ColumnSpec[] {
+                ColumnSpec.decode("default:grow"),
+                FormFactory.PREF_COLSPEC,
+                ColumnSpec.decode("default:grow"),},
+                new RowSpec[] {
+                        RowSpec.decode("default:grow"),
+                        FormFactory.PREF_ROWSPEC,
+                        RowSpec.decode("default:grow"),}));
+
+        colorPanel[2] = new JPanel();
+        colorPanel[2].setVisible(false);
+        colorPanel[2].setPreferredSize(new Dimension(30, 10));
+        colorPanel[2].setBackground(Color.RED);
+        panel_7.add(colorPanel[2], "2, 2, fill, fill");
+
 		JPanel panel = new JPanel();
 		panel.setOpaque(false);
 		add(panel, BorderLayout.CENTER);
@@ -293,6 +316,9 @@ public class UsbCubeRealTimePanel extends RealTimePanel{
                 case DatasetItemIds.SHT_H:
                     lblUnit[i].setText(lm.getString(1107));
                     break;
+                case DatasetItemIds.MS5607:
+                    lblUnit[i].setText(lm.getString(1109));
+                    break;
                 default:
                     lblUnit[i].setText("");
                     break;
@@ -321,8 +347,7 @@ public class UsbCubeRealTimePanel extends RealTimePanel{
 			
 			
 			lr = new LoggerRecord(logger);
-			lr.setChannels(2);
-			//lrm.add(lr);
+			lr.setChannels(logger.getChannels());
 			
 			realtimeDataWorker = new RealTimeDataWorker(logger,  lr,  this);
 			realtimeDataWorker.execute();
