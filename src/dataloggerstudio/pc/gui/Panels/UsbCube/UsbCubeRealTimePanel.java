@@ -385,8 +385,10 @@ public class UsbCubeRealTimePanel extends RealTimePanel{
 		@Override
 		protected Logger doInBackground(){
 			UsbCubeSerialInterface com = (UsbCubeSerialInterface)logger.getCommunicationInterface();
-			
+
 			if(com.isOpen()){
+                com.getLastError();
+                com.flush();
 				if(!com.startRealTimeLogging()){
 					return null;
 				}

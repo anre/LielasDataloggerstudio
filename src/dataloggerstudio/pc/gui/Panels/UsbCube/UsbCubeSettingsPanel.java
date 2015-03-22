@@ -529,7 +529,8 @@ public class UsbCubeSettingsPanel extends SettingsPanel{
 		protected Object doInBackground(){
 			LoggerManager loggerManager = LoggerManager.getInstance();
 			UsbCubeSerialInterface com = (UsbCubeSerialInterface) loggerManager.getActiveLogger().getCommunicationInterface();
-			com.getLastError();
+            com.getLastError();
+            com.flush();
 			com.setName(name, (UsbCube)loggerManager.getActiveLogger());
 			return (UsbCube)loggerManager.getActiveLogger();
 		}
@@ -634,7 +635,12 @@ public class UsbCubeSettingsPanel extends SettingsPanel{
 			UsbCube logger = (UsbCube) LoggerManager.getInstance().getActiveLogger();
 			UsbCubeSerialInterface com = (UsbCubeSerialInterface)logger.getCommunicationInterface();
 			com.getLastError();
-			com.setClock(logger);
+            com.flush();
+			if(!com.setClock(logger)){
+                com.flush();
+                com.getLastError();
+                com.setClock(logger);
+            }
 			return logger;
 		}
 
@@ -733,7 +739,8 @@ public class UsbCubeSettingsPanel extends SettingsPanel{
 			LoggerManager lm = LoggerManager.getInstance();
 			UsbCube logger = (UsbCube)lm.getActiveLogger();
 			UsbCubeSerialInterface com = (UsbCubeSerialInterface)logger.getCommunicationInterface();
-			com.getLastError();
+            com.getLastError();
+            com.flush();
 
 			//set samplerate
 			for(i = 0; i < 3; i++) {
@@ -828,7 +835,8 @@ public class UsbCubeSettingsPanel extends SettingsPanel{
 			LoggerManager lm = LoggerManager.getInstance();
 			UsbCube logger = (UsbCube)lm.getActiveLogger();
 			UsbCubeSerialInterface com = (UsbCubeSerialInterface)logger.getCommunicationInterface();
-			com.getLastError();
+            com.getLastError();
+            com.flush();
 
 			//stop logger
 			for(i = 0; i < 3; i++) {
