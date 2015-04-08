@@ -73,28 +73,6 @@ public class UsbCubeSerialInterface extends AndroidSerialInterface {
         }catch (IOException e){
             e.printStackTrace();
         }
-		return;
-	}
-
-	public boolean wakeup(){
-        byte[] sync = new byte[2];
-        int i;
-
-        sync[0] = (byte)0x0A;
-        sync[1] = (byte)0xA0;
-
-        if(!isOpen()){
-            return false;
-        }
-
-        for(i = 0; i < 7; i++) {
-            write(sync);
-        }
-        try {
-            Thread.sleep(5);
-        }catch(InterruptedException e){
-        }
-        return true;
 	}
 
     public boolean realTimeLoggingInProgress(){
@@ -103,10 +81,6 @@ public class UsbCubeSerialInterface extends AndroidSerialInterface {
 
 	private boolean setRealTimeLoging(boolean status){
         if(!isOpen){
-            return false;
-        }
-
-        if(!wakeup()){
             return false;
         }
 
@@ -161,10 +135,6 @@ public class UsbCubeSerialInterface extends AndroidSerialInterface {
         boolean success = false;
 
         if(!realtimeLogging){
-            return false;
-        }
-
-        if(!wakeup()){
             return false;
         }
 
@@ -246,51 +216,55 @@ public class UsbCubeSerialInterface extends AndroidSerialInterface {
         int len = 0;
         int state  = 0;
         int paketLength = LielasCommunicationProtocolPaket.HEADER_LEN + LielasCommunicationProtocolPaket.CRC_LEN;
-        int recvLen;
+        int recvLen = 0;
+
+        long start = new Date().getTime();
+        long end = start + 200;
+
 
         if(!isOpen){
             return null;
         }
 
-        try {
-            Thread.sleep(200);
-        }catch(InterruptedException e){
-        }
+        while(new Date().getTime() < end) {
 
-        recvLen = read();
-        while(len < recvLen){
-            d = readByte();
-            if(d != null){
-                if(len == 0){
-                    if(d == 42){
+            if(getBytesInBuffer() == 0){
+                recvLen += read();
+            }
+
+            while (len < recvLen) {
+                d = readByte();
+                if (d != null) {
+                    if (len == 0) {
+                        if (d == 42) {
+                            recv[len] = d;
+                        }
+                    } else {
                         recv[len] = d;
                     }
-                }else{
-                    recv[len] = d;
-                }
-                len += 1;
+                    len += 1;
 
-                switch(state){
-                    case 0:		//header not complete
-                        if(len == LielasCommunicationProtocolPaket.HEADER_LEN){
-                            paketLength += recv[1];
-                            state += 1;
-                        }
-                        break;
-                    case 1:		//receive paket
-                        if(len == paketLength){
-                            paket = new byte[paketLength];
-                            for(len = 0; len < paketLength; len++){
-                                paket[len] =  recv[len];
+                    switch (state) {
+                        case 0:        //header not complete
+                            if (len == LielasCommunicationProtocolPaket.HEADER_LEN) {
+                                paketLength += recv[1];
+                                state += 1;
                             }
-                            return paket;
-                        }
-                        break;
+                            break;
+                        case 1:        //receive paket
+                            if (len == paketLength) {
+                                paket = new byte[paketLength];
+                                for (len = 0; len < paketLength; len++) {
+                                    paket[len] = recv[len];
+                                }
+                                return paket;
+                            }
+                            break;
 
+                    }
                 }
             }
         }
-
         return paket;
 	}
 
@@ -307,10 +281,6 @@ public class UsbCubeSerialInterface extends AndroidSerialInterface {
         LielasVersion lielasVersion;
 
         if(!isOpen){
-            return false;
-        }
-
-        if(!wakeup()){
             return false;
         }
 
@@ -361,10 +331,6 @@ public class UsbCubeSerialInterface extends AndroidSerialInterface {
         LielasId id = new LielasId();
 
         if(!isOpen){
-            return false;
-        }
-
-        if(!wakeup()){
             return false;
         }
 
@@ -419,10 +385,6 @@ public class UsbCubeSerialInterface extends AndroidSerialInterface {
             return false;
         }
 
-        if(!wakeup()){
-            return false;
-        }
-
         //create application protocol paket
         LielasSettingsProtocolPaket lspp = new LielasSettingsProtocolPaket();
         LielasSettingsProtocolName lsppName = new LielasSettingsProtocolName();
@@ -473,10 +435,6 @@ public class UsbCubeSerialInterface extends AndroidSerialInterface {
             return false;
         }
 
-        if(!wakeup()){
-            return false;
-        }
-
         //create application protocol paket
         LielasSettingsProtocolPaket lspp = new LielasSettingsProtocolPaket();
         LielasSettingsProtocolName lsppName = new LielasSettingsProtocolName();
@@ -521,16 +479,13 @@ public class UsbCubeSerialInterface extends AndroidSerialInterface {
             return false;
         }
 
+        Log.d(TAG, "set Name successfull");
         return true;
 	}
 
 	public boolean getSamplerate(UsbCube logger){
 
         if(!isOpen){
-            return false;
-        }
-
-        if(!wakeup()){
             return false;
         }
 
@@ -578,10 +533,6 @@ public class UsbCubeSerialInterface extends AndroidSerialInterface {
 
 	public boolean setSamplerate(UsbCube logger){
         if(!isOpen){
-            return false;
-        }
-
-        if(!wakeup()){
             return false;
         }
 
@@ -635,10 +586,6 @@ public class UsbCubeSerialInterface extends AndroidSerialInterface {
             return false;
         }
 
-        if(!wakeup()){
-            return false;
-        }
-
         //create application protocol paket
         LielasSettingsProtocolPaket lspp = new LielasSettingsProtocolPaket();
         LielasSettingsProtocolLoggerStatus lsppLoggerStatus = new LielasSettingsProtocolLoggerStatus();
@@ -682,10 +629,6 @@ public class UsbCubeSerialInterface extends AndroidSerialInterface {
 
 	public boolean setLoggerStatus(UsbCube logger, boolean status){
         if(!isOpen){
-            return false;
-        }
-
-        if(!wakeup()){
             return false;
         }
 
@@ -739,10 +682,6 @@ public class UsbCubeSerialInterface extends AndroidSerialInterface {
             return false;
         }
 
-        if(!wakeup()){
-            return false;
-        }
-
         //create application protocol paket
         LielasSettingsProtocolPaket lspp = new LielasSettingsProtocolPaket();
         LielasSettingsProtocolLogfilename lsppFilename = new LielasSettingsProtocolLogfilename();
@@ -788,10 +727,6 @@ public class UsbCubeSerialInterface extends AndroidSerialInterface {
             return false;
         }
 
-        if(!wakeup()){
-            return false;
-        }
-
         //create application protocol paket
         LielasSettingsProtocolPaket lspp = new LielasSettingsProtocolPaket();
         LielasSettingsProtocolDatetime lsppDt = new LielasSettingsProtocolDatetime();
@@ -832,18 +767,70 @@ public class UsbCubeSerialInterface extends AndroidSerialInterface {
         return true;
 	}
 
+    private long syncSecond(){
+        long tm = new Date().getTime() % 1000;
+        long start = new Date().getTime();
+        while(tm > 980 || tm < 973){
+            tm = new Date().getTime() % 1000;
+        }
+        long duration = new Date().getTime() - start;
+        Log.d(TAG, "Sync duration: " + Long.toString(duration));
+        return duration;
+    }
+
 	public boolean setClock(UsbCube logger){
-
-        return false;
-	}
-
-	public boolean getLogfileCount(UsbCube logger){
 
         if(!isOpen){
             return false;
         }
 
-        if(!wakeup()){
+        logger.setDatetime(logger.getDatetime() + syncSecond() + 1000);
+
+        //create application protocol paket
+        LielasSettingsProtocolPaket lspp = new LielasSettingsProtocolPaket();
+        LielasSettingsProtocolDatetime lsppDt = new LielasSettingsProtocolDatetime();
+        lsppDt.setDatetime(logger.getDatetime());
+        lspp.setPayload(lsppDt);
+
+        //create lcp protocol paket
+        LielasCommunicationProtocolPaket lcpp = new LielasCommunicationProtocolPaket();
+        lcpp.setLielasApplicationProtocol(lspp);
+        lcpp.pack();
+        //get paket
+        byte[] paket = lcpp.getBytes();
+
+        if(!write(paket)){
+            return false;
+        }
+
+        //receive answer
+        lcpp = getPaket();
+        if(lcpp == null) {
+            return false;
+        }
+        if(!(lcpp.header.getProtocol() == LielasApplicationProtocolPaket.LAP_PROTOCOL_TYPE_LSP)){
+            isBusy = false;
+            return false;
+        }
+        lspp = (LielasSettingsProtocolPaket) lcpp.payload;
+        try{
+            lsppDt = (LielasSettingsProtocolDatetime)lspp.getPayload();
+            if((lsppDt.getDatetime() / 1000) < (logger.getDatetime() / 1000) || (lsppDt.getDatetime()/1000) > ((logger.getDatetime()/1000) + 1)){
+                isBusy = false;
+                return false;
+            }
+            logger.setDatetime(lsppDt.getDatetime());
+        }catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
+        Log.d(TAG, "set Logger Clock successfull");
+        return true;
+	}
+
+	public boolean getLogfileCount(UsbCube logger){
+
+        if(!isOpen){
             return false;
         }
 
@@ -886,10 +873,6 @@ public class UsbCubeSerialInterface extends AndroidSerialInterface {
 
 	public boolean getLogfileProperties(UsbCube logger, int index){
         if(!isOpen){
-            return false;
-        }
-
-        if(!wakeup()){
             return false;
         }
 
@@ -946,20 +929,121 @@ public class UsbCubeSerialInterface extends AndroidSerialInterface {
 
 	public boolean getLogfileDataset(UsbCube logger, LoggerRecord lr, long id){
 
-        return false;
+        if(!isOpen){
+            return false;
+        }
+
+        //create application protocol paket
+        LielasSettingsProtocolPaket lspp = new LielasSettingsProtocolPaket();
+        LielasSettingsProtocolDataset lsppDs = new LielasSettingsProtocolDataset();
+        lsppDs.setDatasetStructure(logger.getDatasetStructure());
+        lsppDs.setId(id);
+        lsppDs.setChannels(logger.getChannels());
+        lspp.setPayload(lsppDs);
+
+        //create lcp protocol paket
+        LielasCommunicationProtocolPaket lcpp = new LielasCommunicationProtocolPaket();
+        lcpp.setLielasApplicationProtocol(lspp);
+        lcpp.pack();
+        //get paket
+        byte[] paket = lcpp.getBytes();
+
+        if(!write(paket)){
+            return false;
+        }
+
+        //receive answer
+        lcpp = new LielasCommunicationProtocolPaket();
+
+
+        paket = getPaketData();
+
+        if(paket == null){
+            flush();
+            return false;
+        }
+
+        if(!lcpp.parse(paket, (LielasSettingsProtocolPayload)lsppDs)){
+            flush();
+            return false;
+        }
+
+        if(lcpp == null) {
+            return false;
+        }
+        if(!(lcpp.header.getProtocol() == LielasApplicationProtocolPaket.LAP_PROTOCOL_TYPE_LSP)){
+            isBusy = false;
+            return false;
+        }
+        lspp = (LielasSettingsProtocolPaket) lcpp.payload;
+        try{
+            lsppDs = (LielasSettingsProtocolDataset)lspp.getPayload();
+            if(lsppDs.getId() != id){
+                return false;
+            }
+
+            Dataset ds = new Dataset(logger.getChannels());
+            ds.setDateTime(lsppDs.getDatetime());
+            for(int i = 0; i < logger.getChannels(); i++){
+                ds.setValue((int)lsppDs.getChannelValue(i), lsppDs.getDecimalPoints(i),  i);
+            }
+            lr.add(ds);
+
+        }catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
+        Log.d(TAG, "get Logger dataset successfull");
+        return true;
 	}
 
 	public boolean deleteLogfiles(UsbCube logger){
 
+        if(!isOpen){
+            return false;
+        }
+
+        //create application protocol paket
+        LielasSettingsProtocolPaket lspp = new LielasSettingsProtocolPaket();
+        LielasSettingsProtocolDelete lsppDelete = new LielasSettingsProtocolDelete();
+        lspp.setPayload(lsppDelete);
+
+        //create lcp protocol paket
+        LielasCommunicationProtocolPaket lcpp = new LielasCommunicationProtocolPaket();
+        lcpp.setLielasApplicationProtocol(lspp);
+        lcpp.pack();
+        //get paket
+        byte[] paket = lcpp.getBytes();
+
+        if(!write(paket)){
+            return false;
+        }
+
+        //receive answer
+        lcpp = getPaket();
+        if(lcpp == null) {
+            return false;
+        }
+        if(!(lcpp.header.getProtocol() == LielasApplicationProtocolPaket.LAP_PROTOCOL_TYPE_LSP)){
+            isBusy = false;
+            return false;
+        }
+        lspp = (LielasSettingsProtocolPaket) lcpp.payload;
+        try{
+            lsppDelete = (LielasSettingsProtocolDelete)lspp.getPayload();
+            if(lsppDelete.isDataDeleted()){
+                return true;
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
+        Log.d(TAG, "Logfiles successfully deleted");
         return false;
 	}
 
 	public boolean getDatasetStructure(UsbCube logger){
         if(!isOpen){
-            return false;
-        }
-
-        if(!wakeup()){
             return false;
         }
 
@@ -998,7 +1082,7 @@ public class UsbCubeSerialInterface extends AndroidSerialInterface {
             e.printStackTrace();
             return false;
         }
-        Log.d(TAG, "get Logger Dataset Structure successfull");
+        //Log.d(TAG, "get Logger Dataset Structure successfull");
         return true;
 	}
 

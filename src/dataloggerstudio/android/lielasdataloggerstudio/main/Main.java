@@ -1,10 +1,9 @@
 package org.lielas.lielasdataloggerstudio.main;
 
-import android.app.ActionBar;
-import android.app.Activity;
+import android.content.IntentFilter;
+import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -19,7 +18,6 @@ import org.lielas.lielasdataloggerstudio.main.Fragments.ClockSettingsFragment;
 import org.lielas.lielasdataloggerstudio.main.Fragments.ConnectFragment;
 import org.lielas.lielasdataloggerstudio.main.Fragments.DataFragment;
 import org.lielas.lielasdataloggerstudio.main.Fragments.ExportFragment;
-import org.lielas.lielasdataloggerstudio.main.Fragments.LielasFragment;
 import org.lielas.lielasdataloggerstudio.main.Fragments.LoggerSettingsFragment;
 import org.lielas.lielasdataloggerstudio.main.Fragments.SettingsFragment;
 import org.lielas.lielasdataloggerstudio.main.Fragments.ViewFragment;
@@ -44,6 +42,7 @@ public class Main extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+
         updateManager = new UpdateManager();
 
         logger = new UsbCube();
@@ -51,10 +50,21 @@ public class Main extends ActionBarActivity {
 
         setContentView(R.layout.activity_main);
 
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setIcon(R.drawable.ic_launcher);
+
         List<Fragment> fragments = getFragments();
         pageAdapter = new MyPageAdapter(getSupportFragmentManager(), fragments);
         ViewPager pager = (ViewPager)findViewById(R.id.viewpager);
         pager.setAdapter(pageAdapter);
+
+        UsbBroadcastReceiver broadcastReceiver = new UsbBroadcastReceiver(logger, updateManager);
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
+        registerReceiver(broadcastReceiver, intentFilter);
+
     }
 
     @Override
@@ -133,7 +143,12 @@ public class Main extends ActionBarActivity {
         dataFragmentId = fList.size() - 1;
 
 
-        fList.add(ViewFragment.newInstance(""));
+        //view fragment
+        ViewFragment viewFragment = ViewFragment.newInstance();
+        viewFragment.setLogger(logger);
+        viewFragment.setUpdateManager(updateManager);
+        updateManager.addFragment(viewFragment);
+        fList.add(viewFragment);
         viewFragmentId = fList.size() - 1;
 
         //export fragment

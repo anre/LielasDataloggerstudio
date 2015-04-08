@@ -637,6 +637,7 @@ public class UsbCubeSettingsPanel extends SettingsPanel{
 			com.getLastError();
             com.flush();
 			if(!com.setClock(logger)){
+
                 com.flush();
                 com.getLastError();
                 com.setClock(logger);

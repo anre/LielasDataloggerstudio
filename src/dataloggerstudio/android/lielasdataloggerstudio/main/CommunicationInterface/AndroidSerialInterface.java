@@ -29,6 +29,7 @@ public class AndroidSerialInterface extends SerialInterface {
 
     byte[] readBuffer;
     int readBufPosition;
+    int readBufLen;
 
     public AndroidSerialInterface(){
         super();
@@ -40,6 +41,7 @@ public class AndroidSerialInterface extends SerialInterface {
         databits = UsbSerialPort.DATABITS_8;
 
         readBufPosition = 0;
+        readBufLen = 0;
         readBuffer = null;
         context = null;
     }
@@ -94,11 +96,14 @@ public class AndroidSerialInterface extends SerialInterface {
 
     @Override
     public void close() {
-        isOpen = false;
-        try{
-            serialport.close();
-        }catch (Exception e){
-            e.printStackTrace();
+        if(isOpen && serialport != null) {
+            isOpen = false;
+
+            try {
+                serialport.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -136,15 +141,15 @@ public class AndroidSerialInterface extends SerialInterface {
             readBuffer = new byte[500];
             readBufPosition = 0;
 
-            len = serialport.read(readBuffer, timeout);
-            for(byte b : readBuffer){
+            readBufLen = serialport.read(readBuffer, timeout);
+            /*for(byte b : readBuffer){
                 System.out.print(b);
                 System.out.print(":");
-            }
+            }*/
             System.out.println();
         }catch(IOException e){
         }
-        return len;
+        return readBufLen;
     }
 
     public byte readByte(){
@@ -152,13 +157,19 @@ public class AndroidSerialInterface extends SerialInterface {
             return 0;
         }
 
-        if(readBuffer.length > readBufPosition){
+        if(readBufPosition < readBufLen){
             return readBuffer[readBufPosition++];
         }
         return 0;
     }
 
+    public int getBytesInBuffer(){
+        if(readBuffer == null){
+            return 0;
+        }
 
+        return readBufLen - readBufPosition;
+    }
 
     public void flush(){
         try{

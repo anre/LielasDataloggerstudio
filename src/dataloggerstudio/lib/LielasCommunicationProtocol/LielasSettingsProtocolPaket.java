@@ -158,11 +158,8 @@ public class LielasSettingsProtocolPaket extends LielasApplicationProtocolPaket{
 		System.arraycopy(bytes, LSPID_LEN, payloadBytes, 0, (bytes.length - LSPID_LEN));
 		
 		//parse payload
-		if(!payload.parse(payloadBytes)){
-			return false;
-		}
-		
-		return true;
-	}
+        return payload.parse(payloadBytes);
+
+    }
 
 }

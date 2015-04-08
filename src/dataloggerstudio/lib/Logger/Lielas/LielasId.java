@@ -48,9 +48,7 @@ public class LielasId {
             return false;
         }
 
-        for(int i = 0; i< ID_LENGTH; i++){
-            this.id[i] = id[i];
-        }
+        System.arraycopy(id, 0, this.id, 0, ID_LENGTH);
         return true;
     }
 

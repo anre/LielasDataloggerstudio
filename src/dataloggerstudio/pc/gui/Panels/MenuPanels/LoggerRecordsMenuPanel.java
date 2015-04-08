@@ -302,20 +302,19 @@ public class LoggerRecordsMenuPanel extends MenuPanel{
 
             for(id = lr.getStartIndex(); id <= lr.getEndIndex(); id++){
                 for(j = 0; j < tries; j++) {
-                    if(com.getLogfileDataset((UsbCube) loggerManager.getActiveLogger(), lr, id)){
-                        break;
+                    if (com.getLogfileDataset((UsbCube) loggerManager.getActiveLogger(), lr, id)) {
+
+                        if (com.getLastError().equals(LanguageManager.getInstance().getString(1066))) {
+                            break;
+                        }
+                    }
+                    if (j == tries) {
+                        return null;
                     }
 
-                    if(com.getLastError().equals(LanguageManager.getInstance().getString(1066))){
-                        break;
-                    }
+                    SampleProgress progress = new SampleProgress(id - lr.getStartIndex(), lr.getEndIndex() - lr.getStartIndex());
+                    publish(progress);
                 }
-                if(j == tries){
-                    return null;
-                }
-
-                SampleProgress progress = new SampleProgress(id - lr.getStartIndex(), lr.getEndIndex() - lr.getStartIndex());
-                publish(progress);
             }
 
             double duration = (new Date().getTime() - start)/1000.;

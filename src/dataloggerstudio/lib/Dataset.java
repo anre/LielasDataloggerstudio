@@ -110,7 +110,7 @@ public class Dataset{
 		
 		if(channel == 0){
 			Date date = new Date(dt);
-			DateFormat df = new SimpleDateFormat("dd.MM.YYYY HH:mm:ss");
+			DateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 			return df.format(date);
 		}else {
 			if (value[channel - 1] == null) {
@@ -132,7 +132,7 @@ public class Dataset{
 		
 		//date
 		Date date = new Date(dt);
-		DateFormat df = new SimpleDateFormat("dd.MM.YYYY HH:mm:ss");
+		DateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 		s[0] = df.format(date);
 		
 		//values

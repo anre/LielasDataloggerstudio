@@ -13,11 +13,12 @@ import org.lielas.lielasdataloggerstudio.R;
         httpMethod = org.acra.sender.HttpSender.Method.PUT,
         formUriBasicAuthLogin="ntiontefeentaidessonatio",
         formUriBasicAuthPassword="CxqXGN2txNUA6fjdsALGQbdc",
-        mode = ReportingInteractionMode.DIALOG,
-        forceCloseDialogAfterToast = false,
-        resDialogText = R.string.errorTxt,
+        mode = ReportingInteractionMode.TOAST,
+        resToastText = R.string.errorToast
+        //forceCloseDialogAfterToast = false,
+        /*resDialogText = R.string.errorTxt,
         resDialogCommentPrompt = R.string.errorTxtComment,
-        resDialogTitle = R.string.errorTitle)
+        resDialogTitle = R.string.errorTitle*/)
 public class LielasDataloggerstudio extends Application{
 
     @Override

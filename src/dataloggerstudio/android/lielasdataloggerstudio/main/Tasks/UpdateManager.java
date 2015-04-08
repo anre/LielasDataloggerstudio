@@ -1,5 +1,6 @@
 package org.lielas.lielasdataloggerstudio.main.Tasks;
 
+import org.lielas.lielasdataloggerstudio.main.Fragments.DataFragment;
 import org.lielas.lielasdataloggerstudio.main.Fragments.LielasFragment;
 
 import java.util.ArrayList;
@@ -19,6 +20,21 @@ public class UpdateManager {
     public void update(){
         for(LielasFragment f : fragments){
             f.update();
+        }
+    }
+
+    public void update(String text){
+        for(LielasFragment f : fragments){
+            f.update(text);
+            text = null;
+        }
+    }
+
+    public void updateProgress(Integer progress){
+        for(LielasFragment f : fragments){
+            if(f instanceof DataFragment){
+                ((DataFragment)f).updateProgress(progress);
+            }
         }
     }
 

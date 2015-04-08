@@ -1,9 +1,11 @@
 package org.lielas.lielasdataloggerstudio.main.Tasks;
 
 import android.content.Context;
+import android.widget.ImageButton;
 
 import org.lielas.dataloggerstudio.lib.Logger.UsbCube.UsbCube;
 import org.lielas.lielasdataloggerstudio.main.CommunicationInterface.UsbCube.UsbCubeSerialInterface;
+import org.lielas.lielasdataloggerstudio.main.LoggerRecordManager;
 
 import java.util.concurrent.ExecutionException;
 
@@ -39,6 +41,7 @@ public class ConnectTask extends LielasTask<Void, Void, UsbCube>{
             return null;
         }
 
+
         //stop realtime logging
 /*        for(int i = 0; i < 3; i++){
             if(com.stopRealTimeLogging()){
@@ -50,42 +53,50 @@ public class ConnectTask extends LielasTask<Void, Void, UsbCube>{
         }*/
 
         //get version
-        if(!com.getVersion((UsbCube)logger)){
+        if(!com.getVersion(logger)){
+            com.close();
             return null;
         }
 
         //get model
-        if(!com.getDatasetStructure((UsbCube)logger)){
+        if(!com.getDatasetStructure(logger)){
+            com.close();
             return null;
         }
 
         //get id
-        if(!com.getId((UsbCube)logger)){
+        if(!com.getId(logger)){
+            com.close();
             return null;
         }
 
         //get logger name
-        if(!com.getName((UsbCube)logger)){
+        if(!com.getName(logger)){
+            com.close();
             return null;
         }
 
         //get samplerate
-        if(!com.getSamplerate((UsbCube)logger)){
+        if(!com.getSamplerate(logger)){
+            com.close();
             return null;
         }
 
         //get logger status
-        if(!com.getLoggerStatus((UsbCube)logger)){
+        if(!com.getLoggerStatus(logger)){
+            com.close();
             return null;
         }
 
         //get datetime
-        if(!com.getClock((UsbCube)logger)){
+        if(!com.getClock(logger)){
+            com.close();
             return null;
         }
 
         //get logfile count
-        if(!com.getLogfileCount((UsbCube)logger)){
+        if(!com.getLogfileCount(logger)){
+            com.close();
             return null;
         }
 
@@ -99,8 +110,12 @@ public class ConnectTask extends LielasTask<Void, Void, UsbCube>{
     @Override
     protected void onPostExecute(UsbCube log){
         try {
-            if ((UsbCube) get() != null) {
-                updateManager.update();
+            UsbCube cube = get();
+            if (cube != null) {
+                updateManager.update("Successfully connected");
+                LoggerRecordManager.getInstance().setActiveLogggerRecord(cube.getRecordset(0));
+            }else{
+                updateManager.update("Failed to connect");
             }
         }catch(Exception e){
 

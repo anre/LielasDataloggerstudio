@@ -156,9 +156,7 @@ public class LoggerRecord{
 		
 		for(int i = 0; i < (totalSamples / 2); i++){
 			val = data.get(i).getStringArray();
-			for(int j = 0; j < (channels+1); j++){
-				s[i][j] = val[j];
-			}
+            System.arraycopy(val, 0, s[i], 0, channels + 1);
 		}
 		return s;
 	}

@@ -1,16 +1,15 @@
-package org.lielas.lielasdataloggerstudio.main.Fragments;
+package org.lielas.micdataloggerstudio.main.Fragments;
 
 import android.support.v4.app.Fragment;
 
 import org.lielas.dataloggerstudio.lib.Logger.Logger;
-import org.lielas.lielasdataloggerstudio.main.LielasToast;
-import org.lielas.lielasdataloggerstudio.main.Tasks.UpdateManager;
+import org.lielas.micdataloggerstudio.main.LielasToast;
+import org.lielas.micdataloggerstudio.main.UpdateManager;
 
 /**
- * Created by Andi on 05.03.2015.
+ * Created by Andi on 08.04.2015.
  */
-public abstract class LielasFragment extends Fragment{
-
+public abstract class MicFragment extends Fragment{
     protected Logger logger;
     protected UpdateManager updateManager;
 
@@ -28,5 +27,6 @@ public abstract class LielasFragment extends Fragment{
         LielasToast.show(text, getActivity());
         update();
     }
+
 
 }

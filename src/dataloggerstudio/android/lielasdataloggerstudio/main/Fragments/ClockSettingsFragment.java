@@ -4,15 +4,20 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import org.joda.time.format.DateTimeFormat;
 import org.lielas.dataloggerstudio.lib.Logger.UsbCube.UsbCube;
 import org.lielas.dataloggerstudio.lib.LoggerManager;
 import org.lielas.lielasdataloggerstudio.R;
+import org.lielas.lielasdataloggerstudio.main.LielasToast;
+import org.lielas.lielasdataloggerstudio.main.Tasks.SetClockTask;
 
 import java.util.Date;
 import java.util.TimerTask;
@@ -24,6 +29,9 @@ public class ClockSettingsFragment extends LielasFragment{
 
     String loggerTm;
     String phoneTm;
+
+    Button bttnSetClock;
+
 
     final Handler guiUpdateHandler = new Handler();
 
@@ -46,9 +54,65 @@ public class ClockSettingsFragment extends LielasFragment{
             UpdateTimeTask updateTimeTask = new UpdateTimeTask();
             updateTimeTask.setLogger((UsbCube)logger);
             t.schedule(updateTimeTask, 1000, 1000);
+
+            bttnSetClock = (Button) v.findViewById(R.id.bttnClockSettingsSetClock);
+            bttnSetClock.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v){
+                    onButtonClick(v);
+                }
+            });
+
+            ImageButton navRight = (ImageButton)v.findViewById(R.id.clockSettingsNavRight);
+            navRight.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ViewPager pager = (ViewPager) getActivity().findViewById(R.id.viewpager);
+                    pager.setCurrentItem(pager.getCurrentItem() + 1);
+                }
+            });
+
+            ImageButton navLeft = (ImageButton)v.findViewById(R.id.clockSettingsNavLeft);
+            navLeft.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ViewPager pager = (ViewPager)getActivity().findViewById(R.id.viewpager);
+                    pager.setCurrentItem(pager.getCurrentItem() - 1);
+                }
+            });
         }
 
         return v;
+    }
+
+    private void onButtonClick(View v){
+        UsbCube cube = (UsbCube)logger;
+
+        if(!logger.getCommunicationInterface().isOpen()){
+            LielasToast.show("no logger connected", getActivity());
+            return;
+        }
+
+        if(cube.isLogging()){
+            LielasToast.show("Logging in progress. You have to stop the logger before setting a new date/time.", getActivity());
+            return;
+        }
+
+        if(cube.isRealtimeLogging()) {
+            LielasToast.show("Realtimelogging in progress. You have to stop the logger before setting a new date/time.", getActivity());
+            return;
+        }
+
+        cube.setDatetime(new Date().getTime());
+
+        SetClockTask task = new SetClockTask(cube, updateManager);
+        task.execute();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        update();
     }
 
     @Override
@@ -62,15 +126,6 @@ public class ClockSettingsFragment extends LielasFragment{
     }
 
     public void updateUI(){
-        UsbCube l = (UsbCube) logger;
-
-        if(l == null || l.getCommunicationInterface() == null){
-            return;
-        }
-
-        if(this.loggerClock == null){
-            return;
-        }
 
     }
 

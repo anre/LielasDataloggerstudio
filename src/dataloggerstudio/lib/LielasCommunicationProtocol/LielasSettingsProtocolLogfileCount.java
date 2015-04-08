@@ -60,7 +60,7 @@ public class LielasSettingsProtocolLogfileCount extends LielasSettingsProtocolPa
             byte[] b = new byte[2];
             b[0] = (byte)((count >> 8) & 0xFF);
             b[1] = (byte)(count & 0xFF);
-
+            return b;
         }
         return null;
     }

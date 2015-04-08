@@ -302,7 +302,7 @@ public class FtdiSerialDriver implements UsbSerialDriver {
 
                 final int payloadBytesRead = buf.position() - MODEM_STATUS_HEADER_LENGTH;
                 if (payloadBytesRead > 0) {
-                    Log.d(TAG, HexDump.dumpHexString(dest, 0, Math.min(32, dest.length)));
+                    //Log.d(TAG, HexDump.dumpHexString(dest, 0, Math.min(32, dest.length)));
                     return payloadBytesRead;
                 } else {
                     return 0;

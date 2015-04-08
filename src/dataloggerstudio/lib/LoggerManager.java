@@ -80,7 +80,7 @@ public class LoggerManager{
 	}
 	
 	public void setFirstLoggerActive(){
-		active = logger.get(01);
+		active = logger.get(1);
 	}
 	
 	public void setLastLoggerActive(){
