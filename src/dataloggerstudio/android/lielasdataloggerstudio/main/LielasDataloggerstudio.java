@@ -8,7 +8,7 @@ import org.lielas.lielasdataloggerstudio.R;
 
 @ReportsCrashes(
         formKey = "",
-        formUri = "https://anre.cloudant.com/acra-myapp/_design/acra-storage/_update/report",
+        formUri = "http://http://134.119.24.50:5984/acra-lielas/_design/acra-storage/_update/report",
         reportType = org.acra.sender.HttpSender.Type.JSON,
         httpMethod = org.acra.sender.HttpSender.Method.PUT,
         formUriBasicAuthLogin="ntiontefeentaidessonatio",

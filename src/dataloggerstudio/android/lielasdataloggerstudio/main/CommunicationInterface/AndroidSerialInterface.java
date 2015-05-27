@@ -25,8 +25,6 @@ public class AndroidSerialInterface extends SerialInterface {
     protected int databits;
     protected boolean isOpen;
 
-    private static final String ACTION_USB_PERMISSION = "anre.serialInterface.USB_PERMISSION";
-
     byte[] readBuffer;
     int readBufPosition;
     int readBufLen;

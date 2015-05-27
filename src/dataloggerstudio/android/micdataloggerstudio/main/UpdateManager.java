@@ -1,5 +1,6 @@
 package org.lielas.micdataloggerstudio.main;
 
+import org.lielas.micdataloggerstudio.main.Fragments.DataFragment;
 import org.lielas.micdataloggerstudio.main.Fragments.MicFragment;
 
 import java.util.ArrayList;
@@ -31,9 +32,9 @@ public class UpdateManager {
 
     public void updateProgress(Integer progress){
         for(MicFragment f : fragments){
-            /*if(f instanceof DataFragment){
-                ((DataFragment)f).updateProgress(progress);  //TODO
-            }*/
+            if(f instanceof DataFragment){
+                ((DataFragment)f).updateProgress(progress);
+            }
         }
     }
 

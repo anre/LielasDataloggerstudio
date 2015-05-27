@@ -61,7 +61,7 @@ public class UsbCubeSerialInterface extends PcSerialInterface{
 	}
 	
 	public boolean connect(String port){
-		setBaudrate(115200);
+		setBaudrate(500000);
 		return open(port);
 	}
 
@@ -215,7 +215,7 @@ public class UsbCubeSerialInterface extends PcSerialInterface{
     }
 	
 	private byte[] getPaketData(){
-		byte[]recv = new byte[200];
+		byte[]recv = new byte[2000];
 		byte[] paket = null;
 		Byte d;
 		int len = 0;
@@ -244,7 +244,7 @@ public class UsbCubeSerialInterface extends PcSerialInterface{
 				switch(state){
 					case 0:		//header not complete
 						if(len == LielasCommunicationProtocolPaket.HEADER_LEN){
-							paketLength += recv[1];
+							paketLength += (recv[1] & 0xFF);
 							state += 1;
 						}
 						break;
@@ -254,7 +254,7 @@ public class UsbCubeSerialInterface extends PcSerialInterface{
 							for(len = 0; len < paketLength; len++){
 								paket[len] =  recv[len];
 							}
-							long du = new Date().getTime() - start;
+							//long du = new Date().getTime() - start;
 							return paket;
 						}
 						break;
@@ -264,7 +264,7 @@ public class UsbCubeSerialInterface extends PcSerialInterface{
 			time = new Date().getTime();
 		}
 
-		long duration = new Date().getTime() - start;
+		//long duration = new Date().getTime() - start;
 
 		return paket;
 	}
@@ -1132,6 +1132,7 @@ public class UsbCubeSerialInterface extends PcSerialInterface{
 			}
 
 			Dataset ds = new Dataset(logger.getChannels());
+            ds.setId(lsppDs.getId());
 			ds.setDateTime(lsppDs.getDatetime());
 			for(int i = 0; i < logger.getChannels(); i++){
 				ds.setValue((int)lsppDs.getChannelValue(i), lsppDs.getDecimalPoints(i),  i);
@@ -1145,6 +1146,84 @@ public class UsbCubeSerialInterface extends PcSerialInterface{
 		}
 		return true;
 	}
+
+    public int getLdpPaket(UsbCube logger, LoggerRecord lr, boolean requestTypeStart){
+        int paketsReceived = 0;
+
+        if(!isOpen){
+            setError(LanguageManager.getInstance().getString(1053));
+            return 0;
+        }
+
+        //create application protocol paket
+        LielasDataProtocolPaket ldpp = new LielasDataProtocolPaket();
+        if(requestTypeStart) {
+            ldpp.setRequestType(LielasDataProtocolPaket.RQ_START);
+        }else{
+            ldpp.setRequestType(LielasDataProtocolPaket.RQ_NEXT);
+        }
+        ldpp.setLriIndex(lr.getIndex());
+        ldpp.setDatasetStructure(logger.getDatasetStructure());
+        ldpp.setPaketCount(10);
+
+        //create lcp protocol paket
+        LielasCommunicationProtocolPaket lcpp = new LielasCommunicationProtocolPaket();
+        lcpp.setLielasApplicationProtocol(ldpp);
+        lcpp.pack();
+        //get paket
+        byte[] paket = lcpp.getBytes();
+
+        double start = new Date().getTime();
+
+        try{
+            sp.writeBytes(paket);
+        } catch (SerialPortException e) {
+            setError(LanguageManager.getInstance().getString(1055));
+            isBusy = false;
+            return 0;
+        }
+
+        for(int i = 0; i < ldpp.getPaketCount(); i++) {
+
+            //receive answer
+            lcpp = new LielasCommunicationProtocolPaket();
+
+
+            paket = getPaketData();
+
+            if (paket == null) {
+                flush();
+                setError(LanguageManager.getInstance().getString(1066));
+                return 0;
+            }
+
+            LielasDataProtocolAnswerPaket ldpap = new LielasDataProtocolAnswerPaket();
+            lcpp.setDatasetStructure(logger.getDatasetStructure());
+            if (!lcpp.parse(paket, ldpap)) {
+                setError(LanguageManager.getInstance().getString(1066));
+                flush();
+                return 0;
+            }
+
+            for (int j = 0; j < ldpap.getDatasetCount(); j++) {
+                lr.add(ldpap.getDataset(j));
+            }
+
+            paketsReceived += ldpap.getDatasetCount();
+
+            if(lr.getCount() >= (lr.getEndIndex() - lr.getStartIndex())){
+                break;
+            }
+
+            if (lcpp == null) {
+                setError(LanguageManager.getInstance().getString(1066));
+                return 0;
+            }
+
+        }
+
+        return paketsReceived;
+    }
 
 	public boolean deleteLogfiles(UsbCube logger){
 

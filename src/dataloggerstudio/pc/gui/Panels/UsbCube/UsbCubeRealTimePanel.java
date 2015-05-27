@@ -135,7 +135,7 @@ public class UsbCubeRealTimePanel extends RealTimePanel{
 		
 		JPanel valuePanel = new JPanel();
 		panel_1.add(valuePanel);
-		valuePanel.setPreferredSize(new Dimension(250, 10));
+		valuePanel.setPreferredSize(new Dimension(300, 10));
 		valuePanel.setOpaque(false);
 		valuePanel.setLayout(new FormLayout(new ColumnSpec[] {
 				FormFactory.UNRELATED_GAP_COLSPEC,
@@ -318,6 +318,18 @@ public class UsbCubeRealTimePanel extends RealTimePanel{
                     break;
                 case DatasetItemIds.MS5607:
                     lblUnit[i].setText(lm.getString(1109));
+                    break;
+                case DatasetItemIds.EDLSU1:
+                case DatasetItemIds.EDLSU2:
+                case DatasetItemIds.EDLSU3:
+                case DatasetItemIds.EDLSU4:
+                    lblUnit[i].setText(lm.getString(1110));
+                    break;
+                case DatasetItemIds.EDLSI1:
+                case DatasetItemIds.EDLSI2:
+                case DatasetItemIds.EDLSI3:
+                case DatasetItemIds.EDLSI4:
+                    lblUnit[i].setText(lm.getString(1111));
                     break;
                 default:
                     lblUnit[i].setText("");

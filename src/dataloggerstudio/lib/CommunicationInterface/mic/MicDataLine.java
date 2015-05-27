@@ -45,6 +45,13 @@ public class MicDataLine{
 	public void setValues(int[] values) {
 		this.values = values;
 	}
+
+    public int getValueByIndex(int index){
+        if(index < 0 || index > (values.length - 1)){
+            return 0;
+        }
+        return values[index];
+    }
 	
 	public boolean parse(byte[] line){
 		int pos = 0;

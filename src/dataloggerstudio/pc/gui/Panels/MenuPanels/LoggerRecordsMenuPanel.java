@@ -289,9 +289,7 @@ public class LoggerRecordsMenuPanel extends MenuPanel{
 
         @Override
         protected LoggerRecord doInBackground() throws Exception {
-            long id;
-            int tries = 3;
-            int j;
+            long id = 0, tmpId;
             long start = new Date().getTime();
 
             LoggerManager loggerManager = LoggerManager.getInstance();
@@ -300,11 +298,14 @@ public class LoggerRecordsMenuPanel extends MenuPanel{
             com.getLastError();
             com.flush();
 
-            for(id = lr.getStartIndex(); id <= lr.getEndIndex(); id++){
+
+            //get each dataset through lsp
+            /*for(id = lr.getStartIndex(); id <= lr.getEndIndex(); id++){
                 for(j = 0; j < tries; j++) {
+
                     if (com.getLogfileDataset((UsbCube) loggerManager.getActiveLogger(), lr, id)) {
 
-                        if (com.getLastError().equals(LanguageManager.getInstance().getString(1066))) {
+                        if (com.getLastError() != null && com.getLastError().equals(LanguageManager.getInstance().getString(1066))) {
                             break;
                         }
                     }
@@ -312,10 +313,36 @@ public class LoggerRecordsMenuPanel extends MenuPanel{
                         return null;
                     }
 
+                    double dur = (new Date().getTime() - start);
+                    System.out.println("Duration: " + Double.toString(dur) + "ms");
+
                     SampleProgress progress = new SampleProgress(id - lr.getStartIndex(), lr.getEndIndex() - lr.getStartIndex());
                     publish(progress);
                 }
+            }*/
+
+            lr.clearData();
+            tmpId = com.getLdpPaket((UsbCube)loggerManager.getActiveLogger(), lr, true);
+            while(tmpId > 0){
+                id += tmpId;
+                tmpId = com.getLdpPaket((UsbCube)loggerManager.getActiveLogger(), lr, false);
+                SampleProgress progress = new SampleProgress(id, lr.getEndIndex() - lr.getStartIndex());
+                publish(progress);
             }
+
+            //all pakets received, check if data is missing
+            id = lr.get(0).getId();
+            for(int i = 1; i < (lr.getEndIndex() - lr.getStartIndex() + 1); i++){
+                if(lr.get(i) == null || lr.get(i).getId() != (id + 1)){
+                    //missing a dataset, try to get it via settings manager
+                    com.getLogfileDataset((UsbCube) loggerManager.getActiveLogger(), lr, id+1);
+                    lr.sort();
+                    SampleProgress progress = new SampleProgress(id+1, lr.getEndIndex() - lr.getStartIndex());
+                    publish(progress);
+                }
+                id = lr.get(i).getId();
+            }
+
 
             double duration = (new Date().getTime() - start)/1000.;
             System.out.println("Duration: " + Double.toString(duration) + "s");
@@ -337,6 +364,10 @@ public class LoggerRecordsMenuPanel extends MenuPanel{
             SampleProgress progress = samples.get(samples.size()-1);
             long loaded = progress.samples + 1;
             long max = progress.maxSamples + 1;
+
+            if(loaded > max){
+                loaded = max;
+            }
 
             lblDownloadStatusContent.setText(loaded + "/" + max);
         }

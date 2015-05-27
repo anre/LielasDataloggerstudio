@@ -34,6 +34,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.lielas.dataloggerstudio.lib.Logger.Logger;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class LoggerRecord{
 
@@ -89,6 +90,10 @@ public class LoggerRecord{
 	}
 	
 	public Dataset get(int index){
+        if(data == null || index > (data.size() - 1)){
+            return null;
+        }
+
 		return data.get((int) index);
 	}
 	
@@ -234,4 +239,12 @@ public class LoggerRecord{
 	public String toString(){
 		return name;
 	}
+
+    public void clearData(){
+        data = new ArrayList<Dataset>();
+    }
+
+    public void sort(){
+        Collections.sort(data);
+    }
 }

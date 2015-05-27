@@ -15,5 +15,13 @@ public final class DatasetItemIds {
     public static final int PT1K3 = 1005;
     public static final int PT1K4 = 1006;
     public static final int MS5607 = 1007;
+    public static final int EDLSU1 = 1008;
+    public static final int EDLSU2 = 1009;
+    public static final int EDLSU3 = 1010;
+    public static final int EDLSU4 = 1011;
+    public static final int EDLSI1 = 1012;
+    public static final int EDLSI2 = 1013;
+    public static final int EDLSI3 = 1014;
+    public static final int EDLSI4 = 1015;
 
 }

@@ -38,10 +38,10 @@ public class DatasetSensorItemPT1K  extends DatasetSensorItem{
             return false;
         }
 
-        value = (payload[start++] & 0xFF) << 24;
-        value += (payload[start++] & 0xFF) << 16;
+        value = (payload[start++] & 0xFF);
         value += (payload[start++] & 0xFF) <<  8;
-        value += (payload[start++] & 0xFF);
+        value += (payload[start++] & 0xFF) << 16;
+        value += (payload[start++] & 0xFF) << 24;
 
         value -= 27310;
 

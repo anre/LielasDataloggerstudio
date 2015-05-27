@@ -161,7 +161,7 @@ public class ExportFragment extends LielasFragment {
             ArrayAdapter<LoggerRecord> adapter = new ArrayAdapter<LoggerRecord>(getActivity(), R.layout.logfile_spinner_item, l.getRecordsetArray());
             logfilesSpinner.setAdapter(adapter);
             logfilesSpinner.setVisibility(View.VISIBLE);
-            LoggerRecord lr = LoggerRecordManager.getInstance().getActiveLogggerRecord();
+            LoggerRecord lr = LoggerRecordManager.getInstance().getActiveLoggerRecord();
 
             if(lr != null) {
                 LoggerRecord loggerRecords[] = l.getRecordsetArray();
@@ -198,9 +198,9 @@ public class ExportFragment extends LielasFragment {
 
         LoggerRecord lr = (LoggerRecord)logfilesSpinner.getSelectedItem();
 
-        if(LoggerRecordManager.getInstance().getActiveLogggerRecord() == null ||
-                lr.getId() != LoggerRecordManager.getInstance().getActiveLogggerRecord().getId()) {
-            LoggerRecordManager.getInstance().setActiveLogggerRecord(lr);
+        if(LoggerRecordManager.getInstance().getActiveLoggerRecord() == null ||
+                lr.getId() != LoggerRecordManager.getInstance().getActiveLoggerRecord().getId()) {
+            LoggerRecordManager.getInstance().setActiveLoggerRecord(lr);
             updateManager.update();
         }
     }
@@ -208,7 +208,7 @@ public class ExportFragment extends LielasFragment {
     private void onButtonClick(View v){
         int status;
         String fname = filename.getText().toString();
-        LoggerRecord lr = LoggerRecordManager.getInstance().getActiveLogggerRecord();
+        LoggerRecord lr = LoggerRecordManager.getInstance().getActiveLoggerRecord();
 
         if(lr == null){
             new LielasToast().show("No logfile selected", getActivity());
@@ -239,8 +239,8 @@ public class ExportFragment extends LielasFragment {
         fileCreator.setDelimiter(delimiterSpinner.getSelectedItem().toString());
         fileCreator.setComma(commaSpinner.getSelectedItem().toString());
         fileCreator.setPath(fname);
-        fileCreator.create(LoggerRecordManager.getInstance().getActiveLogggerRecord());
-        status = fileCreator.save(LoggerRecordManager.getInstance().getActiveLogggerRecord(), chkOverwrite.isChecked());
+        fileCreator.create(LoggerRecordManager.getInstance().getActiveLoggerRecord());
+        status = fileCreator.save(LoggerRecordManager.getInstance().getActiveLoggerRecord(), chkOverwrite.isChecked());
 
         if(status == FileCreator.STATUS_OK){
             new LielasToast().show("File successfully written to Download/lielas", getActivity());

@@ -30,31 +30,44 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.lielas.dataloggerstudio.lib.Logger.mic;
 
+import org.lielas.dataloggerstudio.lib.CommunicationInterface.mic.Channel.MicChannel;
+import org.lielas.dataloggerstudio.lib.CommunicationInterface.mic.Channel.MicChannelRH;
+import org.lielas.dataloggerstudio.lib.CommunicationInterface.mic.Channel.MicChannelTemperature;
+import org.lielas.dataloggerstudio.lib.CommunicationInterface.mic.MicDataLine;
+import org.lielas.dataloggerstudio.lib.Dataset;
+
 public class MicModel{
 	
 	int model;
-	int channels;
+
+    MicChannel[] channels;
 
     public static final int MODEL_UNKNOWN = 0;
     public static final int MODEL_TEMP = 98580;
     public static final int MODEL_TEMP32 = 98581;
-    public static final int MODEL_TEMP_HUM01 = 98582;
-    public static final int MODEL_TEMP_HUM = 98583;
+    public static final int MODEL_TEMP_HUM01 = 98583;
+    public static final int MODEL_TEMP_HUM = 98582;
     public static final int MODEL_TEMP_HUM_CO2 = 98587;
 	
 	public MicModel(int model){
 		switch(model){
 		case MODEL_TEMP:
 		case MODEL_TEMP32:
+            this.model = model;
+            channels = new MicChannel[1];
+            channels[0] = new MicChannelTemperature();
+            break;
 		case MODEL_TEMP_HUM01:
 		case MODEL_TEMP_HUM:
 		case MODEL_TEMP_HUM_CO2:
 			this.model = model;
-			this.channels = 2;
+            channels = new MicChannel[2];
+            channels[0] = new MicChannelTemperature();
+            channels[1] = new MicChannelRH();
 			break;
-			default:
-				this.model = MODEL_UNKNOWN;
-				break;
+        default:
+            this.model = MODEL_UNKNOWN;
+            break;
 		}
 	}
 	
@@ -90,7 +103,33 @@ public class MicModel{
 	}
 
 	public int getChannels() {
-		return channels;
+		return channels.length;
 	}
-	
+
+    public MicChannel getChannel(int index){
+        if(index < 0 || index > (channels.length - 1)){
+            return null;
+        }
+        return channels[index];
+    }
+
+	public Dataset parseDataLine(byte[] line, long dt){
+        MicDataLine micDataLine = new MicDataLine(channels.length);
+        Dataset ds = new Dataset(channels.length);
+
+        if(!micDataLine.parse(line)){
+            return null;
+        }
+
+        ds.setDateTime(dt);
+
+        switch (model){
+            case MODEL_TEMP_HUM01:
+                ds.setValue(micDataLine.getValueByIndex(0), 1, 0);
+                ds.setValue(micDataLine.getValueByIndex(1), 1, 1);
+                break;
+        }
+
+        return ds;
+    }
 }

@@ -51,8 +51,8 @@ public class StopLoggerTask extends LielasTask<Void, Void, UsbCube> {
             UsbCube cube = get();
             if (cube != null) {
                 LoggerRecordManager lrm = LoggerRecordManager.getInstance();
-                if(lrm.getActiveLogggerRecord() == null){
-                    lrm.setActiveLogggerRecord(cube.getRecordset(0));
+                if(lrm.getActiveLoggerRecord() == null){
+                    lrm.setActiveLoggerRecord(cube.getRecordset(0));
                 }
 
                 updateManager.update("Logger successfully stopped");

@@ -39,7 +39,6 @@ public class MicLoggerArguments{
 	private int sampleRate;
 	private UnitClass unitClass;
 	private long time;
-	private int sensorSample;
 
 	public MicLoggerArguments() {
 		unitClass = new UnitClass();
@@ -75,14 +74,6 @@ public class MicLoggerArguments{
 
 	public void setTime(long time) {
 		this.time = time;
-	}
-
-	public int getSensorSample() {
-		return sensorSample;
-	}
-
-	public void setSensorSample(int sensorSample) {
-		this.sensorSample = sensorSample;
 	}
 
 	public boolean parse(byte[] line) {

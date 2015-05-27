@@ -1,13 +1,10 @@
 package org.lielas.lielasdataloggerstudio.main.Tasks;
 
 import android.content.Context;
-import android.widget.ImageButton;
 
 import org.lielas.dataloggerstudio.lib.Logger.UsbCube.UsbCube;
 import org.lielas.lielasdataloggerstudio.main.CommunicationInterface.UsbCube.UsbCubeSerialInterface;
 import org.lielas.lielasdataloggerstudio.main.LoggerRecordManager;
-
-import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Andi on 05.03.2015.
@@ -113,7 +110,7 @@ public class ConnectTask extends LielasTask<Void, Void, UsbCube>{
             UsbCube cube = get();
             if (cube != null) {
                 updateManager.update("Successfully connected");
-                LoggerRecordManager.getInstance().setActiveLogggerRecord(cube.getRecordset(0));
+                LoggerRecordManager.getInstance().setActiveLoggerRecord(cube.getRecordset(0));
             }else{
                 updateManager.update("Failed to connect");
             }

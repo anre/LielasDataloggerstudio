@@ -37,14 +37,22 @@ import org.lielas.dataloggerstudio.lib.Logger.UsbCube.UsbCube;
 
 public class LielasDataProtocolPaket extends LielasApplicationProtocolPaket{
 
+    public static final int RQ_START = 1;
+    public static final int RQ_NEXT = 0;
+
 	private int datasetCount;
 	private Dataset ds;
 	private byte[] paket;
     private DatasetStructure datasetStructure;
+
+    private int lriIndex;
+    private int requestType;
+    private int pakets;
 	
 	public LielasDataProtocolPaket() {
 		super(LielasApplicationProtocolPaket.LAP_PROTOCOL_TYPE_LDP);
         datasetStructure = null;
+        pakets = 1;
 	}
 
     public void setDatasetStructure(DatasetStructure datasetStructure){
@@ -53,12 +61,20 @@ public class LielasDataProtocolPaket extends LielasApplicationProtocolPaket{
 
 	@Override
 	public int getLength() {
-		return paket.length;
+		return 4;
 	}
 
 	@Override
 	public byte[] getBytes() {
-		return paket;
+        paket = new byte[getLength()];
+
+        //fill header
+        paket[0] = (byte)(requestType);
+        paket[1] = (byte)(lriIndex >> 8);
+        paket[2] = (byte)(lriIndex);
+        paket[3] = (byte)(pakets);
+
+        return paket;
 	}
 
 	@Override
@@ -107,6 +123,21 @@ public class LielasDataProtocolPaket extends LielasApplicationProtocolPaket{
 	public Dataset get(){
 		return ds;
 	}
-	
-	
+
+    public void setRequestType(int rq){
+        this.requestType = rq;
+    }
+
+    public void setLriIndex(int index){
+        this.lriIndex = index;
+    }
+
+    public void setPaketCount(int count){
+        pakets = count;
+    }
+
+    public int getPaketCount(){
+        return pakets;
+    }
+
 }

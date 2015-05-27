@@ -186,6 +186,18 @@ public class DataTablePanel extends DataContentPanel {
                         case DatasetItemIds.MS5607:
                             columnNames[i] = lm.getString(1108);
                             break;
+                        case DatasetItemIds.EDLSU1:
+                        case DatasetItemIds.EDLSU2:
+                        case DatasetItemIds.EDLSU3:
+                        case DatasetItemIds.EDLSU4:
+                            columnNames[i] = lm.getString(1112);
+                            break;
+                        case DatasetItemIds.EDLSI1:
+                        case DatasetItemIds.EDLSI2:
+                        case DatasetItemIds.EDLSI3:
+                        case DatasetItemIds.EDLSI4:
+                            columnNames[i] = lm.getString(1113);
+                            break;
                         default:
                             columnNames[i] = "";
                             break;

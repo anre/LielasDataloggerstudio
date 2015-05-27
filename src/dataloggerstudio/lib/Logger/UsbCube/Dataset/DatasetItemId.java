@@ -23,10 +23,10 @@ public class DatasetItemId extends DatasetItem{
             return false;
         }
 
-        id = (payload[start++] & 0xFF) << 24;
-        id += (payload[start++] & 0xFF) << 16;
+        id = (payload[start++] & 0xFF);
         id += (payload[start++] & 0xFF) << 8;
-        id += (payload[start++] & 0xFF);
+        id += (payload[start++] & 0xFF) << 16;
+        id += (payload[start++] & 0xFF) << 24;
 
         return true;
     }

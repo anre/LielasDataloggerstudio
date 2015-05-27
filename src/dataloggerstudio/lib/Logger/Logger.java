@@ -30,6 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.lielas.dataloggerstudio.lib.Logger;
 
+import org.joda.time.format.DateTimeFormat;
 import org.lielas.dataloggerstudio.lib.CommunicationInterface.CommunicationInterface;
 import org.lielas.dataloggerstudio.lib.Logger.Units.UnitClass;
 import org.lielas.dataloggerstudio.lib.Dataset;
@@ -103,4 +104,11 @@ public abstract class Logger{
 	}
 
 	public abstract StringBuilder getCsvHeader(String delimiter);
+
+
+
+    public static String dateToString(long date){
+        org.joda.time.format.DateTimeFormatter formatter = DateTimeFormat.forPattern("dd.MM.yyyy HH:mm:ss");
+        return formatter.print(date);
+    }
 }

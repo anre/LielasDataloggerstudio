@@ -35,6 +35,9 @@ import org.lielas.dataloggerstudio.lib.Logger.Units.UnitClass;
 import org.lielas.dataloggerstudio.lib.Logger.Logger;
 import org.lielas.dataloggerstudio.lib.Logger.LoggerType;
 import org.lielas.dataloggerstudio.lib.Logger.StartTrigger;
+import org.lielas.dataloggerstudio.lib.LoggerRecord;
+
+import java.util.ArrayList;
 
 public class MicUSBStick extends Logger{
 	
@@ -47,6 +50,10 @@ public class MicUSBStick extends Logger{
 	private String version;
 	private int maxSamples;
 	private long firstDatasetDate;
+    private ArrayList<LoggerRecord> records;
+    private int recordCount;
+    private long datetime;
+    private MicStartTrigger micStartTrigger;
 	
 	public MicUSBStick(){
 		super();
@@ -54,7 +61,10 @@ public class MicUSBStick extends Logger{
 		com = new SerialInterface();
 		unitClass = new UnitClass();
 		startTrigger = new StartTrigger();
+        micStartTrigger = new MicStartTrigger(MicStartTrigger.START_IMMEDIATELY);
 		maxSamples = 1000;
+        records = new ArrayList<LoggerRecord>();
+        recordCount = 0;
 	}
 	
 	public void setModel(int m){
@@ -153,7 +163,6 @@ public class MicUSBStick extends Logger{
 		this.firstDatasetDate = firstDatasetDate;
 	}
 
-
 	@Override
 	public StringBuilder getCsvHeader(String delimiter) {
 		StringBuilder sb = new StringBuilder();
@@ -184,4 +193,60 @@ public class MicUSBStick extends Logger{
 		return sb;
 	}
 
+
+
+    public void setRecordCount(int count){
+        recordCount = count;
+    }
+
+    public int getRecordCount(){
+        return recordCount;
+    }
+
+    private boolean recordsetExists(int index){
+        for(int i = 0; i < records.size(); i++){
+            if(records.get(i).getIndex() == index){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean addRecordset(int index, LoggerRecord lr){
+        if(recordsetExists(index)){
+            return false;
+        }
+        records.add(lr);
+        return true;
+    }
+
+    public LoggerRecord getRecordset(int index){
+        for(int i = 0; i < records.size(); i++){
+            if(records.get(i).getIndex() == index){
+                return records.get(i);
+            }
+        }
+        return null;
+    }
+
+    public void removeAllRecordsets(){
+        records = new ArrayList<LoggerRecord>();
+        recordCount = 0;
+    }
+
+    public void setDatetime(long dt){
+        datetime = dt;
+    }
+
+    public long getDatetime(){
+        return datetime;
+    }
+
+    public MicStartTrigger getMicStartTrigger(){
+        return micStartTrigger;
+    }
+
+    public void setMicStartTrigger(MicStartTrigger startTrigger){
+        micStartTrigger = startTrigger;
+    }
 }

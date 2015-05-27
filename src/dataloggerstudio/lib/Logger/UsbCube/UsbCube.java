@@ -95,10 +95,10 @@ public class UsbCube extends Logger{
 
 		//create header line 3
 		sb.append(delimiter);
-		sb.append("channel 1");
-		sb.append(delimiter);
-		sb.append("channel 2");
-		sb.append(delimiter);
+        for(int i = 0; i < channels; i++) {
+            sb.append("channel " + Integer.toString(i+1));
+            sb.append(delimiter);
+        }
 		sb.append("\n");
 
 		//create header line 4
@@ -117,6 +117,18 @@ public class UsbCube extends Logger{
                     break;
                 case DatasetItemIds.MS5607:
                     sb.append("mbar");
+                    break;
+                case DatasetItemIds.EDLSU1:
+                case DatasetItemIds.EDLSU2:
+                case DatasetItemIds.EDLSU3:
+                case DatasetItemIds.EDLSU4:
+                    sb.append("V");
+                    break;
+                case DatasetItemIds.EDLSI1:
+                case DatasetItemIds.EDLSI2:
+                case DatasetItemIds.EDLSI3:
+                case DatasetItemIds.EDLSI4:
+                    sb.append("mA");
                     break;
                 default:
                     break;

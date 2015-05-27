@@ -112,6 +112,22 @@ public class DatasetStructure {
                     channels += 1;
                     sensors += 1;
                     break;
+                case DatasetItemIds.EDLSU1:
+                case DatasetItemIds.EDLSU2:
+                case DatasetItemIds.EDLSU3:
+                case DatasetItemIds.EDLSU4:
+                    items.add(new DatasetSensorItemEDLSU(itemId));
+                    channels += 1;
+                    sensors += 1;
+                    break;
+                case DatasetItemIds.EDLSI1:
+                case DatasetItemIds.EDLSI2:
+                case DatasetItemIds.EDLSI3:
+                case DatasetItemIds.EDLSI4:
+                    items.add(new DatasetSensorItemEDLSI(itemId));
+                    channels += 1;
+                    sensors += 1;
+                    break;
             }
         }
         return true;

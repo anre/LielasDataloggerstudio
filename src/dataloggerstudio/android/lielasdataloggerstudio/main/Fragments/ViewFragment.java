@@ -1,10 +1,7 @@
 package org.lielas.lielasdataloggerstudio.main.Fragments;
 
-import android.app.ActionBar;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -18,14 +15,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.Spinner;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 
-import org.lielas.dataloggerstudio.lib.Dataset;
 import org.lielas.dataloggerstudio.lib.Logger.UsbCube.Dataset.DatasetItemIds;
 import org.lielas.dataloggerstudio.lib.Logger.UsbCube.Dataset.DatasetStructure;
 import org.lielas.dataloggerstudio.lib.Logger.UsbCube.UsbCube;
@@ -33,8 +25,6 @@ import org.lielas.dataloggerstudio.lib.LoggerRecord;
 import org.lielas.lielasdataloggerstudio.R;
 import org.lielas.lielasdataloggerstudio.main.LoggerRecordManager;
 import org.lielas.lielasdataloggerstudio.main.Table.LoggerRecordTableAdapter;
-
-import java.util.Date;
 
 /**
  * Created by Andi on 21.02.2015.
@@ -161,6 +151,18 @@ public class ViewFragment extends LielasFragment {
                     case DatasetItemIds.MS5607:
                         txtColumn.setText("p [mbar]");
                         break;
+                    case DatasetItemIds.EDLSU1:
+                    case DatasetItemIds.EDLSU2:
+                    case DatasetItemIds.EDLSU3:
+                    case DatasetItemIds.EDLSU4:
+                        txtColumn.setText("Spannung [V]");
+                        break;
+                    case DatasetItemIds.EDLSI1:
+                    case DatasetItemIds.EDLSI2:
+                    case DatasetItemIds.EDLSI3:
+                    case DatasetItemIds.EDLSI4:
+                        txtColumn.setText("Strom [mA]");
+                        break;
                     default:
                         txtColumn.setText("");
                         break;
@@ -192,9 +194,9 @@ public class ViewFragment extends LielasFragment {
 
         LoggerRecord lr = (LoggerRecord)logfilesSpinner.getSelectedItem();
 
-        if(LoggerRecordManager.getInstance().getActiveLogggerRecord() == null ||
-                lr.getId() != LoggerRecordManager.getInstance().getActiveLogggerRecord().getId()) {
-            LoggerRecordManager.getInstance().setActiveLogggerRecord(lr);
+        if(LoggerRecordManager.getInstance().getActiveLoggerRecord() == null ||
+                lr.getId() != LoggerRecordManager.getInstance().getActiveLoggerRecord().getId()) {
+            LoggerRecordManager.getInstance().setActiveLoggerRecord(lr);
             updateManager.update();
         }
     }
@@ -226,7 +228,7 @@ public class ViewFragment extends LielasFragment {
             ArrayAdapter<LoggerRecord> adapter = new ArrayAdapter<LoggerRecord>(getActivity(), R.layout.logfile_spinner_item, l.getRecordsetArray());
             logfilesSpinner.setAdapter(adapter);
 
-            LoggerRecord lr = LoggerRecordManager.getInstance().getActiveLogggerRecord();
+            LoggerRecord lr = LoggerRecordManager.getInstance().getActiveLoggerRecord();
 
             if(lr!= null){
 

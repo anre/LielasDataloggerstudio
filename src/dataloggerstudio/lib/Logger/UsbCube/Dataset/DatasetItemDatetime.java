@@ -23,15 +23,15 @@ public class DatasetItemDatetime extends DatasetItem{
             return false;
         }
 
-        dt = (payload[start++] & 0xFF) << 56;
-        dt += (payload[start++] & 0xFF) << 48;
-        dt += (payload[start++] & 0xFF) << 40;
-        dt += (payload[start++] & 0xFF) << 32;
-
-        dt += (payload[start++] & 0xFF) << 24;
-        dt += (payload[start++] & 0xFF) << 16;
+        dt = (payload[start++] & 0xFF);
         dt += (payload[start++] & 0xFF) <<  8;
-        dt += (payload[start++] & 0xFF);
+        dt += (payload[start++] & 0xFF) << 16;
+        dt += (payload[start++] & 0xFF) << 24;
+
+        dt += (payload[start++] & 0xFF) << 32;
+        dt += (payload[start++] & 0xFF) << 40;
+        dt += (payload[start++] & 0xFF) << 48;
+        dt += (payload[start++] & 0xFF) << 56;
         dt *= 1000;
 
         return true;

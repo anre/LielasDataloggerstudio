@@ -32,10 +32,12 @@ package org.lielas.dataloggerstudio.lib;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Comparator;
 import java.util.Date;
 
 
-public class Dataset{
+public class Dataset implements Comparable<Dataset>{
+    private long id;
 	private long dt;
 	private int channels;
 	private Value[] value;
@@ -46,8 +48,18 @@ public class Dataset{
 		
 		dt = 0;
 	}
-	
-	public class Value{
+
+    @Override
+    public int compareTo(Dataset o) {
+        if(this.dt < o.getDateTime()){
+            return -1;
+        }else if(this.dt > o.getDateTime()){
+            return 1;
+        }
+        return 0;
+    }
+
+    public class Value{
 		private int value;
 		private int decimals;
 		
@@ -67,6 +79,14 @@ public class Dataset{
 			return decimals;
 		}
 	}
+
+    public long getId(){
+        return id;
+    }
+
+    public void setId(long id){
+        this.id = id;
+    }
 
 	public long getDateTime() {
 		return dt;
@@ -138,7 +158,11 @@ public class Dataset{
 		//values
 		for(int i = 0; i < channels; i++){
 			String val = Integer.toString(value[i].getValue());
-			s[i+1] = val.substring(0, val.length() - value[i].getDecimals()) + "," + val.substring(val.length() - value[i].getDecimals(), val.length());
+            if(val.equals("0")){
+                s[i + 1] = "0,0";
+            }else {
+                s[i + 1] = val.substring(0, val.length() - value[i].getDecimals()) + "," + val.substring(val.length() - value[i].getDecimals(), val.length());
+            }
 		}
 		return s;
 	}

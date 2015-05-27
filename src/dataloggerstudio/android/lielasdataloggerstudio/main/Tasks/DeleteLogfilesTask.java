@@ -42,7 +42,7 @@ public class DeleteLogfilesTask extends LielasTask<Void, Void, UsbCube>{
             if (cube != null) {
                 updateManager.update("Logfiles successfully deleted");
                 cube.removeAllRecordsets();
-                LoggerRecordManager.getInstance().setActiveLogggerRecord(null);
+                LoggerRecordManager.getInstance().setActiveLoggerRecord(null);
             }
         }catch(Exception e){
         }

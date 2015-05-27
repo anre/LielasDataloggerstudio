@@ -1,7 +1,5 @@
 package org.lielas.lielasdataloggerstudio.main.Fragments;
 
-import android.database.DataSetObserver;
-import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -14,7 +12,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import org.lielas.dataloggerstudio.lib.Logger.UsbCube.UsbCube;
@@ -171,7 +168,7 @@ public class DataFragment extends LielasFragment {
             ArrayAdapter<LoggerRecord> adapter = new ArrayAdapter<LoggerRecord>(getActivity(), R.layout.logfile_spinner_item, l.getRecordsetArray());
             logfilesSpinner.setAdapter(adapter);
 
-            LoggerRecord lr = LoggerRecordManager.getInstance().getActiveLogggerRecord();
+            LoggerRecord lr = LoggerRecordManager.getInstance().getActiveLoggerRecord();
 
             if(lr != null) {
                 LoggerRecord loggerRecords[] = l.getRecordsetArray();
@@ -223,9 +220,9 @@ public class DataFragment extends LielasFragment {
 
         LoggerRecord lr = (LoggerRecord)logfilesSpinner.getSelectedItem();
 
-        if(LoggerRecordManager.getInstance().getActiveLogggerRecord() == null ||
-                lr.getId() != LoggerRecordManager.getInstance().getActiveLogggerRecord().getId()) {
-            LoggerRecordManager.getInstance().setActiveLogggerRecord(lr);
+        if(LoggerRecordManager.getInstance().getActiveLoggerRecord() == null ||
+                lr.getId() != LoggerRecordManager.getInstance().getActiveLoggerRecord().getId()) {
+            LoggerRecordManager.getInstance().setActiveLoggerRecord(lr);
             updateManager.update();
         }
 

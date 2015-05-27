@@ -10,7 +10,9 @@ import android.view.MenuItem;
 
 import org.lielas.dataloggerstudio.lib.Logger.Logger;
 import org.lielas.dataloggerstudio.lib.Logger.mic.MicUSBStick;
+import org.lielas.dataloggerstudio.lib.LoggerRecord;
 import org.lielas.micdataloggerstudio.R;
+import org.lielas.micdataloggerstudio.main.CommunicationInterface.mic.MicSerialInterface;
 import org.lielas.micdataloggerstudio.main.Fragments.ConnectFragment;
 import org.lielas.micdataloggerstudio.main.Fragments.DataFragment;
 import org.lielas.micdataloggerstudio.main.Fragments.DeviceInfoFragment;
@@ -31,6 +33,12 @@ public class Main extends ActionBarActivity{
     Logger logger;
     UpdateManager updateManager;
 
+    int connectId = 0;
+    int settingsId = 0;
+    int dataId = 0;
+    int viewId = 0;
+    int exportId = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -38,7 +46,7 @@ public class Main extends ActionBarActivity{
         updateManager = new UpdateManager();
 
         logger = new MicUSBStick();
-        //logger.setCommunicationInterface();  //TODO set communication interface
+        logger.setCommunicationInterface(new MicSerialInterface());
 
         setContentView(R.layout.activity_main);
 
@@ -51,6 +59,9 @@ public class Main extends ActionBarActivity{
         pageAdapter = new MyPageAdapter(getSupportFragmentManager(), fragments);
         ViewPager pager = (ViewPager)findViewById(R.id.viewpager);
         pager.setAdapter(pageAdapter);
+
+        LoggerRecord lr = new LoggerRecord(logger);
+        LoggerRecordManager.getInstance().setActiveLoggerRecord(lr);
     }
 
     @Override
@@ -65,6 +76,24 @@ public class Main extends ActionBarActivity{
     public boolean onOptionsItemSelected(MenuItem item){
         ViewPager pager = (ViewPager)findViewById(R.id.viewpager);
 
+        switch(item.getItemId()){
+            case R.id.action_connect:
+                pager.setCurrentItem(connectId);
+                break;
+            case R.id.action_settings:
+                pager.setCurrentItem(settingsId);
+                break;
+            case R.id.action_data:
+                pager.setCurrentItem(dataId);
+                break;
+            case R.id.action_view:
+                pager.setCurrentItem(viewId);
+                break;
+            case R.id.action_export:
+                pager.setCurrentItem(exportId);
+                break;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -77,6 +106,7 @@ public class Main extends ActionBarActivity{
         connectFragment.setUpdateManager(updateManager);
         updateManager.addFragment(connectFragment);
         fList.add(connectFragment);
+        connectId = fList.size() - 1;
 
         //Device Info Fragment
         DeviceInfoFragment deviceInfoFragment = DeviceInfoFragment.newInstance();
@@ -91,6 +121,7 @@ public class Main extends ActionBarActivity{
         settingsFragment.setUpdateManager(updateManager);
         updateManager.addFragment(settingsFragment);
         fList.add(settingsFragment);
+        settingsId = fList.size() - 1;
 
         //Data Fragment
         DataFragment dataFragment = DataFragment.newInstance();
@@ -98,6 +129,7 @@ public class Main extends ActionBarActivity{
         dataFragment.setUpdateManager(updateManager);
         updateManager.addFragment(dataFragment);
         fList.add(dataFragment);
+        dataId = fList.size() - 1;
 
         //View Fragment
         ViewFragment viewFragment = ViewFragment.newInstance();
@@ -105,6 +137,7 @@ public class Main extends ActionBarActivity{
         viewFragment.setUpdateManager(updateManager);
         updateManager.addFragment(viewFragment);
         fList.add(viewFragment);
+        viewId = fList.size() - 1;
 
         //Export Fragment
         ExportFragment exportFragment = ExportFragment.newInstance();
@@ -112,13 +145,14 @@ public class Main extends ActionBarActivity{
         exportFragment.setUpdateManager(updateManager);
         updateManager.addFragment(exportFragment);
         fList.add(exportFragment);
+        exportId = fList.size() - 1;
 
         //Live Fragment
-        LiveFragment liveFragment = LiveFragment.newInstance();
+        /*LiveFragment liveFragment = LiveFragment.newInstance();
         liveFragment.setLogger(logger);
         liveFragment.setUpdateManager(updateManager);
         updateManager.addFragment(liveFragment);
-        fList.add(liveFragment);
+        fList.add(liveFragment);*/
 
 
 

@@ -68,13 +68,11 @@ import org.lielas.dataloggerstudio.pc.language.LanguageManager;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
-import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.UIManager;
-import javax.swing.JButton;
 
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
@@ -117,16 +115,12 @@ public class MainFrame extends JFrame{
 			UIManager.put("JXDatePicker.arrowIcon", new ImageIcon(getClass().getClassLoader().getResource("img/icons/date_icon.png")));
 			
 		} catch (ClassNotFoundException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		} catch (InstantiationException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		} catch (IllegalAccessException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		} catch (UnsupportedLookAndFeelException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		
@@ -317,6 +311,8 @@ public class MainFrame extends JFrame{
 
 		
 		updateLanguage();
+
+        setExtendedState(this.getExtendedState() |  JFrame.MAXIMIZED_BOTH);
 		pack();
 		revalidate();
 		repaint();
@@ -465,7 +461,6 @@ public class MainFrame extends JFrame{
 				lblConnectionState.setText("   " + languageManager.getString(1022));
 			}
 		}catch(Exception e){
-			// TODO
 			e.printStackTrace();
 		}
 	}

@@ -147,7 +147,7 @@ public class LielasCommunicationProtocolPaket{
 			case LielasApplicationProtocolPaket.LAP_PROTOCOL_TYPE_LDP:
 				payload  = (LielasApplicationProtocolPaket) new LielasDataProtocolPaket();
                 if(datasetStructure != null){
-
+                    return false;
                 }
 				if(!payload.parse(payloadBytes)){
 					return false;
@@ -160,6 +160,49 @@ public class LielasCommunicationProtocolPaket{
 
 		return true;
 	}
+
+    public boolean parse(byte[] paket, LielasDataProtocolAnswerPaket ldpap){
+        int receivedCrc;
+        byte[] payloadBytes;
+
+        //check for paket length error
+        if(paket.length < LielasCommunicationProtocolHeader.HEADER_LENGTH){
+            answer(LcpErrorCode.PAYLOAD_LENGTH_ERROR);
+            return false;
+        }
+
+        //check for crc error
+        crc = Crc16.calculate(paket, paket.length - CRC_LEN);
+        receivedCrc = getUnsignedShort(paket, paket.length - CRC_LEN);
+
+        if(crc != receivedCrc){
+            answer(LcpErrorCode.CRC_ERROR);
+            return false;
+        }
+
+        header.length = getUnsignedByte(paket[LENGTH_POS]);
+        header.setId(getUnsignedShort(paket, ID_POS));
+        header.setProtocol(paket[PROT_POS]);
+
+        //check application protocol
+        payloadBytes = new byte[header.length];
+        System.arraycopy(paket, LielasCommunicationProtocolHeader.HEADER_LENGTH,
+                payloadBytes, 0, payloadBytes.length);
+
+        switch(header.getProtocol()){
+            case LielasApplicationProtocolPaket.LAP_PROTOCOL_TYPE_LDP:
+
+                if(!ldpap.parse(payloadBytes, datasetStructure)){
+                    return false;
+                }
+                break;
+            default:
+                answer(LcpErrorCode.UNKNOWN_PROTOCOL);
+                return false;
+        }
+
+        return true;
+    }
 	
 	public void answer(int errorCode){
 		

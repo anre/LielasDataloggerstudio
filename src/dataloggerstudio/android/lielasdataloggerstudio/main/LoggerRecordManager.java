@@ -7,7 +7,7 @@ import org.lielas.dataloggerstudio.lib.LoggerRecord;
  */
 public class LoggerRecordManager {
 
-    private LoggerRecord activeLogggerRecord;
+    private LoggerRecord activeLoggerRecord;
 
     private static LoggerRecordManager instance;
 
@@ -19,15 +19,15 @@ public class LoggerRecordManager {
     }
 
     public LoggerRecordManager(){
-        activeLogggerRecord = null;
+        activeLoggerRecord = null;
     }
 
-    public void setActiveLogggerRecord(LoggerRecord lr){
-        activeLogggerRecord = lr;
+    public void setActiveLoggerRecord(LoggerRecord lr){
+        activeLoggerRecord = lr;
     }
 
-    public LoggerRecord getActiveLogggerRecord(){
-        return activeLogggerRecord;
+    public LoggerRecord getActiveLoggerRecord(){
+        return activeLoggerRecord;
     }
 
 }
