@@ -64,5 +64,4 @@ public class ConnectTask extends MicTask<Void, Void, MicUSBStick> {
 
         }
     }
-
 }

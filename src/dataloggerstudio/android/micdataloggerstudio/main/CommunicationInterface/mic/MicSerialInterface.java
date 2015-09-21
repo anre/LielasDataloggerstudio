@@ -18,6 +18,8 @@ public class MicSerialInterface extends AndroidSerialInterface {
     final private String CMD_READ_IDENTIFIER = "I\r";
     final private String CMD_READ_ARGUMENTS = "M\r";
     final private String CMD_READ_DATA = "D\r";
+    final private String CMD_SET_TIME = "C ";
+    final private String CMD_PWR_MODE = "P 2\r";
 
     private boolean realtimeLogging = false;
 
@@ -202,6 +204,41 @@ public class MicSerialInterface extends AndroidSerialInterface {
     }
 
     public boolean setClock(MicUSBStick logger){
+        byte[] recv = null;
+
+        if(!isOpen){
+            return false;
+        }
+
+        String cmd = CMD_SET_TIME + logger.getDatetime() + "\r";
+        write(cmd.getBytes());
+        //read first line
+        recv = readLine();
+
+        isBusy = true;
+
+        if(recv == null){
+            return false;
+        }
+
+        return true;
+    }
+
+    public  boolean setPowerMode(MicUSBStick logger){
+        byte[] recv = null;
+
+        if(!isOpen){
+            return false;
+        }
+
+        String cmd = CMD_PWR_MODE;
+        write(cmd.getBytes());
+        //read first line
+        recv = readLine();
+
+        if(recv == null){
+            return false;
+        }
         return true;
     }
 

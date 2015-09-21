@@ -66,7 +66,7 @@ public class CsvFileCreator extends FileCreator{
 		//add data
 		for(int i = 0; i < lr.getCount(); i++){
 			Dataset ds = lr.get(i);
-			String values[] = ds.getStringArray();
+			String values[] = ds.getStringArrayWithSplitDateTime();
 			for(int j = 0; j < values.length; j++){
 				sb.append(values[j].replaceAll(",", this.comma));
 				sb.append(delimiter);

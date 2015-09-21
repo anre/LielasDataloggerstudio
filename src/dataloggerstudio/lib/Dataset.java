@@ -30,6 +30,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.lielas.dataloggerstudio.lib;
 
+import org.lielas.dataloggerstudio.lib.Logger.MeasurementType.MeasurementType;
+import org.lielas.dataloggerstudio.lib.Logger.Units.UnitClass;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
@@ -41,11 +44,14 @@ public class Dataset implements Comparable<Dataset>{
 	private long dt;
 	private int channels;
 	private Value[] value;
+    private MeasurementType[] type;
+	private UnitClass unitClass;
 	
 	public Dataset(int channels){
 		this.channels = channels;
 		value = new Value[channels];
-		
+        type = new MeasurementType[channels];
+		unitClass = new UnitClass();
 		dt = 0;
 	}
 
@@ -57,6 +63,10 @@ public class Dataset implements Comparable<Dataset>{
             return 1;
         }
         return 0;
+    }
+
+    public UnitClass getUnitClass(){
+        return unitClass;
     }
 
     public class Value{
@@ -111,6 +121,14 @@ public class Dataset implements Comparable<Dataset>{
 		}
 	}
 
+    public void setValue(int value, int decimals, int channel, MeasurementType mt){
+        if(channel < this.channels && this.channels >= 0){
+            this.value[channel] = new Value(decimals);
+            this.value[channel].setValue(value);
+            this.type[channel] = mt;
+        }
+    }
+
 	public void setValue(int value, int channel){
 		if(channel < this.channels && this.channels >= 0){
 			this.value[channel] = new Value(1);
@@ -138,6 +156,12 @@ public class Dataset implements Comparable<Dataset>{
 			}
 
 			double d = value[channel - 1].getValue() / (Math.pow(10, value[channel - 1].getDecimals()));
+
+            if(type[channel -1 ] != null){
+                if(unitClass.getUnitClass() == UnitClass.UNIT_CLASS_IMPERIAL){
+                    d = type[channel - 1].toImperial(d);
+                }
+            }
 			String format = "%." + Integer.toString(value[channel - 1].getDecimals()) + "f";
 			s = String.format(format, d);
 
@@ -161,8 +185,51 @@ public class Dataset implements Comparable<Dataset>{
             if(val.equals("0")){
                 s[i + 1] = "0,0";
             }else {
-                s[i + 1] = val.substring(0, val.length() - value[i].getDecimals()) + "," + val.substring(val.length() - value[i].getDecimals(), val.length());
+
+                double d = value[i].getValue() / (Math.pow(10, value[i].getDecimals()));
+
+                if (type[i] != null) {
+                    if (unitClass.getUnitClass() == UnitClass.UNIT_CLASS_IMPERIAL) {
+                        d = type[i].toImperial(d);
+                    }
+                }
+                String format = "%." + Integer.toString(value[i].getDecimals()) + "f";
+                s[i + 1] = String.format(format, d);
+
             }
+		}
+		return s;
+	}
+
+	public String[] getStringArrayWithSplitDateTime(){
+		String[] s = new String[channels+2];
+
+
+		//date
+		Date date = new Date(dt);
+		DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
+        DateFormat tf = new SimpleDateFormat("HH:mm:ss");
+		s[0] = df.format(date);
+        s[1] = tf.format(date);
+
+		//values
+		for(int i = 0; i < channels; i++){
+			String val = Integer.toString(value[i].getValue());
+			if(val.equals("0")){
+				s[i + 1] = "0,0";
+			}else {
+
+				double d = value[i].getValue() / (Math.pow(10, value[i].getDecimals()));
+
+				if (type[i] != null) {
+					if (unitClass.getUnitClass() == UnitClass.UNIT_CLASS_IMPERIAL) {
+						d = type[i].toImperial(d);
+					}
+				}
+				String format = "%." + Integer.toString(value[i].getDecimals()) + "f";
+				s[i + 2] = String.format(format, d);
+
+			}
 		}
 		return s;
 	}

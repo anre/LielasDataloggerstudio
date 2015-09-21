@@ -15,6 +15,7 @@ import org.lielas.micdataloggerstudio.R;
 import org.lielas.micdataloggerstudio.main.LielasToast;
 import org.lielas.micdataloggerstudio.main.LoggerRecordManager;
 import org.lielas.micdataloggerstudio.main.Tasks.LoadDataTask;
+import org.lielas.micdataloggerstudio.main.Tasks.UpdateStatusTask;
 
 /**
  * Created by Andi on 08.04.2015.
@@ -54,6 +55,14 @@ public class DataFragment extends MicFragment{
                     onButtonClick(v);
                 }
             });
+
+            Button updateDataBttn = (Button)v.findViewById(R.id.bttnUpdateData);
+            updateDataBttn.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    onButtonUpdateClick(v);
+                }
+            });
         }
 
         return v;
@@ -79,16 +88,22 @@ public class DataFragment extends MicFragment{
         }
 
         if(stick.getCommunicationInterface().isOpen()){
-            long end = stick.getFirstDatasetDate() + stick.getSampleRate() * stick.getRecordCount() * 1000;
+            long recordCountEnd = stick.getRecordCount() / 2;
+            if(recordCountEnd > 1){
+                recordCountEnd -= 1;
+            }
+            long end = stick.getFirstDatasetDate() + stick.getSampleRate() * recordCountEnd * 1000;
 
             txtStart.setText(Logger.dateToString(stick.getFirstDatasetDate()));
             txtEnd.setText(Logger.dateToString(end));
             txtSamplerate.setText(Long.toString(stick.getSampleRate())+ "s");
-            txtSamples.setText(Integer.toString(stick.getRecordCount()));
+            txtSamples.setText(Integer.toString(stick.getRecordCount()/2));
 
             LoggerRecord lr = LoggerRecordManager.getInstance().getActiveLoggerRecord();
 
-            txtProgressContent.setText(lr.getCount() + "/" + Integer.toString(stick.getRecordCount() / stick.getModel().getChannels()));
+            if(lr != null) {
+                txtProgressContent.setText(lr.getCount() + "/" + Integer.toString(stick.getRecordCount() / stick.getModel().getChannels()));
+            }
         }
     }
 
@@ -96,6 +111,22 @@ public class DataFragment extends MicFragment{
         MicUSBStick stick = (MicUSBStick) logger;
 
         txtProgressContent.setText(progress.toString() + "/" + Integer.toString(stick.getRecordCount() / stick.getModel().getChannels()));
+    }
+
+
+    private void onButtonUpdateClick(View v){
+
+        if(!logger.getCommunicationInterface().isOpen()){
+            LielasToast.show("no logger connected", getActivity());
+            return;
+        }
+
+        if(org.lielas.micdataloggerstudio.main.LoggerRecordManager.getInstance().getActiveLoggerRecord() == null){
+            return;
+        }
+
+        UpdateStatusTask task = new UpdateStatusTask((MicUSBStick)logger, updateManager);
+        task.execute();
     }
 
     private void onButtonClick(View v){

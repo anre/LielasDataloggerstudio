@@ -32,6 +32,7 @@ public class ClockSettingsFragment extends LielasFragment{
 
     Button bttnSetClock;
 
+    java.util.Timer timer;
 
     final Handler guiUpdateHandler = new Handler();
 
@@ -50,10 +51,12 @@ public class ClockSettingsFragment extends LielasFragment{
             phoneClock = (TextView) v.findViewById(R.id.lblClockSettingsPhoneDtData);
 
             updateUI();
-            java.util.Timer t = new java.util.Timer();
-            UpdateTimeTask updateTimeTask = new UpdateTimeTask();
-            updateTimeTask.setLogger((UsbCube)logger);
-            t.schedule(updateTimeTask, 1000, 1000);
+            if(timer == null){
+                timer =  new java.util.Timer();
+                UpdateTimeTask updateTimeTask = new UpdateTimeTask();
+                updateTimeTask.setLogger((UsbCube)logger);
+                timer.schedule(updateTimeTask, 0, 1000);
+            }
 
             bttnSetClock = (Button) v.findViewById(R.id.bttnClockSettingsSetClock);
             bttnSetClock.setOnClickListener(new View.OnClickListener(){

@@ -1,6 +1,7 @@
 package org.lielas.micdataloggerstudio.main.Fragments;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,14 +44,19 @@ public class ExportFragment extends MicFragment{
         View v = inflater.inflate(R.layout.export_fragment, container, false);
 
         if(context != null){
+            SharedPreferences sharedPreferences = context.getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE);
 
             delimiterSpinner = (Spinner) v.findViewById(R.id.spExportDelimiterData);
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, getDelimiterList());
             delimiterSpinner.setAdapter(adapter);
+            String delimiter = sharedPreferences.getString("delimiter", ",");
+            delimiterSpinner.setSelection(adapter.getPosition(delimiter));
 
             commaSpinner = (Spinner) v.findViewById(R.id.spExportCommaData);
             adapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, getCommaList());
             commaSpinner.setAdapter(adapter);
+            String comma = sharedPreferences.getString("comma", ".");
+            commaSpinner.setSelection(adapter.getPosition(comma));
 
             saveBttn = (Button)v.findViewById(R.id.bttnExportBttn);
             saveBttn.setOnClickListener(new View.OnClickListener(){
@@ -63,6 +69,8 @@ public class ExportFragment extends MicFragment{
             chkOverwrite = (CheckBox) v.findViewById(R.id.chkOverwrite);
 
             filename = (EditText)v.findViewById(R.id.txtFilename);
+
+
 
         }
         return v;
@@ -91,9 +99,9 @@ public class ExportFragment extends MicFragment{
     private List<String> getDelimiterList(){
         List<String> list =  new ArrayList<String>();
 
-        list.add(";");
-        list.add(".");
         list.add(",");
+        list.add(".");
+        list.add(";");
         list.add("tab");
         list.add("space");
         return list;
@@ -102,8 +110,8 @@ public class ExportFragment extends MicFragment{
     private List<String> getCommaList(){
         List<String> list =  new ArrayList<String>();
 
-        list.add(",");
         list.add(".");
+        list.add(",");
         return list;
     }
 
@@ -111,6 +119,15 @@ public class ExportFragment extends MicFragment{
         int status;
         String fname = filename.getText().toString();
         LoggerRecord lr = LoggerRecordManager.getInstance().getActiveLoggerRecord();
+        final String[] reservedChars = {"|", "\\", "?", "*", "<", "\"", ":", ">"};
+
+
+        //save settings
+        SharedPreferences.Editor editor = getActivity().getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE).edit();
+        editor.putString("delimiter", delimiterSpinner.getSelectedItem().toString());
+        editor.putString("comma", commaSpinner.getSelectedItem().toString());
+        editor.commit();
+
 
         if(lr == null){
             new LielasToast().show("No logfile selected", getActivity());
@@ -132,9 +149,16 @@ public class ExportFragment extends MicFragment{
             return;
         }
 
+        for ( String c : reservedChars ) {
+            if(fname.contains(c)){
+                new LielasToast().show("The filename may not include \"| / ? * < \\ : >\"", getActivity());
+                return;
+            }
+        }
+
         fname = fname + ".csv";
 
-        AndroidFileSaver fileSaver = new AndroidFileSaver();
+        AndroidFileSaver fileSaver = new AndroidFileSaver("/mic");
         CsvFileCreator fileCreator = new CsvFileCreator();
 
         fileCreator.setFileSaverType(fileSaver);
@@ -145,7 +169,7 @@ public class ExportFragment extends MicFragment{
         status = fileCreator.save(LoggerRecordManager.getInstance().getActiveLoggerRecord(), chkOverwrite.isChecked());
 
         if(status == FileCreator.STATUS_OK){
-            new LielasToast().show("File successfully written to Download/lielas", getActivity());
+            new LielasToast().show("File successfully written to Download" + fileSaver.getPathPrefix(), getActivity());
         }else if(status == FileCreator.STATUS_FILE_EXISTS){
             new LielasToast().show("File already exists", getActivity());
         }else{

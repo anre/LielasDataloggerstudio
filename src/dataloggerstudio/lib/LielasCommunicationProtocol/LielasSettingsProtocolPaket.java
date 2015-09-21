@@ -145,6 +145,15 @@ public class LielasSettingsProtocolPaket extends LielasApplicationProtocolPaket{
 				case LielasSettingsProtocolIds.GET_DATASET_STRUCTURE:
 					payload = (LielasSettingsProtocolPayload) new LielasSettingsProtocolDatasetStructure();
 					break;
+                case LielasSettingsProtocolIds.MODEL_NUMBER:
+                    payload = (LielasSettingsProtocolPayload) new LielasSettingsProtocolModelNumber();
+                    break;
+                case LielasSettingsProtocolIds.GET_BADBLOCK_COUNT:
+                    payload = (LielasSettingsProtocolPayload) new LielasSettingsProtocolBadBlockCount();
+                    break;
+                case LielasSettingsProtocolIds.TEST_FLASH:
+                    payload = (LielasSettingsProtocolPayload) new LielasSettingsProtocolTestFlash();
+                    break;
 				default:
 					return false;
 			}

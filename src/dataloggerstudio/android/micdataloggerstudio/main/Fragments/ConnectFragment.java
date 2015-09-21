@@ -24,6 +24,7 @@ public class ConnectFragment extends MicFragment{
 
 
     TextView connectionstate;
+    Button bttn;
 
     public static final ConnectFragment newInstance(){
         ConnectFragment f = new ConnectFragment();
@@ -57,7 +58,7 @@ public class ConnectFragment extends MicFragment{
         View v = inflater.inflate(R.layout.connect_fragment, container, false);
 
         if(context != null){
-            Button bttn = (Button)v.findViewById(R.id.bttnConnect);
+            bttn = (Button)v.findViewById(R.id.bttnConnect);
             bttn.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v){
@@ -95,6 +96,7 @@ public class ConnectFragment extends MicFragment{
         try{
             if(stick.getCommunicationInterface().isOpen()){
                 connectionstate.setText(getResources().getString(R.string.state_connected));
+                bttn.setVisibility(View.INVISIBLE);
             }else{
                 connectionstate.setText(getResources().getString(R.string.state_not_connected));
             }

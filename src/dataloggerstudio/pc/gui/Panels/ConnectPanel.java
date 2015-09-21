@@ -66,12 +66,12 @@ import java.util.concurrent.ExecutionException;
 
 public class ConnectPanel extends DataloggerstudioPanel{
 
-	JLabel lblType;
-	JComboBox<String> cbType;
 	JLabel lblComPort;
 	JComboBox<String> cbComPort;
 	ImageButton bttnReload;
 	BodyButton bttnConnect;
+    JLabel lblAdvancedView;
+    JCheckBox chkAdvancedView;
 
 	Toast connectingToast;
 	
@@ -118,71 +118,61 @@ public class ConnectPanel extends DataloggerstudioPanel{
 						RowSpec.decode("16dlu"),
 						FormFactory.PREF_ROWSPEC,
 						RowSpec.decode("4dlu:grow"),}));
+
 				
-				lblType = new JLabel("New label");
-				panel_1.add(lblType, "2, 2, left, default");
-				lblType.setHorizontalAlignment(SwingConstants.LEFT);
-				lblType.setHorizontalTextPosition(SwingConstants.LEFT);
-				lblType.setFont(new Font("Tahoma", Font.PLAIN, 11));
-				
-				cbType = new JComboBox(types);
-				panel_1.add(cbType, "6, 2, fill, default");
-				cbType.setBorder(null);
-				
-				lblComPort = new JLabel("New label");
-				panel_1.add(lblComPort, "2, 4, left, default");
-				lblComPort.setHorizontalAlignment(SwingConstants.LEFT);
-				lblComPort.setHorizontalTextPosition(SwingConstants.LEFT);
-				lblComPort.setFont(new Font("Tahoma", Font.PLAIN, 11));
-				
-				cbComPort = new JComboBox();
-				/*cbComPort.addActionListener(new ActionListener() {
-					
-					public void actionPerformed(ActionEvent arg0) {
-						ReloadBttnPressed();
-					}
-				});*/
-				panel_1.add(cbComPort, "6, 4, fill, default");
-				cbComPort.setBorder(null);
-				
-				bttnReload = new ImageButton("reload_icon.png", "reload_icon_clicked.png");
-				panel_1.add(bttnReload, "8, 4");
-				bttnReload.setBorder(BorderFactory.createRaisedBevelBorder());
-				bttnReload.setPreferredSize(new Dimension(24, 24));
-				bttnReload.addActionListener(new ActionListener(){
-					public void actionPerformed(ActionEvent e){
-						ReloadBttnPressed();
-					}
-				});
-				
-				bttnConnect = new BodyButton("New button");
-				panel_1.add(bttnConnect, "6, 6, right, default");
-				bttnConnect.setFont(new Font("Tahoma", Font.BOLD, 11));
-				bttnConnect.addActionListener(new ActionListener(){
-					public void actionPerformed(ActionEvent e){
-						ConnectBttnPressed();
-					}
-				});
+        lblComPort = new JLabel();
+        panel_1.add(lblComPort, "2, 2, left, default");
+        lblComPort.setHorizontalAlignment(SwingConstants.LEFT);
+        lblComPort.setHorizontalTextPosition(SwingConstants.LEFT);
+        lblComPort.setFont(new Font("Tahoma", Font.PLAIN, 11));
+
+        cbComPort = new JComboBox();
+        /*cbComPort.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent arg0) {
+                ReloadBttnPressed();
+            }
+        });*/
+        panel_1.add(cbComPort, "6, 2, fill, default");
+        cbComPort.setBorder(null);
+
+        bttnReload = new ImageButton("reload_icon.png", "reload_icon_clicked.png");
+        panel_1.add(bttnReload, "8, 2");
+        bttnReload.setBorder(BorderFactory.createRaisedBevelBorder());
+        bttnReload.setPreferredSize(new Dimension(24, 24));
+        bttnReload.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                ReloadBttnPressed();
+            }
+        });
+
+        bttnConnect = new BodyButton("");
+        panel_1.add(bttnConnect, "6, 4, right, default");
+        bttnConnect.setFont(new Font("Tahoma", Font.BOLD, 11));
+        bttnConnect.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                ConnectBttnPressed();
+            }
+        });
+
+        lblAdvancedView = new JLabel("Advanced View");
+        panel_1.add(lblAdvancedView, " 2, 6, left, default");
+
+        chkAdvancedView = new JCheckBox();
+        panel_1.add(chkAdvancedView, "6, 6, left, center");
 
 	}
 	
 	
 	public void updateLanguage(LanguageManager lm, MouseOverHintManager hintManager){
 		
-		lblType.setText(lm.getString(910));
-		lblComPort.setText(lm.getString(911));
-		
-		cbType.removeAllItems();
-		cbType.addItem(lm.getString(1020));
-		cbType.addItem(lm.getString(1021));
-		
 		cbComPort.removeAllItems();
 		getSerialPorts();
-		
+
+        lblComPort.setText(lm.getString(911));
+
 		bttnConnect.setText(lm.getString(912));
 
-		hintManager.addHintFor(lblType, lm.getString(915));
-		hintManager.addHintFor(cbType, lm.getString(915));
 		hintManager.addHintFor(lblComPort, lm.getString(916));
 		hintManager.addHintFor(cbComPort, lm.getString(916));
 		hintManager.addHintFor(bttnConnect, lm.getString(913));
@@ -200,8 +190,7 @@ public class ConnectPanel extends DataloggerstudioPanel{
 		for(int i = 0; i < ports.length; i++){
 			cbComPort.addItem(ports[i]);
 		}
-		cbComPort.setSelectedItem("COM2");
-		cbType.setSelectedIndex(1);
+		cbComPort.setSelectedItem("COM15");
 	}
 	
 	private void ConnectBttnPressed(){
@@ -226,15 +215,8 @@ public class ConnectPanel extends DataloggerstudioPanel{
 		mainFrame.disconnectLogger();
 		LoggerRecordManager.getInstance().removeAll();
 		
-		//get selected type
-		int type = cbType.getSelectedIndex() + 1;
-		if(type == 0){
-			//TODO
-			return;
-		}
-		
 		//parse type
-		LoggerType lt = new LoggerType(type);
+		LoggerType lt = new LoggerType(LoggerType.USB_CUBE);
 		if(lt.getType() == LoggerType.NONE){
 			//TODO
 			return;
@@ -323,7 +305,13 @@ public class ConnectPanel extends DataloggerstudioPanel{
 					return logger;
 				}
 
-				//get model
+                //get model
+                if(!com.getModelNumber((UsbCube)logger)){
+                    com.close();
+                    return logger;
+                }
+
+				//get dataset structure
 				if(!com.getDatasetStructure((UsbCube)logger)){
 					com.close();
 					return logger;

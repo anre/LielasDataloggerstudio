@@ -32,6 +32,7 @@ package org.lielas.dataloggerstudio.lib;
 
 import org.joda.time.format.DateTimeFormat;
 import org.lielas.dataloggerstudio.lib.Logger.Logger;
+import org.lielas.dataloggerstudio.lib.Logger.Units.UnitClass;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -49,6 +50,7 @@ public class LoggerRecord{
 	private boolean saved;
 	private int index;
 	private String name;
+	private UnitClass unitClass;
 
 	private long startIndex;
 	private int id;
@@ -70,6 +72,7 @@ public class LoggerRecord{
 		max = 0;
 		index = -1;
 		this.logger = logger;
+		unitClass = new UnitClass();
 	}
 
 	public LoggerRecord(Logger logger, int index){
@@ -79,6 +82,11 @@ public class LoggerRecord{
 		max = 0;
 		this.index = index;
 		this.logger = logger;
+		unitClass = new UnitClass();
+	}
+
+	public UnitClass getUnitClass(){
+		return unitClass;
 	}
 
 	public Logger getLogger(){
@@ -86,6 +94,9 @@ public class LoggerRecord{
 	}
 
 	public int getCount(){
+        if(data == null){
+            return 0;
+        }
 		return data.size();
 	}
 	
@@ -94,6 +105,7 @@ public class LoggerRecord{
             return null;
         }
 
+        data.get((int)index).getUnitClass().setUnitClass(unitClass.getUnitClass());
 		return data.get((int) index);
 	}
 	

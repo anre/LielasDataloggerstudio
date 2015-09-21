@@ -90,6 +90,7 @@ public class ConnectFragment extends LielasFragment{
     }
 
     private void onButtonClick(View v){
+
         ConnectTask conTask = new ConnectTask((UsbCube)this.logger, updateManager, getActivity());
         conTask.execute();
     }

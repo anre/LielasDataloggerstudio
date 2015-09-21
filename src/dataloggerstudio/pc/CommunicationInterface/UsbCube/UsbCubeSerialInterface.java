@@ -35,8 +35,8 @@ import jssc.SerialPortException;
 import org.lielas.dataloggerstudio.lib.Dataset;
 import org.lielas.dataloggerstudio.lib.LielasCommunicationProtocol.*;
 import org.lielas.dataloggerstudio.lib.Logger.Lielas.LielasId;
+import org.lielas.dataloggerstudio.lib.Logger.Lielas.LielasModel;
 import org.lielas.dataloggerstudio.lib.Logger.Lielas.LielasVersion;
-import org.lielas.dataloggerstudio.lib.Logger.UsbCube.Dataset.DatasetSensorItem;
 import org.lielas.dataloggerstudio.lib.Logger.UsbCube.Dataset.DatasetStructure;
 import org.lielas.dataloggerstudio.lib.Logger.UsbCube.UsbCube;
 import org.lielas.dataloggerstudio.lib.LoggerRecord;
@@ -54,7 +54,7 @@ public class UsbCubeSerialInterface extends PcSerialInterface{
     private boolean readTimeout;
     private int readTimerTimeout = 500;
     private int retries = 3;
-    
+    private String port;
 	
 	public UsbCubeSerialInterface (){
 		
@@ -62,6 +62,7 @@ public class UsbCubeSerialInterface extends PcSerialInterface{
 	
 	public boolean connect(String port){
 		setBaudrate(500000);
+        this.port = port;
 		return open(port);
 	}
 
@@ -74,7 +75,12 @@ public class UsbCubeSerialInterface extends PcSerialInterface{
 		return realtimeLogging;
 	}
 
-	private boolean setRealTimeLoging(boolean status){	
+    @Override
+    public String getPort() {
+        return port;
+    }
+
+    private boolean setRealTimeLoging(boolean status){
 		
 		if(!isOpen){
 			setError(LanguageManager.getInstance().getString(1053));
@@ -873,8 +879,6 @@ public class UsbCubeSerialInterface extends PcSerialInterface{
 			lsppDt = (LielasSettingsProtocolDatetime)lspp.getPayload();
 			logger.setDatetime(lsppDt.getDatetime());
 
-            long drift = lsppDt.getDatetime() - (new Date().getTime());
-            System.out.println("Drift:" + drift);
 		}catch(Exception e){
 			setError(LanguageManager.getInstance().getString(1063));
 			e.printStackTrace();
@@ -1217,7 +1221,7 @@ public class UsbCubeSerialInterface extends PcSerialInterface{
 
             if (lcpp == null) {
                 setError(LanguageManager.getInstance().getString(1066));
-                return 0;
+                return paketsReceived;
             }
 
         }
@@ -1330,5 +1334,138 @@ public class UsbCubeSerialInterface extends PcSerialInterface{
 		}
 		return true;
 	}
+
+    public int getBadBlockCount(){
+        int bbc = 0;
+
+        if(!isOpen){
+            setError(LanguageManager.getInstance().getString(1053));
+            return -1;
+        }
+
+        //create application protocol paket
+        LielasSettingsProtocolPaket lspp = new LielasSettingsProtocolPaket();
+        LielasSettingsProtocolBadBlockCount lspb = new LielasSettingsProtocolBadBlockCount();
+        lspp.setPayload(lspb);
+
+        //create lcp protocol paket
+        LielasCommunicationProtocolPaket lcpp = new LielasCommunicationProtocolPaket();
+        lcpp.setLielasApplicationProtocol(lspp);
+        lcpp.pack();
+        //get paket
+        byte[] paket = lcpp.getBytes();
+
+        try{
+            sp.writeBytes(paket);
+        } catch (SerialPortException e) {
+            setError(LanguageManager.getInstance().getString(1055));
+            isBusy = false;
+            return -1;
+        }
+
+        //receive answer
+        lcpp = getPaket();
+        if(lcpp == null) {
+            setError(LanguageManager.getInstance().getString(1064));
+            return -1;
+        }
+        try{
+            bbc = lspb.getBadBlockCount();
+            System.out.println("Bad Block Count:" + Integer.toString(bbc) + " blocks");
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return bbc;
+    }
+
+    public boolean TestFlash(){
+
+        if(!isOpen){
+            setError(LanguageManager.getInstance().getString(1053));
+            return false;
+        }
+
+        //create application protocol paket
+        LielasSettingsProtocolPaket lspp = new LielasSettingsProtocolPaket();
+        LielasSettingsProtocolTestFlash lspt = new LielasSettingsProtocolTestFlash();
+        lspp.setPayload(lspt);
+
+        //create lcp protocol paket
+        LielasCommunicationProtocolPaket lcpp = new LielasCommunicationProtocolPaket();
+        lcpp.setLielasApplicationProtocol(lspp);
+        lcpp.pack();
+        //get paket
+        byte[] paket = lcpp.getBytes();
+
+        try{
+            sp.writeBytes(paket);
+        } catch (SerialPortException e) {
+            setError(LanguageManager.getInstance().getString(1055));
+            isBusy = false;
+            return false;
+        }
+
+        //receive answer
+        lcpp = getPaket();
+        if(lcpp == null) {
+            setError(LanguageManager.getInstance().getString(1064));
+            return false;
+        }
+        try{
+            int status =  lspt.getTestStatus();
+            if(status == LielasSettingsProtocolTestFlash.OK){
+                return true;
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean getModelNumber(UsbCube logger){
+
+        if(!isOpen){
+            setError(LanguageManager.getInstance().getString(1053));
+            return false;
+        }
+
+        //create application protocol paket
+        LielasSettingsProtocolPaket lspp = new LielasSettingsProtocolPaket();
+        LielasSettingsProtocolModelNumber lspm = new LielasSettingsProtocolModelNumber();
+        lspp.setPayload(lspm);
+
+        //create lcp protocol paket
+        LielasCommunicationProtocolPaket lcpp = new LielasCommunicationProtocolPaket();
+        lcpp.setLielasApplicationProtocol(lspp);
+        lcpp.pack();
+        //get paket
+        byte[] paket = lcpp.getBytes();
+
+        try{
+            sp.writeBytes(paket);
+        } catch (SerialPortException e) {
+            setError(LanguageManager.getInstance().getString(1055));
+            isBusy = false;
+            return false;
+        }
+
+        //receive answer
+        lcpp = getPaket();
+        if(lcpp == null) {
+            setError(LanguageManager.getInstance().getString(1064));
+            return false;
+        }
+
+        try{
+            lspp = (LielasSettingsProtocolPaket) lcpp.getLielasApplicationProtocol();
+            lspm = (LielasSettingsProtocolModelNumber) lspp.getPayload();
+            logger.setModelNumber(new LielasModel(lspm.getModelNumber()));
+        }catch(Exception e){
+            logger.setModelNumber(null);
+            e.printStackTrace();
+        }
+        return true;
+    }
 
 }

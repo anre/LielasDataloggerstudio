@@ -19,6 +19,7 @@ import org.lielas.lielasdataloggerstudio.main.Fragments.ConnectFragment;
 import org.lielas.lielasdataloggerstudio.main.Fragments.DataFragment;
 import org.lielas.lielasdataloggerstudio.main.Fragments.ExportFragment;
 import org.lielas.lielasdataloggerstudio.main.Fragments.LoggerSettingsFragment;
+import org.lielas.lielasdataloggerstudio.main.Fragments.RTDataFragment;
 import org.lielas.lielasdataloggerstudio.main.Fragments.SettingsFragment;
 import org.lielas.lielasdataloggerstudio.main.Fragments.ViewFragment;
 import org.lielas.lielasdataloggerstudio.main.Tasks.UpdateManager;
@@ -141,6 +142,13 @@ public class Main extends ActionBarActivity {
         updateManager.addFragment(dataFragment);
         fList.add(dataFragment);
         dataFragmentId = fList.size() - 1;
+
+        //rt data fragment
+        RTDataFragment rtDataFragment = RTDataFragment.newInstance();
+        rtDataFragment.setLogger(logger);
+        rtDataFragment.setUpdateManager(updateManager);
+        updateManager.addFragment(rtDataFragment);
+        fList.add(rtDataFragment);
 
 
         //view fragment

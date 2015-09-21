@@ -230,6 +230,10 @@ public class LielasCommunicationProtocolPaket{
 	public void setLielasApplicationProtocol(LielasApplicationProtocolPaket lapp){
 		this.payload = lapp;
 	}
+
+    public LielasApplicationProtocolPaket getLielasApplicationProtocol(){
+        return this.payload;
+    }
 	
 	public byte[] getBytes(){
 		int len = 0;

@@ -53,7 +53,11 @@ public abstract class CommunicationInterface{
 	public boolean isBusy(){
 		return isBusy;
 	}
-	
+
+    public void setBusy(boolean status){
+        isBusy = status;
+    }
+
 	public String getLastError(){
 		String err = lastError;
 		lastError = null;
@@ -63,6 +67,8 @@ public abstract class CommunicationInterface{
 	protected void setError(String error){
 		lastError = error;
 	}
+
+    public abstract String getPort();
 
 	public abstract boolean open(String port);
 	public abstract void close();

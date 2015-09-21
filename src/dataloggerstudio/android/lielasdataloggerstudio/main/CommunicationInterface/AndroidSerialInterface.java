@@ -136,7 +136,7 @@ public class AndroidSerialInterface extends SerialInterface {
     public int read(){
         int len = 0;
         try{
-            readBuffer = new byte[500];
+            readBuffer = new byte[5000];
             readBufPosition = 0;
 
             readBufLen = serialport.read(readBuffer, timeout);

@@ -7,6 +7,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.lielas.dataloggerstudio.lib.Dataset;
+import org.lielas.micdataloggerstudio.R;
 
 /**
  * Created by Andi on 01.05.2015.
@@ -31,6 +32,7 @@ public class LoggerRecordTableRow extends LinearLayout {
             lblDate = new TextView(context);
             lblDate.setText(ds.getString(0));
             lblDate.setWidth(0);
+            lblDate.setTextAppearance(context, R.style.MyTableStyle);
             addView(lblDate, layoutParams);
 
             lblValue = new TextView[ds.getChannels()];
@@ -40,6 +42,7 @@ public class LoggerRecordTableRow extends LinearLayout {
                 lblValue[i].setText(ds.getString(i + 1));
                 lblValue[i].setGravity(Gravity.CENTER);
                 lblValue[i].setWidth(0);
+                lblValue[i].setTextAppearance(context, R.style.MyTableStyle);
                 addView(lblValue[i], layoutParams);
             }
         }

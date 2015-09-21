@@ -45,4 +45,8 @@ public final class LielasSettingsProtocolIds {
 	public static final int GET_DATASET  = 13;
 	public static final int GET_DATASET_STRUCTURE = 14;
 	public static final int DELETE_DATA = 15;
+    public static final int MODEL_NUMBER = 19;
+    public static final int GET_BADBLOCK_COUNT = 20;
+    public static final int TEST_FLASH = 21;
+    public static final int RT_DATA = 22;
 }

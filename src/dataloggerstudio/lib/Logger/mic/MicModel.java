@@ -35,8 +35,10 @@ import org.lielas.dataloggerstudio.lib.CommunicationInterface.mic.Channel.MicCha
 import org.lielas.dataloggerstudio.lib.CommunicationInterface.mic.Channel.MicChannelTemperature;
 import org.lielas.dataloggerstudio.lib.CommunicationInterface.mic.MicDataLine;
 import org.lielas.dataloggerstudio.lib.Dataset;
+import org.lielas.dataloggerstudio.lib.Logger.MeasurementType.MeasurementTypeHumidity;
+import org.lielas.dataloggerstudio.lib.Logger.MeasurementType.MeasurementTypeTemperature;
 
-public class MicModel{
+public class MicModel {
 	
 	int model;
 
@@ -125,8 +127,8 @@ public class MicModel{
 
         switch (model){
             case MODEL_TEMP_HUM01:
-                ds.setValue(micDataLine.getValueByIndex(0), 1, 0);
-                ds.setValue(micDataLine.getValueByIndex(1), 1, 1);
+                ds.setValue(micDataLine.getValueByIndex(0), 1, 0, new MeasurementTypeTemperature());
+                ds.setValue(micDataLine.getValueByIndex(1), 1, 1, new MeasurementTypeHumidity());
                 break;
         }
 

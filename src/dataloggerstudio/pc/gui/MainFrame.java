@@ -49,15 +49,13 @@ import java.awt.event.ActionListener;
 
 import javax.swing.Box;
 
+import org.lielas.dataloggerstudio.lib.Logger.UsbCube.UsbCube;
 import org.lielas.dataloggerstudio.lib.LoggerManager;
 import org.lielas.dataloggerstudio.lib.Logger.Logger;
 import org.lielas.dataloggerstudio.lib.Logger.LoggerType;
-import org.lielas.dataloggerstudio.pc.gui.Panels.AboutPanel;
-import org.lielas.dataloggerstudio.pc.gui.Panels.ConnectPanel;
-import org.lielas.dataloggerstudio.pc.gui.Panels.DataPanel;
-import org.lielas.dataloggerstudio.pc.gui.Panels.RealTimePanel;
-import org.lielas.dataloggerstudio.pc.gui.Panels.SettingsPanel;
+import org.lielas.dataloggerstudio.pc.gui.Panels.*;
 import org.lielas.dataloggerstudio.pc.gui.Panels.UsbCube.UsbCubeDataPanel;
+import org.lielas.dataloggerstudio.pc.gui.Panels.UsbCube.UsbCubeFWUpgradePanel;
 import org.lielas.dataloggerstudio.pc.gui.Panels.UsbCube.UsbCubeRealTimePanel;
 import org.lielas.dataloggerstudio.pc.gui.Panels.UsbCube.UsbCubeSettingsPanel;
 import org.lielas.dataloggerstudio.pc.gui.Panels.mic.MicDataPanel;
@@ -91,6 +89,7 @@ public class MainFrame extends JFrame{
 	DataPanel dataPanel;
 	RealTimePanel realtimePanel;
 	AboutPanel aboutPanel;
+    FWUpgradePanel fwPanel;
 	
 	//Header buttons
 	HeaderButton connectBttn;
@@ -98,6 +97,7 @@ public class MainFrame extends JFrame{
 	HeaderButton dataBttn;
 	HeaderButton realTimeBttn;
 	HeaderButton aboutBttn;
+    HeaderButton fwBttn;
 	
 	//status Bar
 	JLabel lblConnectionState;
@@ -228,6 +228,12 @@ public class MainFrame extends JFrame{
 		aboutBttn.setBorder(null);
 		//panel_1.add(aboutBttn);
 
+        fwBttn = new HeaderButton("Firmware Upgrade");
+        fwBttn.setPreferredSize(new Dimension(140, 25));
+        fwBttn.setBorder(null);
+        fwBttn.setEnabled(false);
+        panel_1.add(fwBttn);
+
 		
 		dataBttn.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
@@ -249,7 +255,12 @@ public class MainFrame extends JFrame{
 				AboutBttnPressed();
 			}
 		});
-		
+        fwBttn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                FwBttnPressed();
+            }
+        });
+
 		JPanel panel_3 = new JPanel();
 		panel_3.setBorder(new MatteBorder(0, 0, 1, 0, (Color) Color.LIGHT_GRAY));
 		FlowLayout flowLayout = (FlowLayout) panel_3.getLayout();
@@ -288,6 +299,7 @@ public class MainFrame extends JFrame{
 		//dataPanel = (DataPanel) new MicDataPanel();
 		settingsPanel = null;
 		dataPanel = null;
+        fwPanel = null;
 
 		contentPanel.setLayout(new BorderLayout(0, 0));
 		contentPanel.add(connectPanel);
@@ -396,6 +408,21 @@ public class MainFrame extends JFrame{
 		revalidate();
 		repaint();
 	}
+
+    public void FwBttnPressed(){
+        DeactivateHeaderButtons();
+        fwBttn.setActive(true);
+
+        contentPanel.removeAll();
+        contentPanel.add(fwPanel);
+
+        hintManager.removeAll();
+        hintManager.enableHints(this);
+        updateLanguage();
+
+        revalidate();
+        repaint();
+    }
 	
 	public void DeactivateHeaderButtons(){
 		connectBttn.setActive(false);
@@ -403,6 +430,7 @@ public class MainFrame extends JFrame{
 		dataBttn.setActive(false);
 		realTimeBttn.setActive(false);
 		aboutBttn.setActive(false);
+        fwBttn.setActive(false);
 	}
 	
 	public void updateLanguage(){
@@ -485,6 +513,12 @@ public class MainFrame extends JFrame{
 		}else{
 			realtimePanel.updateUIContent();
 		}
+
+        if(fwPanel == null){
+            createFWPanel();
+        }else{
+            fwPanel.updateUIContent();
+        }
 		
 		aboutPanel.updateUIContent();
 		
@@ -569,4 +603,22 @@ public class MainFrame extends JFrame{
 		}
 		realtimePanel.updateLanguage(LanguageManager.getInstance(), hintManager);
 	}
+
+    public void createFWPanel(){
+
+        LoggerManager lm = LoggerManager.getInstance();
+
+        if(lm.getActiveLogger() == null){
+            return;
+        }
+
+        switch(lm.getActiveLogger().getLoggerTpye().getType()){
+            case LoggerType.USB_CUBE:
+                fwPanel = (FWUpgradePanel) new UsbCubeFWUpgradePanel(this);
+                fwPanel.updateUIContent();
+                fwBttn.setEnabled(true);
+                break;
+        }
+        fwPanel.updateLanguage(LanguageManager.getInstance(), hintManager);
+    }
 }

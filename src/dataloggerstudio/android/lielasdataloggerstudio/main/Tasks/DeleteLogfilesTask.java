@@ -27,6 +27,15 @@ public class DeleteLogfilesTask extends LielasTask<Void, Void, UsbCube>{
             return null;
         }
 
+        while(com.isBusy()){
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        com.setBusy(true);
+
         if(!com.deleteLogfiles(logger)){
             return null;
         }
@@ -37,6 +46,8 @@ public class DeleteLogfilesTask extends LielasTask<Void, Void, UsbCube>{
 
     @Override
     protected void onPostExecute(UsbCube log){
+
+        logger.getCommunicationInterface().setBusy(false);
         try {
             UsbCube cube = get();
             if (cube != null) {

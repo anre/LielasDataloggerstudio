@@ -105,23 +105,21 @@ public class ViewFragment extends MicFragment {
             TextView txtDate = new TextView(getActivity());
             txtDate.setText("Date");
             txtDate.setWidth(0);
-            txtDate.setTypeface(txtDate.getTypeface(), Typeface.BOLD);
-            txtDate.setTextColor(Color.BLACK);
+            txtDate.setTextAppearance(getActivity(), R.style.MyTableHeaderStyle);
             tblHeaderLayout.addView(txtDate, layoutParams);
 
             for(int i = 1; i < (stick.getModel().getChannels() + 1); i++){
                 TextView txtColumn = new TextView(getActivity());
 
-                txtColumn.setText(stick.getModel().getChannel(i-1).getUnit());
-
-                txtColumn.setTypeface(txtColumn.getTypeface(), Typeface.BOLD);
-                txtColumn.setTextColor(Color.BLACK);
+                txtColumn.setText(stick.getModel().getChannel(i - 1).getUnit(stick.getUnitClass()));
                 txtColumn.setGravity(Gravity.CENTER);
                 txtColumn.setWidth(0);
+                txtColumn.setTextAppearance(getActivity(), R.style.MyTableHeaderStyle);
                 tblHeaderLayout.addView(txtColumn, layoutParams);
 
             }
 
+            lr.getUnitClass().setUnitClass(stick.getUnitClass().getUnitClass());
             LoggerRecordTableAdapter tableAdapter = new LoggerRecordTableAdapter(getActivity(), lr);
             table.setAdapter(tableAdapter);
 

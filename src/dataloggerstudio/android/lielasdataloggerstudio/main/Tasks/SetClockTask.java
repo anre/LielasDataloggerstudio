@@ -29,6 +29,16 @@ public class SetClockTask extends  LielasTask<Void, Void, UsbCube>{
             return null;
         }
 
+        while(com.isBusy()){
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        com.setBusy(true);
+
         if(!com.setClock(logger)){
             return null;
         }
@@ -37,6 +47,7 @@ public class SetClockTask extends  LielasTask<Void, Void, UsbCube>{
 
     @Override
     protected void onPostExecute(UsbCube log){
+        logger.getCommunicationInterface().setBusy(false);
         try {
             if (get() != null) {
                 updateManager.update("Logger clock successfully set");

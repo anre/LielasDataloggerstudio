@@ -33,6 +33,7 @@ package org.lielas.dataloggerstudio.lib.Logger.UsbCube;
 import org.lielas.dataloggerstudio.lib.CommunicationInterface.SerialInterface;
 import org.lielas.dataloggerstudio.lib.LielasCommunicationProtocol.LielasSettingsProtocolName;
 import org.lielas.dataloggerstudio.lib.Logger.Lielas.LielasId;
+import org.lielas.dataloggerstudio.lib.Logger.Lielas.LielasModel;
 import org.lielas.dataloggerstudio.lib.Logger.Lielas.LielasVersion;
 import org.lielas.dataloggerstudio.lib.Logger.Logger;
 import org.lielas.dataloggerstudio.lib.Logger.LoggerType;
@@ -48,6 +49,7 @@ public class UsbCube extends Logger{
 
 	LielasVersion version;
 	LielasId id;
+    LielasModel modelNumber;
 	boolean logging;
 	boolean rtLogging;
 	String logfileName;
@@ -73,7 +75,19 @@ public class UsbCube extends Logger{
 		records = new ArrayList<LoggerRecord>();
 		recordCount = 0;
 		channels = 1;
+        modelNumber = null;
 	}
+
+    public void setModelNumber(LielasModel modelNumber){
+        this.modelNumber = modelNumber;
+    }
+
+    public int getModelNumber(){
+        if(modelNumber == null) {
+            return 0;
+        }
+        return modelNumber.get();
+    }
 
 	@Override
 	public StringBuilder getCsvHeader(String delimiter) {

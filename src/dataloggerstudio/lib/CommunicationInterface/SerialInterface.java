@@ -67,6 +67,11 @@ public class SerialInterface extends CommunicationInterface{
 
     }
 
+    @Override
+    public String getPort() {
+        return null;
+    }
+
     public void setBaudrate(int baudrate){
 		this.baudrate = baudrate;
 	}

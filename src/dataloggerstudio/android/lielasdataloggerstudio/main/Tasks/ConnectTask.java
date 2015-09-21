@@ -38,6 +38,7 @@ public class ConnectTask extends LielasTask<Void, Void, UsbCube>{
             return null;
         }
 
+        logger.getCommunicationInterface().setBusy(true);
 
         //stop realtime logging
 /*        for(int i = 0; i < 3; i++){
@@ -106,6 +107,9 @@ public class ConnectTask extends LielasTask<Void, Void, UsbCube>{
 
     @Override
     protected void onPostExecute(UsbCube log){
+
+        logger.getCommunicationInterface().setBusy(false);
+
         try {
             UsbCube cube = get();
             if (cube != null) {

@@ -59,9 +59,13 @@ public class MicSerialInterface extends PcSerialInterface{
 		this.parity = SerialPort.PARITY_NONE;
 		lineEnd = '\r';
 	}
-	
-	
-	public boolean connect(String port){
+
+    @Override
+    public String getPort() {
+        return null;
+    }
+
+    public boolean connect(String port){
 		return open(port);
 	}
 	

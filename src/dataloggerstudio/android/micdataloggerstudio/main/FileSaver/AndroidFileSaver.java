@@ -19,8 +19,20 @@ public class AndroidFileSaver extends FileSaver {
     public static final int ERROR_STORAGE_NOT_READABLE = 1001;
     public static final int ERROR_FAILED_TO_CREATE_FILE = 1002;
 
+    public String path_prefix;
+
     public AndroidFileSaver(){
         super(ANDROID_FILE_SAVER);
+        path_prefix = "";
+    }
+
+    public AndroidFileSaver(String path){
+        super(ANDROID_FILE_SAVER);
+        path_prefix = path;
+    }
+
+    public String getPathPrefix(){
+        return path_prefix;
     }
 
     private boolean isExternalStorageWriteable(){
@@ -43,7 +55,7 @@ public class AndroidFileSaver extends FileSaver {
             return ERROR_STORAGE_NOT_WRITEABLE;
         }
 
-        File folder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/lielas");
+        File folder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + path_prefix);
 
         if(!folder.exists()){
             if(!folder.mkdir()){
@@ -51,7 +63,7 @@ public class AndroidFileSaver extends FileSaver {
             }
         }
 
-        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/lielas/", path);
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + path_prefix, path);
 
         if(file.exists() && !overWrite){
             return ERROR_FILE_EXISTS;

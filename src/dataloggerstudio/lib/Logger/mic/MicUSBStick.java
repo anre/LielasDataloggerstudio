@@ -54,6 +54,8 @@ public class MicUSBStick extends Logger{
     private int recordCount;
     private long datetime;
     private MicStartTrigger micStartTrigger;
+	private boolean logging;
+	private UnitClass unitClass;
 	
 	public MicUSBStick(){
 		super();
@@ -65,6 +67,8 @@ public class MicUSBStick extends Logger{
 		maxSamples = 1000;
         records = new ArrayList<LoggerRecord>();
         recordCount = 0;
+		logging = false;
+		unitClass = new UnitClass();
 	}
 	
 	public void setModel(int m){
@@ -81,6 +85,10 @@ public class MicUSBStick extends Logger{
 		}else{
 			this.name = name;
 		}
+	}
+
+	public UnitClass getUnitClass(){
+		return unitClass;
 	}
 	
 	public String getName(){
@@ -249,4 +257,12 @@ public class MicUSBStick extends Logger{
     public void setMicStartTrigger(MicStartTrigger startTrigger){
         micStartTrigger = startTrigger;
     }
+
+	public void setLoggingStatus(boolean status){
+		this.logging = status;
+	}
+
+	public boolean getLoggingStatus(){
+		return this.logging;
+	}
 }
