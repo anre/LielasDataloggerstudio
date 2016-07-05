@@ -17,6 +17,7 @@ import org.lielas.micdataloggerstudio.main.Fragments.ConnectFragment;
 import org.lielas.micdataloggerstudio.main.Fragments.DataFragment;
 import org.lielas.micdataloggerstudio.main.Fragments.DeviceInfoFragment;
 import org.lielas.micdataloggerstudio.main.Fragments.ExportFragment;
+import org.lielas.micdataloggerstudio.main.Fragments.GraphFragment;
 import org.lielas.micdataloggerstudio.main.Fragments.LiveFragment;
 import org.lielas.micdataloggerstudio.main.Fragments.SettingsFragment;
 import org.lielas.micdataloggerstudio.main.Fragments.ViewFragment;
@@ -100,6 +101,7 @@ public class Main extends ActionBarActivity{
     private List<Fragment> getFragments(){
         List<Fragment> fList = new ArrayList<Fragment>();
 
+
         //connect Fragment
         ConnectFragment connectFragment = ConnectFragment.newInstance();
         connectFragment.setLogger(logger);
@@ -138,6 +140,14 @@ public class Main extends ActionBarActivity{
         updateManager.addFragment(viewFragment);
         fList.add(viewFragment);
         viewId = fList.size() - 1;
+
+        // Graph Fragment
+        GraphFragment graphFragment = GraphFragment.newInstance();
+        graphFragment.setLogger(logger);
+        graphFragment.setUpdateManager(updateManager);
+        updateManager.addFragment(graphFragment);
+        fList.add(graphFragment);
+
 
         //Export Fragment
         ExportFragment exportFragment = ExportFragment.newInstance();

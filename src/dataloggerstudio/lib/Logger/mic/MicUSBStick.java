@@ -71,8 +71,8 @@ public class MicUSBStick extends Logger{
 		unitClass = new UnitClass();
 	}
 	
-	public void setModel(int m){
-		model = new MicModel(m);
+	public void setModel(MicModel m){
+		model = m;
 	}
 	
 	public MicModel getModel(){
@@ -113,17 +113,10 @@ public class MicUSBStick extends Logger{
 			return;
 		}
 
-    	switch(model.getModel()){
-			case MicModel.MODEL_TEMP:
-			case MicModel.MODEL_TEMP32:
-			case MicModel.MODEL_TEMP_HUM01:
-			case MicModel.MODEL_TEMP_HUM:
-			case MicModel.MODEL_TEMP_HUM_CO2:
-				if(maxSamples > 32000){
-					return;
-				}
-				break;
-    	}
+		if(maxSamples > model.getMaxSamples()){
+			return;
+		}
+
 		this.maxSamples = maxSamples;
 	}
 
@@ -133,20 +126,12 @@ public class MicUSBStick extends Logger{
     	
     	if(model == null )
     		return null;
-    	
-    	switch(model.getModel()){
-			case MicModel.MODEL_TEMP:
-			case MicModel.MODEL_TEMP32:
-			case MicModel.MODEL_TEMP_HUM01:
-			case MicModel.MODEL_TEMP_HUM:
-			case MicModel.MODEL_TEMP_HUM_CO2:
-				samples = new String[32];
-				for(i = 1000; i <= 32000; i+= 1000){
-					samples[(i/1000)-1] = Integer.toString(i);
-				}
-				break;
-    	}
-    	return samples;
+
+		samples = new String[32];
+		for(i = 1000; i <= 32000; i+= 1000){
+			samples[(i/1000)-1] = Integer.toString(i);
+		}
+		return samples;
     }
     
     public String[] getPossibleUnitClasses(){
@@ -173,35 +158,13 @@ public class MicUSBStick extends Logger{
 
 	@Override
 	public StringBuilder getCsvHeader(String delimiter) {
-		StringBuilder sb = new StringBuilder();
 
-		//create header line 1
-		sb.append(delimiter);
-		sb.append(this.name);
-		sb.append(delimiter);
-		sb.append(delimiter);
-		sb.append("\n");
+		if(this.model == null){
+            return new StringBuilder();
+        }
 
-		//create header line 2
-		sb.append(delimiter);
-		sb.append("channel 1");
-		sb.append(delimiter);
-		sb.append("channel 2");
-		sb.append(delimiter);
-		sb.append("\n");
-
-		//create header line 3
-		sb.append(delimiter);
-		sb.append("°C");
-		sb.append(delimiter);
-		sb.append("%");
-		sb.append(delimiter);
-		sb.append("\n");
-
-		return sb;
+		return model.getCsvHeader(delimiter, this.name, this.getUnitClass());
 	}
-
-
 
     public void setRecordCount(int count){
         recordCount = count;

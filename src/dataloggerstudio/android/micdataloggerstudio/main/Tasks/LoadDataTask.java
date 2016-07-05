@@ -41,7 +41,7 @@ public class LoadDataTask extends MicTask<Void, Integer, MicUSBStick>{
             return null;
         }
 
-        for(int i = 0; i < (stick.getRecordCount() / stick.getModel().getChannels()); i++){
+        for(int i = 0; i < (stick.getRecordCount() / stick.getModel().getChannelCount()); i++){
             if(!com.addData(stick, lr,datasetDt)){
                 return null;
             }
@@ -51,7 +51,6 @@ public class LoadDataTask extends MicTask<Void, Integer, MicUSBStick>{
                 start = dt;
                 publishProgress(i);
             }
-
 
             datasetDt += stick.getSampleRate() * 1000;
 

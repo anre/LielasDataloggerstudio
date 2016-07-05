@@ -94,7 +94,7 @@ public class MicSerialInterface extends PcSerialInterface{
         }
         
         logger.setName(loggerIdentifier.getId());
-        logger.setModel(loggerIdentifier.getModel().getModel());
+        //logger.setModel(loggerIdentifier.getModel().getModel());
         logger.setVersion(loggerIdentifier.getVersion());
         
 
@@ -174,7 +174,7 @@ public class MicSerialInterface extends PcSerialInterface{
         }
 
         logger.setName(loggerIdentifier.getId());
-        logger.setModel(loggerIdentifier.getModel().getModel());
+        //logger.setModel(loggerIdentifier.getModel().getModel());
         logger.setVersion(loggerIdentifier.getVersion());
         
         isBusy = false;
@@ -285,7 +285,7 @@ public class MicSerialInterface extends PcSerialInterface{
 	
 	public LoggerRecord getData(MicUSBStick logger){
 		LoggerRecord lr = new LoggerRecord(logger, 0);
-		lr.setChannels(logger.getModel().getChannels());
+		//lr.setChannels(logger.getModel().getChannels());
 		lr.setName("logfile");
 		String cmd = "D\r";
 		byte[] line;

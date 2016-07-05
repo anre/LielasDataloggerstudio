@@ -80,7 +80,7 @@ public class MicLoggerIdentifier{
         //parse model
         try{
         	i = MicParser.findNextToken(line, i, line.length); 
-        	model = new MicModel((int)MicParser.parseTokenToLong(line, i, line.length));
+        	//model = new MicModel((int)MicParser.parseTokenToLong(line, i, line.length));
 	    }catch(Exception e){
 	    	e.printStackTrace();
 	        return false;

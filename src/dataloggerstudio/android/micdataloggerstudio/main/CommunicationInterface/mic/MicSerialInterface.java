@@ -6,6 +6,7 @@ import org.lielas.dataloggerstudio.lib.Dataset;
 import org.lielas.dataloggerstudio.lib.Logger.mic.MicUSBStick;
 import org.lielas.dataloggerstudio.lib.LoggerRecord;
 import org.lielas.micdataloggerstudio.main.CommunicationInterface.AndroidSerialInterface;
+import org.lielas.micdataloggerstudio.main.CommunicationInterface.VirtualSerialInterface;
 
 import java.io.IOException;
 import java.util.Date;
@@ -20,6 +21,7 @@ public class MicSerialInterface extends AndroidSerialInterface {
     final private String CMD_READ_DATA = "D\r";
     final private String CMD_SET_TIME = "C ";
     final private String CMD_PWR_MODE = "P 2\r";
+    final private String CMD_STOP_RT = "Q\r";
 
     private boolean realtimeLogging = false;
 
@@ -34,11 +36,7 @@ public class MicSerialInterface extends AndroidSerialInterface {
 
     public void disconnect(){
         isOpen = false;
-        try{
-            serialport.close();
-        }catch(IOException ex){
-            ex.printStackTrace();
-        }
+        close();
     }
 
     public byte[] readLine(){
@@ -73,7 +71,6 @@ public class MicSerialInterface extends AndroidSerialInterface {
                 System.arraycopy(recv, 0, paket, 0, len);
                 break;
             }
-
         }
         return paket;
     }
@@ -108,7 +105,7 @@ public class MicSerialInterface extends AndroidSerialInterface {
         }
 
         logger.setName(loggerIdentifier.getId());
-        logger.setModel(loggerIdentifier.getModel().getModel());
+        logger.setModel(loggerIdentifier.getModel());
         logger.setVersion(loggerIdentifier.getVersion());
 
         isBusy = false;
@@ -298,6 +295,20 @@ public class MicSerialInterface extends AndroidSerialInterface {
     }
 
     public boolean stopRealTimeLogging(){
+        byte[] recv = null;
+
+        if(!isOpen){
+            return false;
+        }
+
+        String cmd = CMD_STOP_RT;
+        write(cmd.getBytes());
+        //read first line
+        recv = readLine();
+
+        if(recv == null){
+            return true;
+        }
         return true;
     }
 

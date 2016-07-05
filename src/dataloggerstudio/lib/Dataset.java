@@ -138,7 +138,15 @@ public class Dataset implements Comparable<Dataset>{
 	
 	public double getValue(int channel){
 		if(channel < this.channels && this.channels >= 0){
-			return (double)this.value[channel].getValue() / (java.lang.Math.pow(10,this.value[channel].getDecimals()));
+			double d = value[channel].getValue() / (Math.pow(10, value[channel].getDecimals()));
+
+            if(type[channel] != null){
+                if(unitClass.getUnitClass() == UnitClass.UNIT_CLASS_IMPERIAL){
+                    d = type[channel].toImperial(d);
+                }
+            }
+
+			return d;
 		}
 		return 0.0;
 	}

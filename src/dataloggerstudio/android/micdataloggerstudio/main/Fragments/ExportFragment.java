@@ -44,19 +44,19 @@ public class ExportFragment extends MicFragment{
         View v = inflater.inflate(R.layout.export_fragment, container, false);
 
         if(context != null){
-            SharedPreferences sharedPreferences = context.getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE);
+            //SharedPreferences sharedPreferences = context.getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE);
 
             delimiterSpinner = (Spinner) v.findViewById(R.id.spExportDelimiterData);
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, getDelimiterList());
             delimiterSpinner.setAdapter(adapter);
-            String delimiter = sharedPreferences.getString("delimiter", ",");
-            delimiterSpinner.setSelection(adapter.getPosition(delimiter));
+            //String delimiter = sharedPreferences.getString("delimiter", ",");
+            delimiterSpinner.setSelection(adapter.getPosition(","));
 
             commaSpinner = (Spinner) v.findViewById(R.id.spExportCommaData);
             adapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, getCommaList());
             commaSpinner.setAdapter(adapter);
-            String comma = sharedPreferences.getString("comma", ".");
-            commaSpinner.setSelection(adapter.getPosition(comma));
+            //String comma = sharedPreferences.getString("comma", ".");
+            commaSpinner.setSelection(adapter.getPosition("."));
 
             saveBttn = (Button)v.findViewById(R.id.bttnExportBttn);
             saveBttn.setOnClickListener(new View.OnClickListener(){
@@ -69,8 +69,6 @@ public class ExportFragment extends MicFragment{
             chkOverwrite = (CheckBox) v.findViewById(R.id.chkOverwrite);
 
             filename = (EditText)v.findViewById(R.id.txtFilename);
-
-
 
         }
         return v;

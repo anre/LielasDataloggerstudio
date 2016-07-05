@@ -87,6 +87,10 @@ public class ViewFragment extends MicFragment {
 
         LoggerRecord lr = LoggerRecordManager.getInstance().getActiveLoggerRecord();
 
+        if( table == null){
+            return;
+        }
+
         if(lr!= null){
             datasetcount = lr.getCount();
         }
@@ -99,7 +103,7 @@ public class ViewFragment extends MicFragment {
             tblHeaderLayout.setOrientation(LinearLayout.HORIZONTAL);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
-            double widthRation = 1. / (stick.getModel().getChannels() + 1);
+            double widthRation = 1. / (stick.getModel().getChannelCount() + 1);
             layoutParams.weight = (float)widthRation;
 
             TextView txtDate = new TextView(getActivity());
@@ -108,7 +112,7 @@ public class ViewFragment extends MicFragment {
             txtDate.setTextAppearance(getActivity(), R.style.MyTableHeaderStyle);
             tblHeaderLayout.addView(txtDate, layoutParams);
 
-            for(int i = 1; i < (stick.getModel().getChannels() + 1); i++){
+            for(int i = 1; i < (stick.getModel().getChannelCount() + 1); i++){
                 TextView txtColumn = new TextView(getActivity());
 
                 txtColumn.setText(stick.getModel().getChannel(i - 1).getUnit(stick.getUnitClass()));

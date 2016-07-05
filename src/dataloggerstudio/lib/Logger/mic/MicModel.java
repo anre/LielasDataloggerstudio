@@ -37,10 +37,66 @@ import org.lielas.dataloggerstudio.lib.CommunicationInterface.mic.MicDataLine;
 import org.lielas.dataloggerstudio.lib.Dataset;
 import org.lielas.dataloggerstudio.lib.Logger.MeasurementType.MeasurementTypeHumidity;
 import org.lielas.dataloggerstudio.lib.Logger.MeasurementType.MeasurementTypeTemperature;
+import org.lielas.dataloggerstudio.lib.Logger.Units.UnitClass;
+import org.lielas.dataloggerstudio.lib.Logger.mic.Models.Model98537;
+import org.lielas.dataloggerstudio.lib.Logger.mic.Models.Model98580;
+import org.lielas.dataloggerstudio.lib.Logger.mic.Models.Model98581;
+import org.lielas.dataloggerstudio.lib.Logger.mic.Models.Model98583;
+import org.lielas.dataloggerstudio.lib.Logger.mic.Models.VirtualModelInterface;
 
-public class MicModel {
-	
-	int model;
+public abstract class MicModel  implements VirtualModelInterface {
+
+
+	protected  MicChannel[] channels;
+    protected  String id;
+    protected  int maxSamples;
+
+    public static MicModel CreateNewModel(String id){
+
+        if(id.equals(Model98580.ID)){
+            return new Model98580();
+        }else if(id.equals(Model98583.ID)){
+            return new Model98583();
+        }else if(id.equals(Model98581.ID)){
+            return new Model98581();
+        }else if(id.equals(Model98537.ID)){
+            return new Model98537();
+        }
+        return null;
+    }
+
+    public int getChannelCount(){
+        if(channels == null){
+            return 0;
+        }
+        return  channels.length;
+    }
+
+    public int getMaxSamples(){
+        return maxSamples;
+    }
+
+    public  MicChannel getChannel(int index){
+        if(index < 0 || index > (channels.length - 1)){
+            return null;
+        }
+        return channels[index];
+    }
+
+    public abstract Dataset parseDataLine(byte[] line, long dt);
+    public abstract StringBuilder getCsvHeader(String delimiter, String name, UnitClass unitClass);
+
+    public static byte[] hexStringToByteArray(String s) {
+        int len = s.length();
+        byte[] data = new byte[len / 2];
+        for (int i = 0; i < len; i += 2) {
+            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
+                    + Character.digit(s.charAt(i+1), 16));
+        }
+        return data;
+    }
+
+	/*int model;
 
     MicChannel[] channels;
 
@@ -133,5 +189,5 @@ public class MicModel {
         }
 
         return ds;
-    }
+    }*/
 }

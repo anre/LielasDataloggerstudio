@@ -38,6 +38,8 @@ public class ConnectTask extends MicTask<Void, Void, MicUSBStick> {
             return null;
         }
 
+        com.stopRealTimeLogging();
+
         if(!com.readIdentifier(logger)){
             return null;
         }

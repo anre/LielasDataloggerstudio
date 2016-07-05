@@ -51,6 +51,7 @@ public class LoggerRecord{
 	private int index;
 	private String name;
 	private UnitClass unitClass;
+	private boolean dataChanged;
 
 	private long startIndex;
 	private int id;
@@ -60,16 +61,11 @@ public class LoggerRecord{
 
 	private long endIndex;
 	
-	private double min;
-	private double max;
-	
 	private final Object lock = new Object();
 	
 	public LoggerRecord(Logger logger){
 		data = new ArrayList<Dataset>();
 		saved = false;
-		min = 0;
-		max = 0;
 		index = -1;
 		this.logger = logger;
 		unitClass = new UnitClass();
@@ -78,12 +74,12 @@ public class LoggerRecord{
 	public LoggerRecord(Logger logger, int index){
 		data = new ArrayList<Dataset>();
 		saved = false;
-		min = 0;
-		max = 0;
 		this.index = index;
 		this.logger = logger;
 		unitClass = new UnitClass();
 	}
+
+
 
 	public UnitClass getUnitClass(){
 		return unitClass;
@@ -105,8 +101,8 @@ public class LoggerRecord{
             return null;
         }
 
-        data.get((int)index).getUnitClass().setUnitClass(unitClass.getUnitClass());
-		return data.get((int) index);
+        data.get(index).getUnitClass().setUnitClass(unitClass.getUnitClass());
+		return data.get(index);
 	}
 	
 	public void add(Dataset ds){
@@ -117,6 +113,43 @@ public class LoggerRecord{
 					return;
 			}
 			data.add(ds);
+            dataChanged = true;
+		}
+	}
+
+	public double getMax(int channel){
+		double max;
+		synchronized (lock) {
+			if(data == null || data.size() == 0){
+				return 0.0;
+			}
+
+			max = get(0).getValue(channel);
+
+			for(int i = 0; i < data.size(); i++) {
+				if(get(i).getValue(channel) > max){
+					max = get(i).getValue(channel);
+				}
+			}
+			return max;
+		}
+	}
+
+	public double getMin(int channel){
+		double min;
+		synchronized (lock) {
+			if(data == null || data.size() == 0){
+				return 0.0;
+			}
+
+			min = get(0).getValue(channel);
+
+			for(int i = 0; i < data.size(); i++) {
+				if(get(i).getValue(channel) < min){
+					min = get(i).getValue(channel);
+				}
+			}
+			return min;
 		}
 	}
 
@@ -259,4 +292,16 @@ public class LoggerRecord{
     public void sort(){
         Collections.sort(data);
     }
+
+    public boolean newDataAdded(){
+        return dataChanged;
+    }
+
+    public void setDataProcessed(){
+        dataChanged = false;
+    }
+
+	public  void requestReprocessing(){
+		dataChanged = true;
+	}
 }

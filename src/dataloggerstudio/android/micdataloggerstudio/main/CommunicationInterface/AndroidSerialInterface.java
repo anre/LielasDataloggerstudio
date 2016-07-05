@@ -142,8 +142,8 @@ public class AndroidSerialInterface extends SerialInterface {
             /*for(byte b : readBuffer){
                 System.out.print(b);
                 System.out.print(":");
+                System.out.println();
             }*/
-            System.out.println();
         } catch (IOException e) {
         }
         return readBufLen;

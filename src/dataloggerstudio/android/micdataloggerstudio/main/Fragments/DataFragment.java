@@ -87,8 +87,12 @@ public class DataFragment extends MicFragment{
             return;
         }
 
+        if(txtStart == null){
+            return;
+        }
+
         if(stick.getCommunicationInterface().isOpen()){
-            long recordCountEnd = stick.getRecordCount() / 2;
+            long recordCountEnd = stick.getRecordCount() / stick.getModel().getChannelCount();
             if(recordCountEnd > 1){
                 recordCountEnd -= 1;
             }
@@ -97,12 +101,12 @@ public class DataFragment extends MicFragment{
             txtStart.setText(Logger.dateToString(stick.getFirstDatasetDate()));
             txtEnd.setText(Logger.dateToString(end));
             txtSamplerate.setText(Long.toString(stick.getSampleRate())+ "s");
-            txtSamples.setText(Integer.toString(stick.getRecordCount()/2));
+            txtSamples.setText(Integer.toString(stick.getRecordCount()/ stick.getModel().getChannelCount()));
 
             LoggerRecord lr = LoggerRecordManager.getInstance().getActiveLoggerRecord();
 
             if(lr != null) {
-                txtProgressContent.setText(lr.getCount() + "/" + Integer.toString(stick.getRecordCount() / stick.getModel().getChannels()));
+                txtProgressContent.setText(lr.getCount() + "/" + Integer.toString(stick.getRecordCount() / stick.getModel().getChannelCount()));
             }
         }
     }
@@ -110,7 +114,7 @@ public class DataFragment extends MicFragment{
     public void updateProgress(Integer progress){
         MicUSBStick stick = (MicUSBStick) logger;
 
-        txtProgressContent.setText(progress.toString() + "/" + Integer.toString(stick.getRecordCount() / stick.getModel().getChannels()));
+        txtProgressContent.setText(progress.toString() + "/" + Integer.toString(stick.getRecordCount() / stick.getModel().getChannelCount()));
     }
 
 
@@ -136,10 +140,8 @@ public class DataFragment extends MicFragment{
             return;
         }
 
-        if(org.lielas.micdataloggerstudio.main.LoggerRecordManager.getInstance().getActiveLoggerRecord() == null){
-            return;
-        }
-
+        LoggerRecord r = new LoggerRecord(logger);
+        LoggerRecordManager.getInstance().setActiveLoggerRecord(r);
         LoadDataTask loadDataTask = new LoadDataTask((MicUSBStick)logger, updateManager, org.lielas.micdataloggerstudio.main.LoggerRecordManager.getInstance().getActiveLoggerRecord());
         loadDataTask.execute();
 

@@ -19,8 +19,10 @@ import org.lielas.dataloggerstudio.lib.Logger.mic.MicStartTrigger;
 import org.lielas.dataloggerstudio.lib.Logger.mic.MicUSBStick;
 import org.lielas.micdataloggerstudio.R;
 import org.lielas.micdataloggerstudio.main.LielasToast;
+import org.lielas.micdataloggerstudio.main.LoggerRecordManager;
 import org.lielas.micdataloggerstudio.main.Tasks.StartLoggerTask;
 import org.lielas.micdataloggerstudio.main.Tasks.StopLoggerTask;
+import org.lielas.micdataloggerstudio.main.UpdateManager;
 
 /**
  * Created by Andi on 08.04.2015.
@@ -46,6 +48,7 @@ public class SettingsFragment extends MicFragment {
         View v = inflater.inflate(R.layout.settings_fragment, container, false);
 
         if(context != null){
+
             edSamplerate = (EditText) v.findViewById(R.id.txtSampleRate);
 
             //fill maxSamples Spinner
@@ -97,10 +100,17 @@ public class SettingsFragment extends MicFragment {
                 }
             });
 
-            SharedPreferences sharedPreferences = context.getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE);
+            MicUSBStick stick = (MicUSBStick) logger;
+            if(logger.getUnitClass().getUnitClass() == UnitClass.UNIT_CLASS_IMPERIAL){
+                unitsSpinner.setSelection(unitsArrayAdapter.getPosition("imperial"));
+            }else{
+                unitsSpinner.setSelection(unitsArrayAdapter.getPosition("metric"));
+            }
+
+            /*SharedPreferences sharedPreferences = context.getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE);
             String unit = sharedPreferences.getString("unit_class", "imperial");
 
-            unitsSpinner.setSelection(unitsArrayAdapter.getPosition(unit));
+            unitsSpinner.setSelection(unitsArrayAdapter.getPosition(unit));*/
         }
 
 
@@ -126,6 +136,17 @@ public class SettingsFragment extends MicFragment {
             return;
         }
 
+        //fill maxSamples Spinner
+        try {
+            maxSamplesArray = new Integer[(stick.getModel().getMaxSamples() / 1000)];
+            for (int i = 1; i <= maxSamplesArray.length; i++) {
+                maxSamplesArray[i - 1] = new Integer(i * 1000);
+            }
+            ArrayAdapter<Integer> maxSamplesAdapter = new ArrayAdapter<Integer>(getActivity(), R.layout.spinner_item, maxSamplesArray);
+            maxSamplesSpinner.setAdapter(maxSamplesAdapter);
+        }catch (NullPointerException e){};
+
+
         if(stick.getCommunicationInterface().isOpen()){
             edSamplerate.setText(Long.toString(stick.getSampleRate()));
 
@@ -141,19 +162,23 @@ public class SettingsFragment extends MicFragment {
 
     private void onSpinnerUnitsChanged(String unitClass){
         MicUSBStick stick = (MicUSBStick)logger;
+        boolean changed = false;
 
         if(stick != null){
-            SharedPreferences.Editor editor = getActivity().getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE).edit();
+            //SharedPreferences.Editor editor = getActivity().getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE).edit();
 
-            if(unitClass.equals("imperial")){
+            if(unitClass.equals("imperial") && stick.getUnitClass().getUnitClass() != UnitClass.UNIT_CLASS_IMPERIAL){
                 stick.getUnitClass().setUnitClass(UnitClass.UNIT_CLASS_IMPERIAL);
-                editor.putString("unit_class", "imperial");
-            }else{
+                changed = true;
+            }else if(unitClass.equals("metric") && stick.getUnitClass().getUnitClass() != UnitClass.UNIT_CLASS_METRIC){
                 stick.getUnitClass().setUnitClass(UnitClass.UNIT_CLASS_METRIC);
-                editor.putString("unit_class", "metric");
+                changed = true;
             }
-            stick.setUnitClass(new UnitClass());
-            editor.commit();
+
+            if(changed){
+                LoggerRecordManager.getInstance().getActiveLoggerRecord().requestReprocessing();
+                updateManager.update();
+            }
         }
     }
 
